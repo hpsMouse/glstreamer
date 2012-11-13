@@ -2,7 +2,7 @@
 
 #include "argblock.h"
 #include "defaultspecs.h"
-#include "internallink.h"
+#include "internalsinglelink.h"
 #include "processor.h"
 #include "typespec.h"
 
@@ -77,8 +77,12 @@ int main()
     Provider provider("a", "b", "c");
     P p("d", "e", "f", "g", "h", "i");
     Printer printer("j", "k", "l");
-    InternalLink l1(&provider, 0, &p, 0), l2(&provider, 1, &p, 1), l3(&provider, 2, &p, 2);
-    InternalLink l4(&p, 0, &printer, 0), l5(&p, 1, &printer, 1), l6(&p, 2, &printer, 2);
+    InternalSingleLink l0(provider.outputArg(0), p.inputArg(0));
+    InternalSingleLink l1(provider.outputArg(1), p.inputArg(1));
+    InternalSingleLink l2(provider.outputArg(2), p.inputArg(2));
+    InternalSingleLink l3(p.outputArg(0), printer.inputArg(0));
+    InternalSingleLink l4(p.outputArg(1), printer.inputArg(1));
+    InternalSingleLink l5(p.outputArg(2), printer.inputArg(2));
     provider.run();
     p.run();
     printer.run();

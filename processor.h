@@ -4,6 +4,7 @@
 #include <type_traits>
 
 #include "argblock.h"
+#include "slottypes.h"
 #include "typelist.h"
 
 namespace glstreamer
@@ -13,26 +14,33 @@ namespace glstreamer
     public:
         virtual ~Processor() = default;
         
+        void execute()
+        {
+            inputArgs.fetchArgs();
+            run();
+            outputArgs.pushArgs();
+        }
+        
         virtual void run() = 0;
         
-        Slot& inputArg(ArgBlock::size_type i)
+        InputSlot inputArg(ArgBlock::size_type i)
         {
-            return inputArgs.arg(i);
+            return InputSlot(inputArgs.arg(i));
         }
         
-        Slot& inputArg(std::string const& name)
+        InputSlot inputArg(std::string const& name)
         {
-            return inputArgs.arg(name);
+            return InputSlot(inputArgs.arg(name));
         }
         
-        Slot& outputArg(ArgBlock::size_type i)
+        OutputSlot outputArg(ArgBlock::size_type i)
         {
-            return outputArgs.arg(i);
+            return OutputSlot(outputArgs.arg(i));
         }
         
-        Slot& outputArg(std::string const& name)
+        OutputSlot outputArg(std::string const& name)
         {
-            return outputArgs.arg(name);
+            return OutputSlot(outputArgs.arg(name));
         }
         
     protected:

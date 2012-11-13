@@ -6,33 +6,11 @@
 #include <vector>
 
 #include "exceptions.h"
+#include "slot.h"
 #include "typemgr.h"
 
 namespace glstreamer
 {
-    class TypeSpec;
-    
-    struct Slot
-    {
-        Slot(std::string const& name, TypeSpec *typeSpec):
-        name(name),
-        arg(nullptr),
-        typeSpec(typeSpec)
-        {}
-        
-        Slot(Slot const& slot):
-        name(slot.name),
-        arg(nullptr),
-        typeSpec(slot.typeSpec)
-        {}
-        
-        Slot& operator = (Slot const&) = delete;
-        
-        std::string const name;
-        void *arg;
-        TypeSpec* const typeSpec;
-    };
-    
     class ArgBlock
     {
     public:
@@ -91,6 +69,18 @@ namespace glstreamer
             static_assert(sizeof...(SlotTypes) == sizeof...(NameTypes), "sizeof(slots) != sizeof(names)");
             doAddSlots<SlotTypes...>(names...);
             return *this;
+        }
+        
+        void fetchArgs()
+        {
+            for(Slot& slot : args)
+                slot.fetch();
+        }
+        
+        void pushArgs()
+        {
+            for(Slot& slot : args)
+                slot.push();
         }
         
     private:
