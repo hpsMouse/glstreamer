@@ -5,7 +5,7 @@
 
 #include "link.h"
 
-#include "slottypes.h"
+#include "types.h"
 #include "typespec.h"
 
 namespace glstreamer
@@ -16,21 +16,15 @@ namespace glstreamer
         InternalSingleLink(OutputSlot const& srcSlot, InputSlot const& dstSlot);
         virtual ~InternalSingleLink() noexcept;
         
-        virtual void push(Slot*) {}
-        virtual void fetch(Slot*) {}
+        InternalSingleLink(InternalSingleLink const&) = delete;
+        InternalSingleLink& operator = (InternalSingleLink const&) = delete;
+        
+        virtual void push(SimpleSlot*) override {}
+        virtual void fetch(SimpleSlot*) override {}
         
     protected:
-        struct Destroyer
-        {
-            Destroyer(TypeSpec *typeSpec): typeSpec(typeSpec) {}
-            
-            void operator() (void* obj){ typeSpec->destroy(obj); }
-            
-        private:
-            TypeSpec *typeSpec;
-        };
-        Slot* src;
-        Slot* dst;
+        FullSlot* src;
+        FullSlot* dst;
         std::unique_ptr<void, Destroyer> arg;
     };
 }

@@ -1,102 +1,134 @@
 #ifndef _5784FE2E_274B_11E2_B935_206A8A22A96A
 #define _5784FE2E_274B_11E2_B935_206A8A22A96A
 
+#include <functional>
 #include <map>
 #include <string>
+#include <utility>
 #include <vector>
 
+#include "types.h"
+
 #include "exceptions.h"
-#include "slot.h"
+#include "fullslot.h"
+#include "link.h"
+#include "simpleslot.h"
+#include "typelist.h"
 #include "typemgr.h"
+#include "typespec.h"
 
 namespace glstreamer
 {
     class ArgBlock
     {
     public:
-        typedef std::vector<Slot>::size_type size_type;
-        
-        ArgBlock() = default;
+        ArgBlock(Processor *processor, FullSlot::Direction direction):
+        simpleSlots(),
+        fullSlots(),
+        processor(processor),
+        direction(direction)
+        {}
         
         ArgBlock(ArgBlock const&) = delete;
+        ArgBlock(ArgBlock&&) = delete;
         ArgBlock& operator = (ArgBlock const&) = delete;
+        ArgBlock& operator = (ArgBlock&&) = delete;
         
         size_type argCount() const
         {
-            return args.size();
+            return simpleSlots.size();
         }
         
-        Slot& arg(size_type i)
+        SimpleSlot& simpleSlot(size_type index)
         {
-            return args[i];
+            return simpleSlots[index];
         }
         
-        Slot const& arg(size_type i) const
+        FullSlot& fullSlot(size_type index)
         {
-            return args[i];
+            return *fullSlotsRef[index];
         }
         
-        Slot& arg(std::string const& name)
+        FullSlot& fullSlot(std::string const& name)
         {
-            auto indexIter = name2index.find(name);
-            if(indexIter == name2index.end())
-                throw NotFound("argument \"" + name + "\"");
-            return arg(indexIter->second);
+            auto const& iter = fullSlots.find(name);
+            if(iter == fullSlots.end())
+                throw NotFound("Slot " + name);
+            return iter->second;
         }
         
-        Slot const& arg(std::string const& name) const
+        template <typename T>
+        ArgBlock& _addSlot(std::string const& name)
         {
-            auto indexIter = name2index.find(name);
-            if(indexIter == name2index.end())
-                throw NotFound("argument \"" + name + "\"");
-            return arg(indexIter->second);
+            auto const& result = fullSlots.insert(std::make_pair(name, FullSlot(TypeManager::getTypeSpec<T>(), name, processor, direction)));
+            if(!result.second)
+                throw DefinationConflict("Slot " + name);
+            fullSlotsRef.push_back(&result.first->second);
+            return *this;
         }
         
         template <typename T>
         ArgBlock& addSlot(std::string const& name)
         {
-            if(name2index.find(name) != name2index.end())
-                throw DefinationConflict(name);
-            size_type index = args.size();
-            args.push_back(Slot(name, TypeManager::getTypeSpec<T>()));
-            name2index.insert(std::make_pair(name, index));
+            _addSlot<T>(name);
+            refreshSimpleSlots();
             return *this;
         }
         
-        template <typename ... SlotTypes, typename ... NameTypes>
-        ArgBlock& addSlots(NameTypes const& ... names)
+        template <typename ... Types>
+        ArgBlock& _addSlots(typename Const<std::string const&, Types>::type ... names)
         {
-            static_assert(sizeof...(SlotTypes) == sizeof...(NameTypes), "sizeof(slots) != sizeof(names)");
-            doAddSlots<SlotTypes...>(names...);
+            sequence(std::bind(&ArgBlock::_addSlot<Types>, this, names)...);
             return *this;
+        }
+        
+        template <typename ... Types>
+        ArgBlock& addSlots(typename Const<std::string const&, Types>::type ... names)
+        {
+            _addSlots<Types...>(names...);
+            refreshSimpleSlots();
+            return *this;
+        }
+        
+        void refreshSimpleSlots()
+        {
+            std::vector<SimpleSlot> newSimpleSlots;
+            newSimpleSlots.reserve(fullSlotsRef.size());
+            for(FullSlot* slot : fullSlotsRef)
+            {
+                if(slot->simpleSlot != nullptr)
+                    newSimpleSlots.push_back(*slot->simpleSlot);
+                else
+                    newSimpleSlots.emplace_back(slot->typeSpec);
+                slot->simpleSlot = &newSimpleSlots.back();
+            }
+            simpleSlots = std::move(newSimpleSlots);
         }
         
         void fetchArgs()
         {
-            for(Slot& slot : args)
-                slot.fetch();
+            for(SimpleSlot& slot : simpleSlots)
+                slot.link->fetch(&slot);
         }
         
         void pushArgs()
         {
-            for(Slot& slot : args)
-                slot.push();
+            for(SimpleSlot& slot : simpleSlots)
+                slot.link->push(&slot);
+        }
+        
+        void clearArgs()
+        {
+            for(SimpleSlot& slot : simpleSlots)
+                slot.typeSpec->clear(slot.arg);
         }
         
     private:
-        template <typename SlotType, typename ... SlotTypes, typename NameType, typename ... NameTypes>
-        void doAddSlots(NameType const& name, NameTypes const& ... names)
-        {
-            addSlot<SlotType>(name);
-            doAddSlots<SlotTypes...>(names...);
-        }
-        
-        template <typename ...>
-        void doAddSlots()
-        {}
-        
-        std::vector<Slot> args;
-        std::map<std::string, size_type> name2index;
+        std::vector<SimpleSlot> simpleSlots;
+        std::map<std::string, FullSlot> fullSlots;
+        std::vector<FullSlot*> fullSlotsRef;
+        Processor *processor;
+        FullSlot::Direction direction;
     };
 }
 

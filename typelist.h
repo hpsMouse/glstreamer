@@ -1,11 +1,19 @@
 #ifndef _1454C614_2A4A_11E2_9F25_206A8A22A96A
 #define _1454C614_2A4A_11E2_9F25_206A8A22A96A
 
+#include <utility>
+
 namespace glstreamer
 {
     template <typename ... Types>
     struct TypeList
     {};
+    
+    template <typename T, typename U>
+    struct Const
+    {
+        using type = T;
+    };
     
     template <unsigned i, typename ... Types>
     struct TypeListPickRaw;
@@ -22,14 +30,15 @@ namespace glstreamer
         typedef typename TypeListPickRaw<i-1, Types...>::type type;
     };
     
-    template <unsigned i, typename List>
-    struct TypeListPick;
+    inline void sequence()
+    {}
     
-    template <unsigned i, typename ... Types>
-    struct TypeListPick<i, TypeList<Types...>>
+    template <typename Func, typename ... Funcs>
+    inline void sequence(Func&& func, Funcs&& ... funcs)
     {
-        typedef TypeListPickRaw<i, Types...> type;
-    };
+        func();
+        sequence(std::forward<Funcs>(funcs)...);
+    }
 }
 
 #endif

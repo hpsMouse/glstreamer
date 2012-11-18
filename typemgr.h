@@ -5,10 +5,10 @@
 #include <type_traits>
 #include <typeindex>
 
+#include "types.h"
+
 namespace glstreamer
 {
-    class TypeSpec;
-    
     class TypeManager
     {
     public:

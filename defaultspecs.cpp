@@ -1,7 +1,7 @@
 #include "defaultspecs.h"
 
+#include "defaulttypespec.h"
 #include "typemgr.h"
-#include "typespec.h"
 
 template <typename T>
 inline static void registerDefaultTypeSpec()

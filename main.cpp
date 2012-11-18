@@ -1,96 +1,115 @@
+#include <chrono>
 #include <iostream>
+#include <thread>
+#include <vector>
 
-#include "argblock.h"
 #include "defaultspecs.h"
-#include "internalsinglelink.h"
 #include "processor.h"
-#include "typespec.h"
 
-template struct glstreamer::DefaultTypeSpec<int>;
+#include "testfactory.h"
 
+using namespace std;
+using namespace chrono;
 using namespace glstreamer;
-
-class Provider : public FixedProcessor<TypeList<>, TypeList<int, float, char>>
-{
-public:
-    template <typename ... Types>
-    Provider(Types const& ... names):
-    FixedProcessor<TypeList<>, TypeList<int, float, char>>(names ...),
-    counter(0)
-    {}
-    
-    virtual void do_run(int& i, float& f, char& c) override
-    {
-        i = counter;
-        f = counter * 2;
-        c = counter * 3;
-        ++counter;
-    }
-    
-private:
-    int counter;
-};
-
-class P : public FixedProcessor<TypeList<int, float, char>, TypeList<long, double, short>>
-{
-public:
-    template <typename ... Types>
-    P(Types const& ... names):
-    FixedProcessor<TypeList<int, float, char>, TypeList<long, double, short>>(names...)
-    {}
-    
-    virtual void do_run(int& ii, float& fi, char& ci, long& lo, double& _do, short& so) override
-    {
-        lo = ii * 2;
-        _do = fi * 2;
-        so = ci * 2;
-    }
-};
-
-class Printer : public FixedProcessor<TypeList<long, double, short>, TypeList<>>
-{
-public:
-    template <typename ... Types>
-    Printer(Types const& ... names):
-    FixedProcessor<TypeList<long, double, short>, TypeList<>>(names ...)
-    {}
-    
-    virtual void do_run(long& l, double& d, short& s) override
-    {
-        using namespace std;
-        cout << l << ' ' << d << ' ' << s << endl;
-    }
-};
 
 int main()
 {
-    using namespace std;
-    using namespace glstreamer;
     registerDefaultTypes();
-    ArgBlock argBlock;
-    argBlock.addSlots<int, float, char>("ivalue", "fvalue", "cvalue");
-    for(ArgBlock::size_type i = 0; i < argBlock.argCount(); ++i)
+    
+    Processor *provider = makeProvider();
+    Processor *p = makeP();
+    Processor *printer = makePrinter();
+    
+#if 0
+    // Internal link test
+    vector<Link*> links = {
+        makeInternalSingleLink(provider->outputArg(0), p->inputArg(0)),
+        makeInternalSingleLink(provider->outputArg(1), p->inputArg(1)),
+        makeInternalSingleLink(provider->outputArg(2), p->inputArg(2)),
+        makeInternalSingleLink(p->outputArg(0), printer->inputArg(0)),
+        makeInternalSingleLink(p->outputArg(1), printer->inputArg(1)),
+        makeInternalSingleLink(p->outputArg(2), printer->inputArg(2))
+    };
+    
+    for(int i = 0; i < 100000000; ++i)
     {
-        Slot const& slot(argBlock.arg(i));
-        cout << slot.name << " :: " << slot.typeSpec->id()->name() << endl;
+        provider->execute();
+        p->execute();
+        printer->execute();
     }
-    Provider provider("a", "b", "c");
-    P p("d", "e", "f", "g", "h", "i");
-    Printer printer("j", "k", "l");
-    InternalSingleLink l0(provider.outputArg(0), p.inputArg(0));
-    InternalSingleLink l1(provider.outputArg(1), p.inputArg(1));
-    InternalSingleLink l2(provider.outputArg(2), p.inputArg(2));
-    InternalSingleLink l3(p.outputArg(0), printer.inputArg(0));
-    InternalSingleLink l4(p.outputArg(1), printer.inputArg(1));
-    InternalSingleLink l5(p.outputArg(2), printer.inputArg(2));
-    provider.run();
-    p.run();
-    printer.run();
-    provider.run();
-    p.run();
-    printer.run();
-    provider.run();
-    p.run();
-    printer.run();
-    return 0;
+#endif
+    
+    // Threaded link test
+    vector<Link*> links = {
+        makeThreadedLink(provider->outputArg(0), p->inputArg(0)),
+        makeThreadedLink(provider->outputArg(1), p->inputArg(1)),
+        makeThreadedLink(provider->outputArg(2), p->inputArg(2)),
+        makeThreadedLink(p->outputArg(0), printer->inputArg(0)),
+        makeThreadedLink(p->outputArg(1), printer->inputArg(1)),
+        makeThreadedLink(p->outputArg(2), printer->inputArg(2))
+    };
+    
+    thread t1([provider]()
+    {
+        for(int i = 0; i < 7; ++i)
+        {
+            provider->execute();
+        }
+        
+    });
+    thread t2([p]()
+    {
+        this_thread::sleep_for(duration<long>(5));
+        for(int i = 0; i < 7; ++i)
+        {
+            p->execute();
+            this_thread::sleep_for(duration<long>(1));
+        }
+    });
+    thread t3([printer]()
+    {
+        for(int i = 0; i < 7; ++i)
+            printer->execute();
+    });
+    
+    t1.join();
+    t2.join();
+    t3.join();
+    
+#if 0
+    // ArgBlock test
+    std::string ccc("ccc"), dddd("dddd");
+    P p("a", (char const*)"bb", ccc, std::move(dddd), "eeeee", "ffffff");
+    Processor &pr = static_cast<Processor&>(p);
+    cout << pr.inputArgCount() << " slots." << endl;
+    for(size_type i = 0; i < pr.inputArgCount(); ++i)
+    {
+        FullSlot const& slot(pr.inputArg(i).toSlot());
+        cout << "Slot " << i << ":" << endl;
+        cout << slot.simpleSlot << endl;
+        cout << slot.simpleSlot->arg << endl;
+        cout << slot.simpleSlot->link << endl;
+        cout << slot.simpleSlot->typeSpec << endl;
+        cout << slot.simpleSlot->typeSpec->id().name() << endl;
+        cout << slot.typeSpec << endl;
+        cout << slot.name << endl;
+        cout << slot.processor << endl;
+        cout << slot.direction << endl;
+    }
+    cout << pr.outputArgCount() << " slots." << endl;
+    for(size_type i = 0; i < pr.outputArgCount(); ++i)
+    {
+        FullSlot const& slot(pr.outputArg(i).toSlot());
+        cout << "Slot " << i << ":" << endl;
+        cout << slot.simpleSlot << endl;
+        cout << slot.simpleSlot->arg << endl;
+        cout << slot.simpleSlot->link << endl;
+        cout << slot.simpleSlot->typeSpec << endl;
+        cout << slot.simpleSlot->typeSpec->id().name() << endl;
+        cout << slot.typeSpec << endl;
+        cout << slot.name << endl;
+        cout << slot.processor << endl;
+        cout << slot.direction << endl;
+    }
+#endif
 }
