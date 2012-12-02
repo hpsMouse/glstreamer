@@ -14,6 +14,8 @@ namespace glstreamer
     class Link;
     class OStream;
     class OutputSlot;
+    class PosixException;
+    class PosixSem;
     class Processor;
     class SimpleSlot;
     class ThreadedLink;

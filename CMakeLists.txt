@@ -4,6 +4,8 @@ project(glstreamer)
 
 add_definitions(-std=gnu++11 -Wall -Wextra -pthread)
 
-add_executable(glstreamer defaultspecs.cpp internalsinglelink.cpp threadedlink.cpp typemgr.cpp main.cpp testfactory.cpp)
+add_library(glstreamer SHARED defaultspecs.cpp internalsinglelink.cpp posixexception.cpp posixsem.cpp threadedlink.cpp typemgr.cpp)
 
-target_link_libraries(glstreamer pthread)
+add_executable(test main.cpp testfactory.cpp)
+
+target_link_libraries(test pthread rt glstreamer)

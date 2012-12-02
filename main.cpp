@@ -3,7 +3,11 @@
 #include <thread>
 #include <vector>
 
+#include <sys/types.h>
+#include <unistd.h>
+
 #include "defaultspecs.h"
+#include "posixsem.h"
 #include "processor.h"
 
 #include "testfactory.h"
@@ -14,11 +18,34 @@ using namespace glstreamer;
 
 int main()
 {
+    pid_t pid = getpid();
+    
     registerDefaultTypes();
     
     Processor *provider = makeProvider();
     Processor *p = makeP();
     Processor *printer = makePrinter();
+    
+#if 1
+    // Semaphore test
+    PosixSem semaphore("semtest", true);
+    if(semaphore.hasOwnership())
+    {
+        clog << pid << " got ownership" << endl;
+        for(int i = 0; i < 5; ++i)
+        {
+            this_thread::sleep_for(duration<long>(2));
+            semaphore.post();
+        }
+    }
+    else
+    {
+        clog << pid << " didn't get ownership" << endl;
+        semaphore = PosixSem("semtest");
+        semaphore.wait();
+        clog << pid << " got semaphore" << endl;
+    }
+#endif
     
 #if 0
     // Internal link test
@@ -39,6 +66,7 @@ int main()
     }
 #endif
     
+#if 0
     // Threaded link test
     vector<Link*> links = {
         makeThreadedLink(provider->outputArg(0), p->inputArg(0)),
@@ -75,6 +103,7 @@ int main()
     t1.join();
     t2.join();
     t3.join();
+#endif
     
 #if 0
     // ArgBlock test
