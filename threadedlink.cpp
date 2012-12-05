@@ -1,7 +1,6 @@
-#include <stdexcept>
-
 #include "threadedlink.h"
 
+#include "exceptions.h"
 #include "fullslot.h"
 #include "simpleslot.h"
 #include "slottypes.h"
@@ -46,14 +45,14 @@ ThreadedLink::~ThreadedLink() noexcept
 void ThreadedLink::push(SimpleSlot* src)
 {
     if(src != this->src->simpleSlot)
-        throw std::logic_error("Internal error: slot doesn't match with link.");
+        throw InternalError("slot doesn't match with link.");
     
     std::unique_lock<mutex> locker(queueLock);
     while(currentSize >= queueSize)
         condPush.wait(locker);
     
     if(src->arg != argBuffers[indexIn].get())
-        throw std::logic_error("Internal error: argument reference differs between slot and link");
+        throw InternalError("argument reference differs between slot and link");
     
     typeSpec->context_out(src->arg);
     
@@ -68,14 +67,14 @@ void ThreadedLink::push(SimpleSlot* src)
 void ThreadedLink::fetch(SimpleSlot* dst)
 {
     if(dst != this->dst->simpleSlot)
-        throw std::logic_error("Internal error: slot doesn't match with link.");
+        throw InternalError("slot doesn't match with link.");
     
     std::unique_lock<mutex> locker(queueLock);
     while(currentSize == 2)
         condFetch.wait(locker);
     
     if(dst->arg != argBuffers[indexOut].get())
-        throw std::logic_error("Internal error: argument reference differs between slot and link");
+        throw InternalError("argument reference differs between slot and link");
     
     indexOut = (indexOut + 1) % queueSize;
     --currentSize;

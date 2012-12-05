@@ -28,6 +28,22 @@ namespace glstreamer
         runtime_error("Defination conflict: " + __arg)
         {}
     };
+    
+    class ResourceConflict : public std::runtime_error
+    {
+    public:
+        explicit ResourceConflict ( const std::string& __arg ):
+        runtime_error("Resource conflict: " + __arg)
+        {}
+    };
+    
+    class InternalError : public std::logic_error
+    {
+    public:
+        explicit InternalError ( const std::string& __arg ):
+        logic_error("Internal error: " + __arg)
+        {}
+    };
 }
 
 #endif

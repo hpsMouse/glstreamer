@@ -14,7 +14,7 @@ namespace glstreamer
         TypeSpec *typeSpec;
         std::string name;
         Processor *processor;
-        enum Direction { Input, Output } direction;
+        Direction direction;
         
         FullSlot() = default;
         

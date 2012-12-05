@@ -16,6 +16,8 @@ namespace glstreamer
     class OutputSlot;
     class PosixException;
     class PosixSem;
+    class PosixShm;
+    class ProcessLink;
     class Processor;
     class SimpleSlot;
     class ThreadedLink;
@@ -23,6 +25,8 @@ namespace glstreamer
     class TypeSpec;
     
     using size_type = std::size_t;
+    
+    enum Direction {Input, Output};
 }
 
 #endif

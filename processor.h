@@ -10,8 +10,8 @@ namespace glstreamer
     {
     public:
         Processor():
-        inputArgs(this, FullSlot::Input),
-        outputArgs(this, FullSlot::Output)
+        inputArgs(this, Input),
+        outputArgs(this, Output)
         {}
         virtual ~Processor() = default;
         

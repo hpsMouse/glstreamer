@@ -10,19 +10,19 @@ namespace glstreamer
     class PosixSem
     {
     public:
-        PosixSem();
+        PosixSem() noexcept;
         
         /**
          * \brief Open a POSIX semaphore by name.
          * 
-         * Note that the name mustn't contain any slashes, including the
-         * initial one, which will be automatically added by this constructor.
+         * The name mustn't contain any slashes, including the initial one,
+         * which will be automatically added by this constructor.
          * 
          * If \c create is \c true and the creation fails because of an existing
          * semaphore, no exception will be thrown, instead hasOwnership()
          * will return \c false. In such a case you may want to reopen the
          * semaphore with a new PosixSem object or report an error to the upper
-         * level.
+         * layer.
          * 
          * \param name   the semaphore name without the initial slash
          * \param create if set to true, then a new semaphore is created
@@ -50,8 +50,8 @@ namespace glstreamer
         void destroy() noexcept;
         void unsafeClear() noexcept;
         
-        std::string _name;
         sem_t *sem;
+        std::string _name;
         bool owns;
     };
 }

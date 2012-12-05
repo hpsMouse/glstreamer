@@ -22,7 +22,7 @@ namespace glstreamer
     class ArgBlock
     {
     public:
-        ArgBlock(Processor *processor, FullSlot::Direction direction):
+        ArgBlock(Processor *processor, Direction direction):
         simpleSlots(),
         fullSlots(),
         processor(processor),
@@ -128,7 +128,7 @@ namespace glstreamer
         std::map<std::string, FullSlot> fullSlots;
         std::vector<FullSlot*> fullSlotsRef;
         Processor *processor;
-        FullSlot::Direction direction;
+        Direction direction;
     };
 }
 

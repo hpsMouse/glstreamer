@@ -6,9 +6,9 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#include "defaultspecs.h"
-#include "posixsem.h"
-#include "processor.h"
+#include "../defaultspecs.h"
+#include "../posixsem.h"
+#include "../processor.h"
 
 #include "testfactory.h"
 
@@ -22,11 +22,13 @@ int main()
     
     registerDefaultTypes();
     
+#if 0
     Processor *provider = makeProvider();
     Processor *p = makeP();
     Processor *printer = makePrinter();
+#endif
     
-#if 1
+#if 0
     // Semaphore test
     PosixSem semaphore("semtest", true);
     if(semaphore.hasOwnership())

@@ -7,15 +7,15 @@
 
 using namespace glstreamer;
 
-PosixSem::PosixSem():
-_name(),
+PosixSem::PosixSem() noexcept:
 sem(nullptr),
+_name(),
 owns(false)
 {}
 
 PosixSem::PosixSem ( const std::string& name, bool create, unsigned int value ):
-_name("/" + name),
 sem(nullptr),
+_name("/" + name),
 owns(create)
 {
     if(!owns)
@@ -25,6 +25,7 @@ owns(create)
     
     if(sem == SEM_FAILED)
     {
+        sem = nullptr;
         if(errno == EEXIST)
             owns = false;
         else
@@ -38,8 +39,8 @@ PosixSem::~PosixSem() noexcept
 }
 
 PosixSem::PosixSem ( PosixSem&& sem ) noexcept:
-_name(sem._name),
 sem(sem.sem),
+_name(sem._name),
 owns(sem.owns)
 {
     sem.unsafeClear();
@@ -52,8 +53,8 @@ PosixSem& PosixSem::operator= ( PosixSem&& sem ) noexcept
     
     this->destroy();
     
-    this->_name = sem._name;
     this->sem = sem.sem;
+    this->_name = sem._name;
     this->owns = sem.owns;
     
     sem.unsafeClear();
@@ -79,8 +80,6 @@ void PosixSem::wait()
 
 void PosixSem::destroy() noexcept
 {
-    // Not testing for SEM_FAILED because in such a fault the PosixSem object
-    // cannot be constructed, thus cannot be destroyed.
     if(sem != nullptr)
     {
         sem_close(sem);
@@ -97,7 +96,7 @@ void PosixSem::destroy() noexcept
 
 void PosixSem::unsafeClear() noexcept
 {
-    _name.clear();
     sem = nullptr;
+    _name.clear();
     owns = false;
 }

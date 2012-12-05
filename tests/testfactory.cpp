@@ -2,9 +2,9 @@
 
 #include "testfactory.h"
 
-#include "fixedprocessor.h"
-#include "internalsinglelink.h"
-#include "threadedlink.h"
+#include "../fixedprocessor.h"
+#include "../internalsinglelink.h"
+#include "../threadedlink.h"
 
 using namespace std;
 using namespace glstreamer;
