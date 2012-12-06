@@ -1,6 +1,7 @@
 #include <cstdint>
 #include <cstring>
 
+#include <mutex>
 #include <sstream>
 
 #include "processlink.h"
@@ -35,7 +36,7 @@ namespace
 // DONE: Type matching
 // DONE: Argument object assign and check
 // DONE: Link reflection set and optionally check
-// TODO: Slot pointer check
+// DONE: Slot pointer check
 
 ProcessLink::ProcessLink ( const OutputSlot& srcSlot, const string& name, size_type queueSize ):
 typeSpec(srcSlot.toSlot().typeSpec),
@@ -81,7 +82,7 @@ void ProcessLink::push ( SimpleSlot* src )
     if(src != slot->simpleSlot)
         throw InternalError("slot doesn't match with link");
     
-    emptyLeft.wait();
+    unique_lock<PosixSem> emptyLocker(emptyLeft);
     
     CtrlBlock *ctrlBlockPtr = static_cast<CtrlBlock*>(ctrlBlock.map());
     if(ctrlBlockPtr->bufferSize != 0)
@@ -94,6 +95,8 @@ void ProcessLink::push ( SimpleSlot* src )
     
     fullLeft.post();
     currentBufferId = (currentBufferId + 1) % queueSize;
+    
+    emptyLocker.release();
 }
 
 void ProcessLink::fetch ( SimpleSlot* dst )
@@ -104,7 +107,7 @@ void ProcessLink::fetch ( SimpleSlot* dst )
     if(dst != slot->simpleSlot)
         throw InternalError("slot doesn't match with link");
     
-    fullLeft.wait();
+    unique_lock<PosixSem> fullLocker(fullLeft);
     
     CtrlBlock *ctrlBlockPtr = static_cast<CtrlBlock*>(ctrlBlock.map());
     if(ctrlBlockPtr->bufferSize != 0)
@@ -117,6 +120,8 @@ void ProcessLink::fetch ( SimpleSlot* dst )
     
     emptyLeft.post();
     currentBufferId = (currentBufferId + 1) % queueSize;
+    
+    fullLocker.release();
 }
 
 static inline string makeBufferName(string const& baseName, size_type index)
