@@ -51,6 +51,10 @@ namespace glstreamer
     
     struct TypeSpecNoFixedSerialize : virtual TypeSpec
     {
+        virtual size_type serialize_size() const override
+        {
+            return 0;
+        }
         virtual void serialize_fixed(const void*, char*) const override
         {
             throw UnsupportedOperation("serialize_fixed");
@@ -76,7 +80,7 @@ namespace glstreamer
     template <typename T>
     struct TypeSpecPodSerialize : TypeSpecNoVariableSerialize
     {
-        virtual std::size_t serialize_size() const override
+        virtual size_type serialize_size() const override
         {
             return sizeof(T);
         }

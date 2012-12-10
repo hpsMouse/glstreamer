@@ -8,6 +8,8 @@
 
 #include "exceptions.h"
 #include "fullslot.h"
+#include "posixshmistream.h"
+#include "posixshmostream.h"
 #include "simpleslot.h"
 #include "slottypes.h"
 #include "typespec.h"
@@ -91,7 +93,10 @@ void ProcessLink::push ( SimpleSlot* src )
         typeSpec->serialize_fixed(src->arg, buffer->data);
     }
     else
-        throw UnsupportedOperation("Sorry, variable buffer size currently not supported.");
+    {
+        PosixShmOStream os(buffers[currentBufferId]);
+        typeSpec->serialize_variable(src->arg, os);
+    }
     
     fullLeft.post();
     currentBufferId = (currentBufferId + 1) % queueSize;
@@ -116,7 +121,10 @@ void ProcessLink::fetch ( SimpleSlot* dst )
         typeSpec->deserialize_fixed(dst->arg, buffer->data);
     }
     else
-        throw UnsupportedOperation("Sorry, variable buffer size currently not supported.");
+    {
+        PosixShmIStream is(buffers[currentBufferId]);
+        typeSpec->deserialize_varialbe(dst->arg, is);
+    }
     
     emptyLeft.post();
     currentBufferId = (currentBufferId + 1) % queueSize;

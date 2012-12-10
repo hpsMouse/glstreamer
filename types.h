@@ -17,6 +17,8 @@ namespace glstreamer
     class PosixException;
     class PosixSem;
     class PosixShm;
+    class PosixShmIStream;
+    class PosixShmOStream;
     class ProcessLink;
     class Processor;
     class SimpleSlot;

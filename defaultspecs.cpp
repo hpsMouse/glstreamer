@@ -4,7 +4,7 @@
 #include "typemgr.h"
 
 template <typename T>
-inline static void registerDefaultTypeSpec()
+static void registerDefaultTypeSpec()
 {
     using namespace glstreamer;
     static DefaultTypeSpec<T> spec;

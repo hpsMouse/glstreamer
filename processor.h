@@ -23,8 +23,6 @@ namespace glstreamer
             outputArgs.pushArgs();
         }
         
-        virtual void run() = 0;
-        
         size_type inputArgCount() const
         {
             return inputArgs.argCount();
@@ -56,6 +54,8 @@ namespace glstreamer
         }
         
     protected:
+        virtual void run() = 0;
+        
         ArgBlock inputArgs, outputArgs;
     };
 }

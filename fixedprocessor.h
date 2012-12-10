@@ -24,14 +24,15 @@ namespace glstreamer
             outputArgs.addSlots<OutputTypes...>(outputNames...);
         }
         
-        virtual void run() override
+    protected:
+        virtual void do_run(InputTypes& ... inputs, OutputTypes& ... outputs) = 0;
+        
+    private:
+        virtual void run() override final
         {
             assignInputs<0, InputTypes...>();
         }
         
-        virtual void do_run(InputTypes& ... inputs, OutputTypes& ... outputs) = 0;
-        
-    private:
         template <size_type i, typename Head, typename ... Tail, typename ... Assigned>
         void assignInputs(Assigned& ... args)
         {

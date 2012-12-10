@@ -20,7 +20,7 @@ namespace glstreamer
         virtual void                   clear               (void *obj)                    const = 0;
         virtual void                   context_out         (void *obj)                    const = 0;
         virtual void                   context_in          (void *obj)                    const = 0;
-        virtual std::size_t            serialize_size      ()                             const = 0;
+        virtual size_type              serialize_size      ()                             const = 0;
         virtual void                   serialize_fixed     (void const* obj, char *data)  const = 0;
         virtual void                   serialize_variable  (void const* obj, OStream &os) const = 0;
         virtual void                   deserialize_fixed   (void *obj, char const* data)  const = 0;
