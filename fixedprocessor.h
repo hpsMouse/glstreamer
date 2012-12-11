@@ -39,8 +39,9 @@ namespace glstreamer
             assignInputs<i+1, Tail...>(args ..., *static_cast<Head*>(inputArgs.simpleSlot(i).arg));
         }
         
-        template <size_type i, typename ... Assigned>
-        void assignInputs(Assigned& ... args)
+        template <size_type i, typename ... Tail, typename ... Assigned>
+        typename std::enable_if<sizeof...(Tail) == 0>::type
+        assignInputs(Assigned& ... args)
         {
             assignOutputs<0, OutputTypes...>(args ...);
         }
@@ -51,8 +52,9 @@ namespace glstreamer
             assignOutputs<i+1, Tail...>(args ..., *static_cast<Head*>(outputArgs.simpleSlot(i).arg));
         }
         
-        template <size_type i, typename ... Assigned>
-        void assignOutputs(Assigned& ... args)
+        template <size_type i, typename ... Tail, typename ... Assigned>
+        typename std::enable_if<sizeof...(Tail) == 0>::type
+        assignOutputs(Assigned& ... args)
         {
             do_run(args ...);
         }
