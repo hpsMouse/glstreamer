@@ -9,6 +9,7 @@
 #include "../defaultspecs.h"
 #include "../posixsem.h"
 #include "../processor.h"
+#include "../protocoltypes.h"
 
 #include "testfactory.h"
 
@@ -18,7 +19,9 @@ using namespace glstreamer;
 
 int main()
 {
+#if 0
     pid_t pid = getpid();
+#endif
     
     registerDefaultTypes();
     

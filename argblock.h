@@ -25,6 +25,7 @@ namespace glstreamer
         ArgBlock(Processor *processor, Direction direction):
         simpleSlots(),
         fullSlots(),
+        fullSlotsRef(),
         processor(processor),
         direction(direction)
         {}

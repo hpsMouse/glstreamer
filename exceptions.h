@@ -44,6 +44,24 @@ namespace glstreamer
         logic_error("Internal error: " + __arg)
         {}
     };
+    
+    class EOFError : public std::runtime_error
+    {
+    public:
+        explicit EOFError ():
+        runtime_error("Unexpected EOF.")
+        {}
+    };
+    
+    class ProtocolError : public std::logic_error
+    {
+    public:
+        explicit ProtocolError ( const std::string& __arg ):
+        logic_error("Protocol error: " + __arg)
+        {}
+    };
+    
+    #define wrap(content) (std::string(__PRETTY_FUNCTION__) + ": " + (content))
 }
 
 #endif

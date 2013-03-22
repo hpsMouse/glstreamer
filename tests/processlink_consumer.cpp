@@ -7,6 +7,10 @@
 using namespace std;
 using namespace glstreamer;
 
+template <typename T>
+void ignore_var(T const&)
+{}
+
 int main()
 {
     registerDefaultTypes();
@@ -20,6 +24,7 @@ int main()
         unique_ptr<Link>(makeInternalSingleLink(p->outputArg(1), printer->inputArg(1))),
         unique_ptr<Link>(makeInternalSingleLink(p->outputArg(2), printer->inputArg(2)))
     };
+    ignore_var(links);
     
     for(int i = 0; i < 5; ++i)
     {

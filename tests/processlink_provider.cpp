@@ -9,6 +9,10 @@
 using namespace std;
 using namespace glstreamer;
 
+template <typename T>
+void ignore_var(T const&)
+{}
+
 int main()
 {
     registerDefaultTypes();
@@ -19,6 +23,7 @@ int main()
         unique_ptr<Link>(new ProcessLink(provider->outputArg(1), "test.link1", 3)),
         unique_ptr<Link>(new ProcessLink(provider->outputArg(2), "test.link2", 3))
     };
+    ignore_var(links);
     
     for(int i = 0; i < 5; ++i)
     {

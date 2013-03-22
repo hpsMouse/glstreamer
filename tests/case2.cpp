@@ -78,6 +78,9 @@ namespace
         }
         
     private:
+        VectorSpec(VectorSpec<T> const&) = delete;
+        VectorSpec<T>& operator = (VectorSpec<T> const&) = delete;
+        
         TypeSpec *typeSpec;
         size_type sSize;
     };

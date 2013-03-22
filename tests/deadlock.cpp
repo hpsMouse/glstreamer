@@ -35,18 +35,6 @@ public:
     {}
 };
 
-using PCType = FixedProcessor<TypeList<int>, TypeList<int>>;
-class PC : public PCType
-{
-public:
-    PC():
-    PCType("slot1", "slot2")
-    {}
-    
-    virtual void do_run(int&, int&) override
-    {}
-};
-
 int main(int argc, char *argv[])
 {
     if(argc != 2)
@@ -63,20 +51,14 @@ int main(int argc, char *argv[])
     if(role == "a")
     {
         p.reset(new PA);
-        link1.reset(new ProcessLink(p->outputArg(1), "test.link1", 2));
-        link2.reset(new ProcessLink(p->outputArg(0), "test.link0", 2));
+        link1.reset(new ProcessLink(p->outputArg(0), "test.link0", 2));
+        link2.reset(new ProcessLink(p->outputArg(1), "test.link1", 2));
     }
     else if(role == "b")
     {
         p.reset(new PB);
-        link1.reset(new ProcessLink("test.link0", p->inputArg(0), 2));
-        link2.reset(new ProcessLink("test.link2", p->inputArg(1), 2));
-    }
-    else if(role == "c")
-    {
-        p.reset(new PC);
-        link1.reset(new ProcessLink(p->outputArg(0), "test.link2", 2));
-        link2.reset(new ProcessLink("test.link1", p->inputArg(0), 2));
+        link1.reset(new ProcessLink("test.link1", p->inputArg(0), 2));
+        link2.reset(new ProcessLink("test.link0", p->inputArg(1), 2));
     }
     else
     {
