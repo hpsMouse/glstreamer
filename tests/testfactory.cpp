@@ -1,4 +1,8 @@
 #include <iostream>
+#include <iterator>
+#include <sstream>
+#include <string>
+#include <vector>
 
 #include "testfactory.h"
 
@@ -60,6 +64,39 @@ public:
     }
 };
 
+class StringVectorReader : public FixedProcessor<TypeList<>, TypeList<std::vector<std::string>>>
+{
+public:
+    template <typename Arg>
+    StringVectorReader(Arg&& arg):
+    FixedProcessor<TypeList<>, TypeList<std::vector<std::string>>>(std::forward<Arg>(arg))
+    {}
+    
+    virtual void do_run(std::vector<std::string>& strvecout)
+    {
+        string line;
+        getline(cin, line);
+        istringstream words(line);
+        strvecout.assign(istream_iterator<string>(words), istream_iterator<string>());
+    }
+};
+
+class StringVectorPrinter : public FixedProcessor<TypeList<std::vector<std::string>>, TypeList<>>
+{
+public:
+    template <typename Arg>
+    StringVectorPrinter(Arg&& arg):
+    FixedProcessor<TypeList<std::vector<std::string>>, TypeList<>>(std::forward<Arg>(arg))
+    {}
+    
+    virtual void do_run(std::vector<std::string>& strvecin) override
+    {
+        for(auto const& str : strvecin)
+            cout << str << ' ';
+        cout << endl;
+    }
+};
+
 Processor* makeProvider()
 {
     return new Provider("intsrc", "charsrc", "floatsrc");
@@ -73,6 +110,16 @@ Processor* makeP()
 Processor* makePrinter()
 {
     return new Printer("longsink", "shortsink", "doublesink");
+}
+
+Processor* makeStringVectorReader()
+{
+    return new StringVectorReader("strvecout");
+}
+
+Processor* makeStringVectorPrinter()
+{
+    return new StringVectorPrinter("strvecin");
 }
 
 Link* makeInternalSingleLink(const OutputSlot& src, const InputSlot& dst)

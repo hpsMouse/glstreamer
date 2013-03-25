@@ -23,7 +23,7 @@ void TypeManager::registerTypeSpec(const type_index& id, TypeSpec* spec, TypeMan
         switch(conflict)
         {
             case Error:
-                throw DefinationConflict(string("TypeSpec for ") + id.name());
+                throw DefinitionConflict(string("TypeSpec for ") + id.name());
                 break;
             case Ignore:
                 break;

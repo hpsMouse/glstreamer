@@ -7,6 +7,9 @@ glstreamer::Processor* makeProvider();
 glstreamer::Processor* makeP();
 glstreamer::Processor* makePrinter();
 
+glstreamer::Processor* makeStringVectorReader();
+glstreamer::Processor* makeStringVectorPrinter();
+
 glstreamer::Link* makeInternalSingleLink(glstreamer::OutputSlot const& src, glstreamer::InputSlot const& dst);
 glstreamer::Link* makeThreadedLink(glstreamer::OutputSlot const& src, glstreamer::InputSlot const& dst);
 

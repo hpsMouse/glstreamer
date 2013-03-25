@@ -16,8 +16,12 @@
 #include "../fdfiller.h"
 #include "../linkbuffer.h"
 #include "../MemBufferOStream.h"
+#include "../processor.h"
+#include "../SocketLinkOutput.h"
 #include "../typemgr.h"
 #include "../typespec.h"
+
+#include "testfactory.h"
 
 using namespace std;
 using namespace glstreamer;
@@ -37,20 +41,11 @@ int main(int argc, char *argv[])
         fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(err));
         return EXIT_FAILURE;
     }
-    LinkBuffer linkBufffer(2);
-    TypeSpec *typeSpec = TypeManager::getTypeSpec<std::vector<std::string>>();
-    FdFiller filler(addrs->ai_addr, addrs->ai_addrlen, 0x11223344, &linkBufffer, typeSpec);
+    Processor* reader = makeStringVectorReader();
+    SocketLinkOutput link(reader->outputArg(0), addrs->ai_addr, addrs->ai_addrlen, 0x11223344);
     freeaddrinfo(addrs);
     for(int i = 0; i < 5; ++i)
     {
-        std::string line;
-        std::getline(std::cin, line);
-        std::istringstream words(line);
-        std::vector<std::string> wordvec(std::istream_iterator<std::string>(words), (std::istream_iterator<std::string>()));
-        auto& buffer = linkBufffer.getEmpty();
-        buffer.clear();
-        MemBufferOStream os(buffer);
-        typeSpec->serialize_auto(&wordvec, os);
-        linkBufffer.putFull();
+        reader->execute();
     }
 }

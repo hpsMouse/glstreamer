@@ -21,11 +21,11 @@ namespace glstreamer
         {}
     };
     
-    class DefinationConflict : public std::runtime_error
+    class DefinitionConflict : public std::runtime_error
     {
     public:
-        explicit DefinationConflict(const std::string& __arg):
-        runtime_error("Defination conflict: " + __arg)
+        explicit DefinitionConflict(const std::string& __arg):
+        runtime_error("Definition conflict: " + __arg)
         {}
     };
     

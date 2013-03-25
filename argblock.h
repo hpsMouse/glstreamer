@@ -63,7 +63,7 @@ namespace glstreamer
         {
             auto const& result = fullSlots.insert(std::make_pair(name, FullSlot(TypeManager::getTypeSpec<T>(), name, processor, direction)));
             if(!result.second)
-                throw DefinationConflict("Slot " + name);
+                throw DefinitionConflict("Slot " + name);
             fullSlotsRef.push_back(&result.first->second);
             return *this;
         }

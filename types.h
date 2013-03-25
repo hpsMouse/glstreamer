@@ -35,6 +35,7 @@ namespace glstreamer
     class ProcessLink;
     class Processor;
     class SimpleSlot;
+    class SocketLinkOutput;
     class ThreadedLink;
     class TypeManager;
     class TypeSpec;
