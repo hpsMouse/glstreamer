@@ -2,6 +2,7 @@
 #define _3D73D4B2_428D_11E2_9A41_206A8A22A96A
 
 #include <type_traits>
+#include <vector>
 
 #include "types.h"
 
@@ -10,7 +11,10 @@ namespace glstreamer
     class OStream
     {
     public:
-        OStream() = default;
+        OStream():
+        internalBuffer()
+        {}
+        
         virtual ~OStream() = default;
         
         /**
@@ -30,12 +34,14 @@ namespace glstreamer
         
         virtual OStream& writeData(void const* data, size_type size) = 0;
         
-        virtual void* requireInternalBuffer(size_type size) = 0;
-        virtual OStream& pushInternalBuffer(void *buffer, size_type size) = 0;
+        virtual void* requireInternalBuffer(size_type size);
+        virtual OStream& pushInternalBuffer(void *buffer, size_type size);
         
     private:
         OStream(OStream const&) = delete;
         OStream& operator = (OStream const&) = delete;
+        
+        std::vector<char> internalBuffer;
     };
 }
 

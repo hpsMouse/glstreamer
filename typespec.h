@@ -25,6 +25,9 @@ namespace glstreamer
         virtual void                   serialize_variable  (void const* obj, OStream &os) const = 0;
         virtual void                   deserialize_fixed   (void *obj, char const* data)  const = 0;
         virtual void                   deserialize_varialbe(void *obj, IStream &is)       const = 0;
+        
+        void serialize_auto(void const* obj, OStream &os);
+        void deserialize_auto(void *obj, IStream &is);
     };
     
     struct Destroyer

@@ -19,6 +19,8 @@ namespace glstreamer
     class Link;
     class LinkBuffer;
     class LinkHeader;
+    class MemBufferIStream;
+    class MemBufferOStream;
     class Muxer;
     class NetUInt32;
     class OStream;
@@ -40,6 +42,7 @@ namespace glstreamer
     using size_type = std::size_t;
     using Word16 = std::uint16_t;
     using Word32 = std::uint32_t;
+    using Word64 = std::uint64_t;
     
     enum Direction {Input, Output};
 }

@@ -1,6 +1,10 @@
 #include <cstdio>
 #include <cstdlib>
 
+#include <iostream>
+#include <string>
+#include <vector>
+
 #include <sys/types.h>
 #include <sys/socket.h>
 
@@ -9,6 +13,7 @@
 #include "../defaultspecs.h"
 #include "../demuxer.h"
 #include "../linkbuffer.h"
+#include "../MemBufferIStream.h"
 #include "../typemgr.h"
 #include "../typespec.h"
 
@@ -32,15 +37,21 @@ int main(int argc, char *argv[])
     }
     Demuxer demuxer(addrs->ai_addr, addrs->ai_addrlen);
     freeaddrinfo(addrs);
-    TypeSpec *typeSpec = TypeManager::getTypeSpec<unsigned>();
+    
+    typedef std::vector<std::string> value_type;
+    
+    TypeSpec *typeSpec = TypeManager::getTypeSpec<value_type>();
     LinkBuffer* buffer = demuxer.getLink(0x11223344, 2, typeSpec);
     for(int i = 0; i < 5; ++i)
     {
         std::vector<char>& data = buffer->getFull();
         printf("size: %zu\n", data.size());
-        unsigned value;
-        typeSpec->deserialize_fixed(&value, data.data());
-        printf("%u\n", value);
+        MemBufferIStream is(data.data(), data.size());
+        value_type value;
+        typeSpec->deserialize_auto(&value, is);
+        for(auto const& str : value)
+            std::cout << str << ' ';
+        std::cout << std::endl;
         buffer->putEmpty();
     }
 }
