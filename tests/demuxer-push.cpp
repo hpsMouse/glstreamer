@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <iterator>
+#include <memory>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -13,13 +14,8 @@
 #include <netdb.h>
 
 #include "../defaultspecs.h"
-#include "../fdfiller.h"
-#include "../linkbuffer.h"
-#include "../MemBufferOStream.h"
 #include "../processor.h"
 #include "../SocketLinkOutput.h"
-#include "../typemgr.h"
-#include "../typespec.h"
 
 #include "testfactory.h"
 
@@ -41,7 +37,7 @@ int main(int argc, char *argv[])
         fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(err));
         return EXIT_FAILURE;
     }
-    Processor* reader = makeStringVectorReader();
+    unique_ptr<Processor> reader(makeStringVectorReader());
     SocketLinkOutput link(reader->outputArg(0), addrs->ai_addr, addrs->ai_addrlen, 0x11223344);
     freeaddrinfo(addrs);
     for(int i = 0; i < 5; ++i)

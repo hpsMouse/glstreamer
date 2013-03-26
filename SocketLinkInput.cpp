@@ -1,13 +1,12 @@
-#include <stdexcept>
+#include "SocketLinkInput.h"
 
-#include "SocketLinkOutput.h"
-
+#include "demuxer.h"
 #include "exceptions.h"
 #include "fullslot.h"
-#include "MemBufferOStream.h"
-#include "simpleslot.h"
+#include "linkbuffer.h"
+#include "MemBufferIStream.h"
 #include "slottypes.h"
-#include "typespec.h"
+#include "simpleslot.h"
 
 using namespace glstreamer;
 
@@ -19,13 +18,12 @@ using namespace glstreamer;
 // DONE: Slot pointer check
 // NOTE: Type matching is done on link. No exception is thrown. To be improved.
 
-SocketLinkOutput::SocketLinkOutput ( const OutputSlot& srcSlot, const sockaddr* addr, socklen_t addrLen, Word32 linkId, size_type bufferCount ):
-slot(&srcSlot.toSlot()),
+SocketLinkInput::SocketLinkInput ( Demuxer* demuxer, Word32 linkId, const InputSlot& dest, size_type bufferCount ):
+slot(&dest.toSlot()),
 typeSpec(slot->typeSpec),
 fixedLen(typeSpec->serialize_size()),
 arg(nullptr, Destroyer(typeSpec)),
-linkBuffer(bufferCount),
-filler()
+linkBuffer(nullptr)
 {
     if(slot->simpleSlot->link != nullptr)
         throw std::invalid_argument("Double link detected. Slot " + slot->name + " is already linked.");
@@ -35,38 +33,34 @@ filler()
     slot->simpleSlot->arg = arg.get();
     slot->simpleSlot->link = this;
     
-    filler.reset(new FdFiller(addr, addrLen, linkId, &linkBuffer, typeSpec));
+    linkBuffer = demuxer->getLink(linkId, bufferCount, typeSpec);
 }
 
-SocketLinkOutput::~SocketLinkOutput() noexcept
+SocketLinkInput::~SocketLinkInput() noexcept
 {
     slot->simpleSlot->link = nullptr;
     slot->simpleSlot->arg = nullptr;
 }
 
-void SocketLinkOutput::push ( SimpleSlot* src )
+void SocketLinkInput::push ( SimpleSlot* )
 {
-    if(src != slot->simpleSlot)
+    throw UnsupportedOperation("Push on input link.");
+}
+
+void SocketLinkInput::fetch ( SimpleSlot* dst )
+{
+    if(dst != slot->simpleSlot)
         throw InternalError("slot doesn't match with link.");
     
-    auto& buffer = linkBuffer.getEmpty();
-    
+    auto const& buffer = linkBuffer->getFull();
     if(fixedLen == 0) // Variable
     {
-        buffer.clear();
-        MemBufferOStream os(buffer);
-        typeSpec->serialize_variable(src->arg, os);
+        MemBufferIStream is(buffer.data(), buffer.size());
+        typeSpec->deserialize_varialbe(dst->arg, is);
     }
     else // Fixed
     {
-        buffer.resize(fixedLen);
-        typeSpec->serialize_fixed(src->arg, buffer.data());
+        typeSpec->deserialize_fixed(dst->arg, buffer.data());
     }
-    
-    linkBuffer.putFull();
-}
-
-void SocketLinkOutput::fetch ( SimpleSlot* )
-{
-    throw UnsupportedOperation("Fetch on output link.");
+    linkBuffer->putEmpty();
 }

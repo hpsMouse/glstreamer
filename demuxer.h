@@ -18,7 +18,7 @@ namespace glstreamer
     class Demuxer
     {
     public:
-        Demuxer(sockaddr* bindAddr, socklen_t addrLen);
+        Demuxer(sockaddr const* bindAddr, socklen_t addrLen);
         ~Demuxer();
         
         LinkBuffer* getLink(Word32 linkId, size_type bufferCount, TypeSpec* typeSpec);

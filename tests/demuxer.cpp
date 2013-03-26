@@ -12,10 +12,10 @@
 
 #include "../defaultspecs.h"
 #include "../demuxer.h"
-#include "../linkbuffer.h"
-#include "../MemBufferIStream.h"
-#include "../typemgr.h"
-#include "../typespec.h"
+#include "../processor.h"
+#include "../SocketLinkInput.h"
+
+#include "testfactory.h"
 
 using namespace std;
 using namespace glstreamer;
@@ -38,20 +38,10 @@ int main(int argc, char *argv[])
     Demuxer demuxer(addrs->ai_addr, addrs->ai_addrlen);
     freeaddrinfo(addrs);
     
-    typedef std::vector<std::string> value_type;
-    
-    TypeSpec *typeSpec = TypeManager::getTypeSpec<value_type>();
-    LinkBuffer* buffer = demuxer.getLink(0x11223344, 2, typeSpec);
+    unique_ptr<Processor> printer(makeStringVectorPrinter());
+    SocketLinkInput link(&demuxer, 0x11223344, printer->inputArg(0));
     for(int i = 0; i < 5; ++i)
     {
-        std::vector<char>& data = buffer->getFull();
-        printf("size: %zu\n", data.size());
-        MemBufferIStream is(data.data(), data.size());
-        value_type value;
-        typeSpec->deserialize_auto(&value, is);
-        for(auto const& str : value)
-            std::cout << str << ' ';
-        std::cout << std::endl;
-        buffer->putEmpty();
+        printer->execute();
     }
 }

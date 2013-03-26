@@ -16,7 +16,7 @@
 
 using namespace glstreamer;
 
-Demuxer::Demuxer( sockaddr* bindAddr, socklen_t addrLen ):
+Demuxer::Demuxer( const sockaddr* bindAddr, socklen_t addrLen ):
 listenfd(socket(bindAddr->sa_family, SOCK_STREAM, 0)),
 pumps(),
 stateLock(),
@@ -25,7 +25,7 @@ runner()
     if(listenfd.fd() < 0)
         throw_posix(socket);
     
-    int err = bind(listenfd.fd(), bindAddr, addrLen);
+    int err = ::bind(listenfd.fd(), bindAddr, addrLen);
     if(err)
         throw_posix(bind);
     

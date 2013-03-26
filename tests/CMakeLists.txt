@@ -8,7 +8,7 @@ add_executable(processlink-provider processlink_provider.cpp testfactory.cpp)
 add_executable(processlink-consumer processlink_consumer.cpp testfactory.cpp)
 add_executable(case2 case2.cpp case2-test.cpp)
 add_executable(deadlock deadlock.cpp)
-add_executable(demuxer demuxer.cpp)
+add_executable(demuxer demuxer.cpp testfactory.cpp)
 add_executable(demuxer-push demuxer-push.cpp testfactory.cpp)
 
 target_link_libraries(processlink-provider ${TEST_LIBS})
