@@ -3,7 +3,7 @@
 
 #include <memory>
 
-#include "../defaultspecs.h"
+#include "../glstreamer.h"
 #include "../processlink.h"
 #include "../processor.h"
 
@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
     using namespace std;
     using namespace glstreamer;
     
-    registerDefaultTypes();
+    init();
     registerTypes();
     
     if(argc != 2)

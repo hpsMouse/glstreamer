@@ -6,11 +6,13 @@
 
 #include <sys/socket.h>
 
+#include "CancellableThread.h"
+
 #include "types.h"
 
 namespace glstreamer
 {
-    class FdFiller
+    class FdFiller : private CancellableThread
     {
     public:
         FdFiller(sockaddr const* addr, socklen_t addrLen, Word32 linkId, LinkBuffer* linkBuffer, TypeSpec* typeSpec);
@@ -20,13 +22,19 @@ namespace glstreamer
         FdFiller(FdFiller const&) = delete;
         FdFiller& operator = (FdFiller const&) = delete;
         
-        void run(sockaddr* addr, socklen_t addrLen, Word32 linkId, TypeSpec* typeSpec);
+        virtual void run() override;
         
         LinkBuffer *linkBuffer;
         int fd;
         std::unique_ptr<char[]> remote_addr;
         
-        std::thread runner;
+        struct ParameterPack
+        {
+            ParameterPack() = default;
+            socklen_t addrLen;
+            Word32 linkId;
+            TypeSpec *typeSpec;
+        } parameterPack;
     };
 }
 

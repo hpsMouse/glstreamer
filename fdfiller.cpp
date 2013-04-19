@@ -8,7 +8,6 @@
 
 #include "fdfiller.h"
 
-#include "cancel.h"
 #include "exceptions.h"
 #include "linkbuffer.h"
 #include "posixexception.h"
@@ -16,15 +15,13 @@
 #include "protocoltypes.h"
 #include "typespec.h"
 
-#include "CancellationEnabler.h"
-
 using namespace glstreamer;
 
 FdFiller::FdFiller ( const sockaddr* addr, socklen_t addrLen, Word32 linkId, LinkBuffer* linkBuffer, TypeSpec* typeSpec ):
 linkBuffer(linkBuffer),
 fd(-1),
 remote_addr(new char[addrLen]),
-runner()
+parameterPack()
 {
     fd = socket(addr->sa_family, SOCK_STREAM, 0);
     if(fd < 0)
@@ -32,14 +29,18 @@ runner()
     
     std::memcpy(remote_addr.get(), addr, addrLen);
     
-    runner = std::thread([=]{this->run(reinterpret_cast<sockaddr*>(remote_addr.get()), addrLen, linkId, typeSpec);});
+    this->parameterPack.addrLen = addrLen;
+    this->parameterPack.linkId = linkId;
+    this->parameterPack.typeSpec = typeSpec;
+    
+    this->start();
 }
 
 FdFiller::~FdFiller()
 {
     linkBuffer->getEmpty().clear();
     linkBuffer->putFull();
-    runner.join();
+    this->waitForFinish();
     close(fd);
     fd = -1;
 }
@@ -52,12 +53,16 @@ static std::string toString(T const& obj)
     return conv.str();
 }
 
-void FdFiller::run ( sockaddr* addr, socklen_t addrLen, Word32 linkId, TypeSpec* typeSpec )
+void FdFiller::run ()
 {
+    sockaddr *addr = reinterpret_cast<sockaddr*>(this->remote_addr.get());
+    socklen_t addrLen = this->parameterPack.addrLen;
+    Word32 linkId = this->parameterPack.linkId;
+    TypeSpec *typeSpec = this->parameterPack.typeSpec;
     try
     {
-        posixpp::CancellationEnabler cancellation_on;
-        int err = cancel_point(connect(fd, addr, addrLen), posixpp::nonzeroerrno);
+        CancellationEnabler cancellation_on;
+        int err = cancel_point(connect(fd, addr, addrLen), ::glstreamer::nonzeroerrno);
         if(err)
             throw_posix(connect);
         
@@ -117,7 +122,7 @@ void FdFiller::run ( sockaddr* addr, socklen_t addrLen, Word32 linkId, TypeSpec*
             linkBuffer->putEmpty();
         }
     }
-    catch(posixpp::CancelException const&)
+    catch(CancelException const&)
     {}
     catch(std::exception const& e)
     {

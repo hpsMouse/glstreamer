@@ -5,7 +5,8 @@
 
 #include "prettyio.h"
 
-#include "cancel.h"
+#include "CancellableThread.h"
+
 #include "exceptions.h"
 #include "posixexception.h"
 
@@ -17,7 +18,7 @@ void glstreamer::readFd ( int fd, void* buf, size_type size )
     
     while(size > 0)
     {
-        ssize_t nread = cancel_point(read(fd, p, size), posixpp::negerrno);
+        ssize_t nread = cancel_point(read(fd, p, size), negerrno);
         if(nread > 0)
         {
             size -= nread;
@@ -36,7 +37,7 @@ void glstreamer::writeFd( int fd, const void* buf, size_type size )
     
     while(size > 0)
     {
-        ssize_t nwrite = cancel_point(write(fd, p, size), posixpp::negerrno);
+        ssize_t nwrite = cancel_point(write(fd, p, size), negerrno);
         if(nwrite >= 0)
         {
             size -= nwrite;

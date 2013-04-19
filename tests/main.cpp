@@ -6,7 +6,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#include "../defaultspecs.h"
+#include "../glstreamer.h"
 #include "../posixsem.h"
 #include "../processor.h"
 #include "../protocoltypes.h"
@@ -23,7 +23,7 @@ int main()
     pid_t pid = getpid();
 #endif
     
-    registerDefaultTypes();
+    init();
     
 #if 0
     Processor *provider = makeProvider();

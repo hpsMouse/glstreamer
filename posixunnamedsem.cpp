@@ -1,6 +1,7 @@
 #include "posixunnamedsem.h"
 
-#include "cancel.h"
+#include "CancellableThread.h"
+
 #include "posixexception.h"
 
 using namespace glstreamer;
@@ -27,7 +28,7 @@ void PosixUnnamedSem::post()
 
 void PosixUnnamedSem::wait()
 {
-    int err = cancel_point(sem_wait(&sem), posixpp::nonzeroerrno);
+    int err = cancel_point(sem_wait(&sem), nonzeroerrno);
     if(err)
         throw_posix(sem_wait);
 }

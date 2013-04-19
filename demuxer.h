@@ -4,10 +4,11 @@
 #include <map>
 #include <memory>
 #include <mutex>
-#include <thread>
 
 #include <sys/types.h>
 #include <sys/socket.h>
+
+#include "CancellableThread.h"
 
 #include "types.h"
 
@@ -15,7 +16,7 @@
 
 namespace glstreamer
 {
-    class Demuxer
+    class Demuxer : private CancellableThread
     {
     public:
         Demuxer(sockaddr const* bindAddr, socklen_t addrLen);
@@ -27,14 +28,12 @@ namespace glstreamer
         Demuxer(Demuxer const&) = delete;
         Demuxer& operator = (Demuxer const&) = delete;
         
-        void run();
+        virtual void run() override;
         
         PosixFd listenfd;
         std::map<Word32, std::unique_ptr<FdPump>> pumps;
         
         std::mutex stateLock;
-        
-        std::thread runner;
     };
 }
 

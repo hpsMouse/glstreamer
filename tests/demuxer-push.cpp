@@ -13,7 +13,7 @@
 
 #include <netdb.h>
 
-#include "../defaultspecs.h"
+#include "../glstreamer.h"
 #include "../processor.h"
 #include "../SocketLinkOutput.h"
 
@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
         fprintf(stderr, "Usage: %s addr port\n", argv[0]);
         return EXIT_FAILURE;
     }
-    registerDefaultTypes();
+    init();
     addrinfo* addrs = nullptr;
     int err = getaddrinfo(argv[1], argv[2], nullptr, &addrs);
     if(err)

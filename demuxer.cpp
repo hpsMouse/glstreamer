@@ -5,22 +5,18 @@
 
 #include "demuxer.h"
 
-#include "cancel.h"
 #include "exceptions.h"
 #include "fdpump.h"
 #include "prettyio.h"
 #include "protocoltypes.h"
 #include "posixexception.h"
 
-#include "CancellationEnabler.h"
-
 using namespace glstreamer;
 
 Demuxer::Demuxer( const sockaddr* bindAddr, socklen_t addrLen ):
 listenfd(socket(bindAddr->sa_family, SOCK_STREAM, 0)),
 pumps(),
-stateLock(),
-runner()
+stateLock()
 {
     if(listenfd.fd() < 0)
         throw_posix(socket);
@@ -33,14 +29,13 @@ runner()
     if(err)
         throw_posix(listen);
     
-    runner = std::thread([this]{this->run();});
+    this->start();
 }
 
 Demuxer::~Demuxer()
 {
-    while(!posixpp::cancel_thread(runner))
-        ;
-    runner.join();
+    this->cancel();
+    this->waitForFinish();
 }
 
 LinkBuffer* Demuxer::getLink ( Word32 linkId, size_type bufferCount, TypeSpec* typeSpec )
@@ -60,10 +55,10 @@ void Demuxer::run()
 {
     try
     {
-        posixpp::CancellationEnabler cancellation_on;
+        CancellationEnabler cancellation_on;
         while(true)
         {
-            PosixFd fd(cancel_point(accept(listenfd.fd(), nullptr, nullptr), ::posixpp::negerrno));
+            PosixFd fd(cancel_point(accept(listenfd.fd(), nullptr, nullptr), ::glstreamer::negerrno));
             if(fd.fd() < 0)
                 throw_posix(accept);
             
@@ -98,7 +93,7 @@ void Demuxer::run()
             fd.release();
         }
     }
-    catch(posixpp::CancelException const&)
+    catch(::glstreamer::CancelException const&)
     {}
     catch(std::exception const& e)
     {

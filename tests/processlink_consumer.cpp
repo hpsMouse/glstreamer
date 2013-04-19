@@ -1,4 +1,4 @@
-#include "../defaultspecs.h"
+#include "../glstreamer.h"
 #include "../processlink.h"
 #include "../processor.h"
 
@@ -13,7 +13,7 @@ void ignore_var(T const&)
 
 int main()
 {
-    registerDefaultTypes();
+    init();
     
     unique_ptr<Processor> p(makeP()), printer(makePrinter());
     unique_ptr<Link> links[6] = {

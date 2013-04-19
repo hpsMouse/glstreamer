@@ -26,6 +26,13 @@ namespace glstreamer
             registerTypeSpec(typeid(typename std::remove_cv<typename std::remove_reference<T>::type>::type), spec, conflict);
         }
         
+        template <typename T, typename Spec>
+        static void registerType(ConflictAction conflict = Error)
+        {
+            static Spec spec;
+            registerTypeSpec<T>(&spec, conflict);
+        }
+        
     private:
         static TypeSpec* getTypeSpec(std::type_index const& id);
         static void registerTypeSpec(std::type_index const& id, TypeSpec* spec, ConflictAction conflict);

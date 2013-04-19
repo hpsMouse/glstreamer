@@ -34,6 +34,7 @@ namespace glstreamer
     class PosixUnnamedSem;
     class ProcessLink;
     class Processor;
+    class ProcessorManager;
     class SimpleSlot;
     class SocketLinkOutput;
     class ThreadedLink;

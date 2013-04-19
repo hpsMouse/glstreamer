@@ -1,6 +1,6 @@
 #include <thread>
 
-#include "../defaultspecs.h"
+#include "../glstreamer.h"
 #include "../processlink.h"
 #include "../processor.h"
 
@@ -15,7 +15,7 @@ void ignore_var(T const&)
 
 int main()
 {
-    registerDefaultTypes();
+    init();
     
     unique_ptr<Processor> provider(makeProvider());
     unique_ptr<Link> links[3] = {

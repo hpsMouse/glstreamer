@@ -4,8 +4,8 @@
 #include <memory>
 #include <string>
 
-#include "../defaultspecs.h"
 #include "../fixedprocessor.h"
+#include "../glstreamer.h"
 #include "../processlink.h"
 
 using namespace std;
@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
         return EXIT_FAILURE;
     }
     
-    registerDefaultTypes();
+    init();
     
     string role = argv[1];
     unique_ptr<Processor> p;
