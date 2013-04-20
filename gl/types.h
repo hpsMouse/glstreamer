@@ -9,6 +9,7 @@ namespace glstreamer_gl
     class GLFBConfig;
     class GLWindow;
     class GLWindowBinding;
+    class GLXException;
 }
 
 #endif

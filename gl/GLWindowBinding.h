@@ -10,7 +10,7 @@ namespace glstreamer_gl
     class GLWindowBinding
     {
     public:
-        GLWindowBinding(char const* displayName, unsigned width, unsigned height, bool show = true);
+        GLWindowBinding(char const* displayName, unsigned width, unsigned height, bool show = true, int x = 0, int y = 0);
         ~GLWindowBinding() noexcept;
         
         void swapBuffers();

@@ -12,7 +12,7 @@ namespace glstreamer_gl
     class GLWindow
     {
     public:
-        GLWindow(GLDisplay const* display, GLXFBConfig config, unsigned width, unsigned height);
+        GLWindow(GLDisplay const* display, GLXFBConfig config, unsigned width, unsigned height, int x = 0, int y = 0);
         ~GLWindow() noexcept;
         
         void map();

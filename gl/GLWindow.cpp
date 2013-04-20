@@ -5,7 +5,7 @@
 
 using namespace glstreamer_gl;
 
-GLWindow::GLWindow ( const GLDisplay* display, GLXFBConfig config, unsigned int width, unsigned int height ):
+GLWindow::GLWindow ( const GLDisplay* display, GLXFBConfig config, unsigned int width, unsigned int height, int x, int y ):
 display(display),
 window(0)
 {
@@ -15,7 +15,7 @@ window(0)
     
     XSetWindowAttributes swa;
     
-    window = XCreateWindow(display->toDisplay(), DefaultRootWindow(display->toDisplay()), 0, 0, width, height, 0, visual_info->depth, InputOutput, visual_info->visual, 0, &swa);
+    window = XCreateWindow(display->toDisplay(), DefaultRootWindow(display->toDisplay()), x, y, width, height, 0, visual_info->depth, InputOutput, visual_info->visual, 0, &swa);
     
     XFree(visual_info);
     
