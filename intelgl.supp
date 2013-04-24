@@ -1,0 +1,13 @@
+{
+  intelgl/ioctl
+  Memcheck:Param
+  ioctl(generic)
+  fun:ioctl
+  obj:/usr/lib/x86_64-linux-gnu/libdrm.so.2.4.0
+}
+
+{
+  intelgl/condjmp
+  Memcheck:Cond
+  fun:drm_intel_bufmgr_gem_init
+}
