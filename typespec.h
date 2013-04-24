@@ -13,21 +13,22 @@ namespace glstreamer
     {
         virtual ~TypeSpec() = default;
         
-        virtual std::type_index const& id                  ()                             const = 0;
-        virtual void*                  create              ()                             const = 0;
-        virtual void                   destroy             (void *obj)                    const = 0;
-        virtual void                   assign              (void *dst, void const* src)   const = 0;
-        virtual void                   clear               (void *obj)                    const = 0;
-        virtual void                   context_out         (void *obj)                    const = 0;
-        virtual void                   context_in          (void *obj)                    const = 0;
-        virtual size_type              serialize_size      ()                             const = 0;
-        virtual void                   serialize_fixed     (void const* obj, char *data)  const = 0;
-        virtual void                   serialize_variable  (void const* obj, OStream &os) const = 0;
-        virtual void                   deserialize_fixed   (void *obj, char const* data)  const = 0;
-        virtual void                   deserialize_varialbe(void *obj, IStream &is)       const = 0;
+        virtual std::type_index const& id                  ()                                                     const = 0;
+        virtual void*                  create              ()                                                     const = 0;
+        virtual LocalArgBase*          createLocal         ()                                                     const = 0;
+        virtual void                   destroy             (void *obj)                                            const = 0;
+        virtual void                   assign              (void *dst, void const* src)                           const = 0;
+        virtual void                   clear               (void *obj)                                            const = 0;
+        virtual void                   context_out         (void *obj, LocalArgBase *localArg)                    const = 0;
+        virtual void                   context_in          (void *obj, LocalArgBase *localArg)                    const = 0;
+        virtual size_type              serialize_size      ()                                                     const = 0;
+        virtual void                   serialize_fixed     (void const* obj, LocalArgBase *localArg, char *data)  const = 0;
+        virtual void                   serialize_variable  (void const* obj, LocalArgBase *localArg, OStream &os) const = 0;
+        virtual void                   deserialize_fixed   (void *obj, LocalArgBase *localArg, char const* data)  const = 0;
+        virtual void                   deserialize_varialbe(void *obj, LocalArgBase *localArg, IStream &is)       const = 0;
         
-        void serialize_auto(void const* obj, OStream &os);
-        void deserialize_auto(void *obj, IStream &is);
+        void serialize_auto(void const* obj, LocalArgBase *localArg, OStream &os);
+        void deserialize_auto(void *obj, LocalArgBase *localArg, IStream &is);
     };
     
     struct Destroyer

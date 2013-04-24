@@ -55,12 +55,12 @@ void SocketLinkOutput::push ( SimpleSlot* src )
     {
         buffer.clear();
         MemBufferOStream os(buffer);
-        typeSpec->serialize_variable(src->arg, os);
+        typeSpec->serialize_variable(src->arg, this->slot->localArg.get(), os);
     }
     else // Fixed
     {
         buffer.resize(fixedLen);
-        typeSpec->serialize_fixed(src->arg, buffer.data());
+        typeSpec->serialize_fixed(src->arg, this->slot->localArg.get(), buffer.data());
     }
     
     linkBuffer.putFull();

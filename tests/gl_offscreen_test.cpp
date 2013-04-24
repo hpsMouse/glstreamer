@@ -9,10 +9,13 @@
 
 #include <GL/glew.h>
 
+#include "../gl/GLEWContextBinding.h"
+
+#include <oglplus/all.hpp>
+
 #include "../glstreamer.h"
 
 #include "../gl/GLContextBinding.h"
-#include "../gl/GLEWContextBinding.h"
 
 pthread_barrier_t barrier1, barrier2;
 
@@ -28,23 +31,23 @@ void renderto(GLclampf r, GLclampf g, GLclampf b, GLclampf a, std::vector<std::u
     
     pthread_barrier_wait(&barrier2);
     
-    GLuint fbo;
-    glGenFramebuffers(1, &fbo);
-    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    using namespace oglplus;
     
-    GLuint renderbuffer;
-    glGenRenderbuffers(1, &renderbuffer);
+    Framebuffer fbo;
+    fbo.Bind(FramebufferTarget::Draw);
     
-    glBindRenderbuffer(GL_RENDERBUFFER, renderbuffer);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA, 800, 600);
+    Renderbuffer renderbuffer;
+    renderbuffer.Bind();
+    Renderbuffer::Storage(RenderbufferTarget::Renderbuffer, PixelDataInternalFormat::RGBA, 800, 600);
     
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, renderbuffer);
+    Framebuffer::AttachColorRenderbuffer(FramebufferTarget::Draw, 0, renderbuffer);
     
-    glClearColor(r, g, b, a);
-    glClear(GL_COLOR_BUFFER_BIT);
+    Context::ClearColor(r, g, b, a);
+    Context::Clear().ColorBuffer();
     
+    fbo.Bind(FramebufferTarget::Read);
     buffer.resize(800*600);
-    glReadPixels(0, 0, 800, 600, GL_RGBA, GL_UNSIGNED_INT_8_8_8_8, buffer.data());
+    Context::ReadPixels(0, 0, 800, 600, PixelDataFormat::RGBA, PixelDataType::UnsignedInt_8_8_8_8_Rev, buffer.data());
 }
 
 int main()

@@ -19,6 +19,7 @@ namespace glstreamer
     class Link;
     class LinkBuffer;
     class LinkHeader;
+    class LocalArgBase;
     class MemBufferIStream;
     class MemBufferOStream;
     class Muxer;

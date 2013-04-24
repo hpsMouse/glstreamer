@@ -14,14 +14,14 @@ namespace glstreamer_core
     using namespace glstreamer;
     struct StringSpec : public TypeSpecBasic<std::string>, public TypeSpecNoContext, public TypeSpecNoFixedSerialize
     {
-        virtual void serialize_variable ( const void* obj, OStream& os ) const override
+        virtual void serialize_variable ( const void* obj, LocalArgBase*, OStream& os ) const override
         {
             std::string const* str = static_cast<std::string const*>(obj);
             os << Word64(str->size());
             os.writeData(str->data(), str->size());
         }
         
-        virtual void deserialize_varialbe ( void* obj, IStream& is ) const override
+        virtual void deserialize_varialbe ( void* obj, LocalArgBase*, IStream& is ) const override
         {
             std::string* str = static_cast<std::string*>(obj);
             Word64 size;

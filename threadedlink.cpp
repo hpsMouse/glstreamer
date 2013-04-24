@@ -54,7 +54,7 @@ void ThreadedLink::push(SimpleSlot* src)
     if(src->arg != argBuffers[indexIn].get())
         throw InternalError("argument reference differs between slot and link");
     
-    typeSpec->context_out(src->arg);
+    typeSpec->context_out(src->arg, this->src->localArg.get());
     
     indexIn = (indexIn + 1) % queueSize;
     ++currentSize;
@@ -80,7 +80,7 @@ void ThreadedLink::fetch(SimpleSlot* dst)
     --currentSize;
     dst->arg = argBuffers[indexOut].get();
     
-    typeSpec->context_in(dst->arg);
+    typeSpec->context_in(dst->arg, this->dst->localArg.get());
     
     if(currentSize == queueSize - 1)
         condPush.notify_one();

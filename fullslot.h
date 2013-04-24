@@ -1,10 +1,13 @@
 #ifndef _796836E2_2FB5_11E2_9115_206A8A22A96A
 #define _796836E2_2FB5_11E2_9115_206A8A22A96A
 
+#include <memory>
 #include <string>
 #include <utility>
 
 #include "types.h"
+
+#include "LocalArg.h"
 
 namespace glstreamer
 {
@@ -12,6 +15,7 @@ namespace glstreamer
     {
         SimpleSlot *simpleSlot;
         TypeSpec *typeSpec;
+        std::unique_ptr<LocalArgBase> localArg;
         std::string name;
         Processor *processor;
         Direction direction;
@@ -19,9 +23,10 @@ namespace glstreamer
         FullSlot() = default;
         
         template <typename Name>
-        FullSlot(TypeSpec *typeSpec, Name&& name, Processor *processor, Direction direction):
+        FullSlot(TypeSpec *typeSpec, std::unique_ptr<LocalArgBase> &&localArg, Name&& name, Processor *processor, Direction direction):
         simpleSlot(nullptr),
         typeSpec(typeSpec),
+        localArg(std::move(localArg)),
         name(std::forward<Name>(name)),
         processor(processor),
         direction(direction)
@@ -34,13 +39,13 @@ namespace glstreamer
         FullSlot(FullSlot&& src):
         simpleSlot(src.simpleSlot),
         typeSpec(src.typeSpec),
-        name(src.name),
+        localArg(std::move(src.localArg)),
+        name(std::move(src.name)),
         processor(src.processor),
-        direction(direction)
+        direction(src.direction)
         {
             src.simpleSlot = nullptr;
             src.typeSpec = nullptr;
-            src.name.clear();
             src.processor = nullptr;
         }
     };

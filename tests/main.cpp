@@ -1,5 +1,6 @@
 #include <chrono>
 #include <iostream>
+#include <memory>
 #include <thread>
 #include <vector>
 
@@ -25,10 +26,10 @@ int main()
     
     init();
     
-#if 0
-    Processor *provider = makeProvider();
-    Processor *p = makeP();
-    Processor *printer = makePrinter();
+#if 1
+    std::unique_ptr<Processor> provider(makeProvider());
+    std::unique_ptr<Processor> p(makeP());
+    std::unique_ptr<Processor> printer(makePrinter());
 #endif
     
 #if 0
@@ -71,7 +72,7 @@ int main()
     }
 #endif
     
-#if 0
+#if 1
     // Threaded link test
     vector<Link*> links = {
         makeThreadedLink(provider->outputArg(0), p->inputArg(0)),
@@ -82,7 +83,7 @@ int main()
         makeThreadedLink(p->outputArg(2), printer->inputArg(2))
     };
     
-    thread t1([provider]()
+    thread t1([&provider]()
     {
         for(int i = 0; i < 7; ++i)
         {
@@ -90,7 +91,7 @@ int main()
         }
         
     });
-    thread t2([p]()
+    thread t2([&p]()
     {
         this_thread::sleep_for(duration<long>(5));
         for(int i = 0; i < 7; ++i)
@@ -99,7 +100,7 @@ int main()
             this_thread::sleep_for(duration<long>(1));
         }
     });
-    thread t3([printer]()
+    thread t3([&printer]()
     {
         for(int i = 0; i < 7; ++i)
             printer->execute();

@@ -21,7 +21,12 @@ stateLock()
     if(listenfd.fd() < 0)
         throw_posix(socket);
     
-    int err = ::bind(listenfd.fd(), bindAddr, addrLen);
+    int reuse_addr = 1;
+    int err = ::setsockopt(listenfd.fd(), SOL_SOCKET, SO_REUSEADDR, &reuse_addr, sizeof(reuse_addr));
+    if(err)
+        throw_posix(setsockopt);
+    
+    err = ::bind(listenfd.fd(), bindAddr, addrLen);
     if(err)
         throw_posix(bind);
     

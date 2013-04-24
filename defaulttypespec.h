@@ -45,8 +45,9 @@ namespace glstreamer
     
     struct TypeSpecNoContext : virtual TypeSpec
     {
-        virtual void context_out(void*) const override {}
-        virtual void context_in(void*) const override {}
+        virtual LocalArgBase* createLocal() const override { return nullptr; }
+        virtual void context_out (void*, LocalArgBase*) const override {}
+        virtual void context_in  (void*, LocalArgBase*) const override {}
     };
     
     struct TypeSpecNoFixedSerialize : virtual TypeSpec
@@ -55,11 +56,11 @@ namespace glstreamer
         {
             return 0;
         }
-        virtual void serialize_fixed(const void*, char*) const override
+        virtual void serialize_fixed(const void*, LocalArgBase*, char*) const override
         {
             throw UnsupportedOperation("serialize_fixed");
         }
-        virtual void deserialize_fixed(void*, const char*) const override
+        virtual void deserialize_fixed(void*, LocalArgBase*, const char*) const override
         {
             throw UnsupportedOperation("deserialize_fixed");
         }
@@ -67,11 +68,11 @@ namespace glstreamer
     
     struct TypeSpecNoVariableSerialize : virtual TypeSpec
     {
-        virtual void serialize_variable(const void*, OStream&) const override
+        virtual void serialize_variable(const void*, LocalArgBase*, OStream&) const override
         {
             throw UnsupportedOperation("serialize_variable");
         }
-        virtual void deserialize_varialbe(void*, IStream&) const override
+        virtual void deserialize_varialbe(void*, LocalArgBase*, IStream&) const override
         {
             throw UnsupportedOperation("deserialize_varialbe");
         }
@@ -84,11 +85,11 @@ namespace glstreamer
         {
             return sizeof(T);
         }
-        virtual void serialize_fixed(const void* obj, char* data) const override
+        virtual void serialize_fixed(const void* obj, LocalArgBase*, char* data) const override
         {
             std::memcpy(data, obj, sizeof(T));
         }
-        virtual void deserialize_fixed(void* obj, const char* data) const override
+        virtual void deserialize_fixed(void* obj, LocalArgBase*, const char* data) const override
         {
             std::memcpy(obj, data, sizeof(T));
         }

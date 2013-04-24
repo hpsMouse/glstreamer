@@ -56,11 +56,11 @@ void SocketLinkInput::fetch ( SimpleSlot* dst )
     if(fixedLen == 0) // Variable
     {
         MemBufferIStream is(buffer.data(), buffer.size());
-        typeSpec->deserialize_varialbe(dst->arg, is);
+        typeSpec->deserialize_varialbe(dst->arg, this->slot->localArg.get(), is);
     }
     else // Fixed
     {
-        typeSpec->deserialize_fixed(dst->arg, buffer.data());
+        typeSpec->deserialize_fixed(dst->arg, this->slot->localArg.get(), buffer.data());
     }
     linkBuffer->putEmpty();
 }

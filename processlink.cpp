@@ -90,12 +90,12 @@ void ProcessLink::push ( SimpleSlot* src )
     if(ctrlBlockPtr->bufferSize != 0)
     {
         Buffer *buffer = static_cast<Buffer*>(buffers[currentBufferId].map());
-        typeSpec->serialize_fixed(src->arg, buffer->data);
+        typeSpec->serialize_fixed(src->arg, this->slot->localArg.get(), buffer->data);
     }
     else
     {
         PosixShmOStream os(buffers[currentBufferId]);
-        typeSpec->serialize_variable(src->arg, os);
+        typeSpec->serialize_variable(src->arg, this->slot->localArg.get(), os);
     }
     
     fullLeft.post();
@@ -118,12 +118,12 @@ void ProcessLink::fetch ( SimpleSlot* dst )
     if(ctrlBlockPtr->bufferSize != 0)
     {
         Buffer *buffer = static_cast<Buffer*>(buffers[currentBufferId].map());
-        typeSpec->deserialize_fixed(dst->arg, buffer->data);
+        typeSpec->deserialize_fixed(dst->arg, this->slot->localArg.get(), buffer->data);
     }
     else
     {
         PosixShmIStream is(buffers[currentBufferId]);
-        typeSpec->deserialize_varialbe(dst->arg, is);
+        typeSpec->deserialize_varialbe(dst->arg, this->slot->localArg.get(), is);
     }
     
     emptyLeft.post();

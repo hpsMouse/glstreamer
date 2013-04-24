@@ -28,7 +28,7 @@ namespace
         sSize(typeSpec->serialize_size())
         {}
         
-        virtual void serialize_variable ( const void* obj, OStream& os ) const override
+        virtual void serialize_variable ( const void* obj, LocalArgBase*, OStream& os ) const override
         {
             vector<T> const& vec = *static_cast<vector<T> const*>(obj);
             
@@ -37,20 +37,20 @@ namespace
             if(sSize == 0)
             {
                 for(T const& v : vec)
-                    typeSpec->serialize_variable(&v, os);
+                    typeSpec->serialize_variable(&v, nullptr, os);
             }
             else
             {
                 for(T const& v : vec)
                 {
                     char *buffer = static_cast<char*>(os.requireInternalBuffer(sSize));
-                    typeSpec->serialize_fixed(&v, buffer);
+                    typeSpec->serialize_fixed(&v, nullptr, buffer);
                     os.pushInternalBuffer(buffer, sSize);
                 }
             }
         }
         
-        virtual void deserialize_varialbe ( void* obj, IStream& is ) const override
+        virtual void deserialize_varialbe ( void* obj, LocalArgBase*, IStream& is ) const override
         {
             vector<T>& vec = *static_cast<vector<T>*>(obj);
             
@@ -63,7 +63,7 @@ namespace
             {
                 for(uint32_t i = 0; i < size; ++i)
                 {
-                    typeSpec->deserialize_varialbe(&vec[i], is);
+                    typeSpec->deserialize_varialbe(&vec[i], nullptr, is);
                 }
             }
             else
@@ -72,7 +72,7 @@ namespace
                 for(uint32_t i = 0; i < size; ++i)
                 {
                     is.readData(buffer.data(), buffer.size());
-                    typeSpec->deserialize_fixed(&vec[i], buffer.data());
+                    typeSpec->deserialize_fixed(&vec[i], nullptr, buffer.data());
                 }
             }
         }
@@ -87,7 +87,7 @@ namespace
     
     struct StringSpec : public TypeSpecBasic<string>, public TypeSpecNoContext, public TypeSpecNoFixedSerialize
     {
-        virtual void serialize_variable ( const void* obj, OStream& os ) const override
+        virtual void serialize_variable ( const void* obj, LocalArgBase*, OStream& os ) const override
         {
             string const& str = *static_cast<string const*>(obj);
             
@@ -100,7 +100,7 @@ namespace
             os.pushInternalBuffer(buffer, size);
         }
         
-        virtual void deserialize_varialbe ( void* obj, IStream& is ) const override
+        virtual void deserialize_varialbe ( void* obj, LocalArgBase*, IStream& is ) const override
         {
             string& str = *static_cast<string*>(obj);
             

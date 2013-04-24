@@ -61,7 +61,8 @@ namespace glstreamer
         template <typename T>
         ArgBlock& _addSlot(std::string const& name)
         {
-            auto const& result = fullSlots.insert(std::make_pair(name, FullSlot(TypeManager::getTypeSpec<T>(), name, processor, direction)));
+            TypeSpec* typeSpec = TypeManager::getTypeSpec<T>();
+            auto const& result = fullSlots.insert(std::make_pair(name, FullSlot(typeSpec, std::unique_ptr<LocalArgBase>(typeSpec->createLocal()), name, processor, direction)));
             if(!result.second)
                 throw DefinitionConflict("Slot " + name);
             fullSlotsRef.push_back(&result.first->second);
