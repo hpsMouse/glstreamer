@@ -15,7 +15,7 @@ namespace glstreamer
     {
         SimpleSlot *simpleSlot;
         TypeSpec *typeSpec;
-        std::unique_ptr<LocalArgBase> localArg;
+        std::shared_ptr<LocalArgBase> localArg;
         std::string name;
         Processor *processor;
         Direction direction;
@@ -23,7 +23,7 @@ namespace glstreamer
         FullSlot() = default;
         
         template <typename Name>
-        FullSlot(TypeSpec *typeSpec, std::unique_ptr<LocalArgBase> &&localArg, Name&& name, Processor *processor, Direction direction):
+        FullSlot(TypeSpec *typeSpec, std::shared_ptr<LocalArgBase> &&localArg, Name&& name, Processor *processor, Direction direction):
         simpleSlot(nullptr),
         typeSpec(typeSpec),
         localArg(std::move(localArg)),

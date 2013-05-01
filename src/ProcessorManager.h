@@ -5,6 +5,8 @@
 #include <memory>
 #include <string>
 
+#include <boost/any.hpp>
+
 #include "processor.h"
 
 namespace glstreamer
@@ -12,7 +14,7 @@ namespace glstreamer
     class ProcessorManager
     {
     public:
-        typedef std::unique_ptr<Processor> (*ProcessorMaker)();
+        typedef std::unique_ptr<Processor> (*ProcessorMaker)(std::map<std::string, boost::any> const& args);
         
         /**
          * \brief Register a new type of processor. NOT thread-safe.
@@ -20,7 +22,7 @@ namespace glstreamer
         static void registerProcessor(std::string const& name, ProcessorMaker maker);
         
         static ProcessorMaker findProcessor(std::string const& name);
-        static std::unique_ptr<Processor> makeProcessor(std::string const& name);
+        static std::unique_ptr<Processor> makeProcessor(std::string const& name, std::map<std::string, boost::any> const& args);
         
     private:
         ProcessorManager() = delete;

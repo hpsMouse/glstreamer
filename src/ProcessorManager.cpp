@@ -20,7 +20,7 @@ ProcessorManager::ProcessorMaker ProcessorManager::findProcessor ( const std::st
     return iter->second;
 }
 
-std::unique_ptr< Processor > ProcessorManager::makeProcessor ( const std::string& name )
+std::unique_ptr< Processor > ProcessorManager::makeProcessor ( const std::string& name, const std::map< std::string, boost::any >& args )
 {
-    return findProcessor(name)();
+    return findProcessor(name)(args);
 }
