@@ -99,23 +99,23 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2><a name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a6f5aaa72237dc2a6b9b1eb8cbe57b03f"><td class="memItemLeft" align="right" valign="top">typedef std::unique_ptr<br class="typebreak"/>
-&lt; <a class="el" href="classglstreamer_1_1Processor.html">Processor</a> &gt;(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classglstreamer_1_1ProcessorManager.html#a6f5aaa72237dc2a6b9b1eb8cbe57b03f">ProcessorMaker</a> )()</td></tr>
+<tr class="memitem:ae855aaba8ec4e95b6f6ff754a19ccc5e"><td class="memItemLeft" align="right" valign="top">typedef std::unique_ptr<br class="typebreak"/>
+&lt; <a class="el" href="classglstreamer_1_1Processor.html">Processor</a> &gt;(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classglstreamer_1_1ProcessorManager.html#ae855aaba8ec4e95b6f6ff754a19ccc5e">ProcessorMaker</a> )(std::map&lt; std::string, boost::any &gt; const &amp;args)</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a15013b856dd2480a7a60fe7eb95e2166"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classglstreamer_1_1ProcessorManager.html#a15013b856dd2480a7a60fe7eb95e2166">registerProcessor</a> (std::string const &amp;name, <a class="el" href="classglstreamer_1_1ProcessorManager.html#a6f5aaa72237dc2a6b9b1eb8cbe57b03f">ProcessorMaker</a> maker)</td></tr>
+<tr class="memitem:a15013b856dd2480a7a60fe7eb95e2166"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classglstreamer_1_1ProcessorManager.html#a15013b856dd2480a7a60fe7eb95e2166">registerProcessor</a> (std::string const &amp;name, <a class="el" href="classglstreamer_1_1ProcessorManager.html#ae855aaba8ec4e95b6f6ff754a19ccc5e">ProcessorMaker</a> maker)</td></tr>
 <tr class="memdesc:a15013b856dd2480a7a60fe7eb95e2166"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register a new type of processor. NOT thread-safe.  <a href="#a15013b856dd2480a7a60fe7eb95e2166"></a><br/></td></tr>
-<tr class="memitem:aec8a6216588af1678fdcac2816f7100a"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classglstreamer_1_1ProcessorManager.html#a6f5aaa72237dc2a6b9b1eb8cbe57b03f">ProcessorMaker</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classglstreamer_1_1ProcessorManager.html#aec8a6216588af1678fdcac2816f7100a">findProcessor</a> (std::string const &amp;name)</td></tr>
-<tr class="memitem:aaeb0db7449a5b31949c4acfd8a403926"><td class="memItemLeft" align="right" valign="top">static std::unique_ptr&lt; <a class="el" href="classglstreamer_1_1Processor.html">Processor</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classglstreamer_1_1ProcessorManager.html#aaeb0db7449a5b31949c4acfd8a403926">makeProcessor</a> (std::string const &amp;name)</td></tr>
+<tr class="memitem:aec8a6216588af1678fdcac2816f7100a"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classglstreamer_1_1ProcessorManager.html#ae855aaba8ec4e95b6f6ff754a19ccc5e">ProcessorMaker</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classglstreamer_1_1ProcessorManager.html#aec8a6216588af1678fdcac2816f7100a">findProcessor</a> (std::string const &amp;name)</td></tr>
+<tr class="memitem:a21825a5256990940130d010a92601ee9"><td class="memItemLeft" align="right" valign="top">static std::unique_ptr&lt; <a class="el" href="classglstreamer_1_1Processor.html">Processor</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classglstreamer_1_1ProcessorManager.html#a21825a5256990940130d010a92601ee9">makeProcessor</a> (std::string const &amp;name, std::map&lt; std::string, boost::any &gt; const &amp;args)</td></tr>
 </table>
 <h2>Member Typedef Documentation</h2>
-<a class="anchor" id="a6f5aaa72237dc2a6b9b1eb8cbe57b03f"></a>
+<a class="anchor" id="ae855aaba8ec4e95b6f6ff754a19ccc5e"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef std::unique_ptr&lt;<a class="el" href="classglstreamer_1_1Processor.html">Processor</a>&gt;(* glstreamer::ProcessorManager::ProcessorMaker)()</td>
+          <td class="memname">typedef std::unique_ptr&lt;<a class="el" href="classglstreamer_1_1Processor.html">Processor</a>&gt;(* glstreamer::ProcessorManager::ProcessorMaker)(std::map&lt; std::string, boost::any &gt; const &amp;args)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -139,7 +139,7 @@ Static Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classglstreamer_1_1ProcessorManager.html#a6f5aaa72237dc2a6b9b1eb8cbe57b03f">ProcessorManager::ProcessorMaker</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="classglstreamer_1_1ProcessorManager.html#ae855aaba8ec4e95b6f6ff754a19ccc5e">ProcessorManager::ProcessorMaker</a>&#160;</td>
           <td class="paramname"><em>maker</em>&#160;</td>
         </tr>
         <tr>
@@ -167,7 +167,7 @@ Static Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classglstreamer_1_1ProcessorManager.html#a6f5aaa72237dc2a6b9b1eb8cbe57b03f">ProcessorManager::ProcessorMaker</a> ProcessorManager::findProcessor </td>
+          <td class="memname"><a class="el" href="classglstreamer_1_1ProcessorManager.html#ae855aaba8ec4e95b6f6ff754a19ccc5e">ProcessorManager::ProcessorMaker</a> ProcessorManager::findProcessor </td>
           <td>(</td>
           <td class="paramtype">std::string const &amp;&#160;</td>
           <td class="paramname"><em>name</em></td><td>)</td>
@@ -183,7 +183,7 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="aaeb0db7449a5b31949c4acfd8a403926"></a>
+<a class="anchor" id="a21825a5256990940130d010a92601ee9"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -194,8 +194,18 @@ Static Public Member Functions</h2></td></tr>
           <td class="memname">std::unique_ptr&lt; <a class="el" href="classglstreamer_1_1Processor.html">Processor</a> &gt; ProcessorManager::makeProcessor </td>
           <td>(</td>
           <td class="paramtype">std::string const &amp;&#160;</td>
-          <td class="paramname"><em>name</em></td><td>)</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">std::map&lt; std::string, boost::any &gt; const &amp;&#160;</td>
+          <td class="paramname"><em>args</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -214,7 +224,7 @@ Static Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Apr 25 2013 13:54:15 for GLStreamer by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri May 3 2013 22:31:44 for GLStreamer by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.1.2
 </small></address>

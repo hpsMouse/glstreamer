@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['a',['a',['../structglstreamer__gl_1_1RGBA.html#a88f73fc8b094f9c1ae3bdf271ee0c779',1,'glstreamer_gl::RGBA']]],
   ['addslot',['addSlot',['../classglstreamer_1_1ArgBlock.html#aa801c7889bb4eb7973d0087eb640fa8f',1,'glstreamer::ArgBlock']]],
   ['addslots',['addSlots',['../classglstreamer_1_1ArgBlock.html#a6a5762387ed3ffb0cb2a04ea85a62862',1,'glstreamer::ArgBlock']]],
   ['allocatebuffer',['allocateBuffer',['../classglstreamer_1_1FdPump.html#a923c7bf95f0ac06857cbd51ee747132f',1,'glstreamer::FdPump']]],

@@ -152,7 +152,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00062"></a><span class="lineno"><a class="code" href="classglstreamer_1_1ArgBlock.html#a95e90335f701f759fb8a8c6ae4f42f1a">   62</a></span>&#160;        <a class="code" href="classglstreamer_1_1ArgBlock.html">ArgBlock</a>&amp; <a class="code" href="classglstreamer_1_1ArgBlock.html#a95e90335f701f759fb8a8c6ae4f42f1a">_addSlot</a>(std::string <span class="keyword">const</span>&amp; name)</div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        {</div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;            <a class="code" href="structglstreamer_1_1TypeSpec.html">TypeSpec</a>* typeSpec = TypeManager::getTypeSpec&lt;T&gt;();</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;            <span class="keyword">auto</span> <span class="keyword">const</span>&amp; result = fullSlots.insert(std::make_pair(name, <a class="code" href="structglstreamer_1_1FullSlot.html">FullSlot</a>(typeSpec, std::unique_ptr&lt;LocalArgBase&gt;(typeSpec-&gt;<a class="code" href="structglstreamer_1_1TypeSpec.html#af2371d61763cd73ff26e6ef54bbc126e">createLocal</a>()), name, processor, direction)));</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;            <span class="keyword">auto</span> <span class="keyword">const</span>&amp; result = fullSlots.insert(std::make_pair(name, <a class="code" href="structglstreamer_1_1FullSlot.html">FullSlot</a>(typeSpec, std::shared_ptr&lt;LocalArgBase&gt;(typeSpec-&gt;<a class="code" href="structglstreamer_1_1TypeSpec.html#af2371d61763cd73ff26e6ef54bbc126e">createLocal</a>()), name, processor, direction)));</div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;            <span class="keywordflow">if</span>(!result.second)</div>
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;                <span class="keywordflow">throw</span> <a class="code" href="classglstreamer_1_1DefinitionConflict.html">DefinitionConflict</a>(<span class="stringliteral">&quot;Slot &quot;</span> + name);</div>
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;            fullSlotsRef.push_back(&amp;result.first-&gt;second);</div>
@@ -228,7 +228,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Apr 25 2013 13:54:14 for GLStreamer by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri May 3 2013 22:31:43 for GLStreamer by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.1.2
 </small></address>

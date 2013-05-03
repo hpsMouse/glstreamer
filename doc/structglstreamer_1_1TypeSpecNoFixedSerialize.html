@@ -101,17 +101,18 @@ Inheritance diagram for glstreamer::TypeSpecNoFixedSerialize:</div>
  <div class="center">
   <img src="structglstreamer_1_1TypeSpecNoFixedSerialize.png" usemap="#glstreamer::TypeSpecNoFixedSerialize_map" alt=""/>
   <map id="glstreamer::TypeSpecNoFixedSerialize_map" name="glstreamer::TypeSpecNoFixedSerialize_map">
-<area href="structglstreamer_1_1TypeSpec.html" alt="glstreamer::TypeSpec" shape="rect" coords="120,0,350,24"/>
-<area href="structglstreamer__core_1_1StringSpec.html" alt="glstreamer_core::StringSpec" shape="rect" coords="0,112,230,136"/>
-<area href="structglstreamer__core_1_1VectorSpec.html" alt="glstreamer_core::VectorSpec&lt; T &gt;" shape="rect" coords="240,112,470,136"/>
+<area href="structglstreamer_1_1TypeSpec.html" alt="glstreamer::TypeSpec" shape="rect" coords="320,0,630,24"/>
+<area href="structglstreamer__core_1_1StringSpec.html" alt="glstreamer_core::StringSpec" shape="rect" coords="0,112,310,136"/>
+<area href="structglstreamer__core_1_1VectorSpec.html" alt="glstreamer_core::VectorSpec&lt; T &gt;" shape="rect" coords="320,112,630,136"/>
+<area href="classglstreamer__gl_1_1GLFrameTypeSpec.html" alt="glstreamer_gl::GLFrameTypeSpec&lt; PixelTypePack &gt;" shape="rect" coords="640,112,950,136"/>
 </map>
  </div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:af760589a45c4de88cf8ce6cbcc36a46d"><td class="memItemLeft" align="right" valign="top">virtual size_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structglstreamer_1_1TypeSpecNoFixedSerialize.html#af760589a45c4de88cf8ce6cbcc36a46d">serialize_size</a> () const override</td></tr>
-<tr class="memitem:a0e5f8da965f98289664876579bca5132"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structglstreamer_1_1TypeSpecNoFixedSerialize.html#a0e5f8da965f98289664876579bca5132">serialize_fixed</a> (const void *, <a class="el" href="classglstreamer_1_1LocalArgBase.html">LocalArgBase</a> *, char *) const override</td></tr>
-<tr class="memitem:ad918266590e7ef9538f41b604ac7f8af"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structglstreamer_1_1TypeSpecNoFixedSerialize.html#ad918266590e7ef9538f41b604ac7f8af">deserialize_fixed</a> (void *, <a class="el" href="classglstreamer_1_1LocalArgBase.html">LocalArgBase</a> *, const char *) const override</td></tr>
+<tr class="memitem:ac7b195c2dd21f6e20faccb044a3ea0b0"><td class="memItemLeft" align="right" valign="top">virtual size_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structglstreamer_1_1TypeSpecNoFixedSerialize.html#ac7b195c2dd21f6e20faccb044a3ea0b0">serialize_size</a> () const override final</td></tr>
+<tr class="memitem:ad86d8a971fc241f764e8eec7dddb9a0a"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structglstreamer_1_1TypeSpecNoFixedSerialize.html#ad86d8a971fc241f764e8eec7dddb9a0a">serialize_fixed</a> (const void *, <a class="el" href="classglstreamer_1_1LocalArgBase.html">LocalArgBase</a> *, char *) const override final</td></tr>
+<tr class="memitem:aeee04a698753bd909645617a10705c5e"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structglstreamer_1_1TypeSpecNoFixedSerialize.html#aeee04a698753bd909645617a10705c5e">deserialize_fixed</a> (void *, <a class="el" href="classglstreamer_1_1LocalArgBase.html">LocalArgBase</a> *, const char *) const override final</td></tr>
 <tr class="inherit_header pub_methods_structglstreamer_1_1TypeSpec"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_structglstreamer_1_1TypeSpec')"><img src="closed.png" alt="-"/>&nbsp;Public Member Functions inherited from <a class="el" href="structglstreamer_1_1TypeSpec.html">glstreamer::TypeSpec</a></td></tr>
 <tr class="memitem:ae0a30b446ca6d08ff7c3dae17829110d inherit pub_methods_structglstreamer_1_1TypeSpec"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structglstreamer_1_1TypeSpec.html#ae0a30b446ca6d08ff7c3dae17829110d">~TypeSpec</a> ()</td></tr>
 <tr class="memitem:a763e7eee14f38828daea7cde58feb3ea inherit pub_methods_structglstreamer_1_1TypeSpec"><td class="memItemLeft" align="right" valign="top">virtual std::type_index const &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structglstreamer_1_1TypeSpec.html#a763e7eee14f38828daea7cde58feb3ea">id</a> () const =0</td></tr>
@@ -128,7 +129,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ae45dcfea86a586ab12f9533024f86914 inherit pub_methods_structglstreamer_1_1TypeSpec"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structglstreamer_1_1TypeSpec.html#ae45dcfea86a586ab12f9533024f86914">deserialize_auto</a> (void *obj, <a class="el" href="classglstreamer_1_1LocalArgBase.html">LocalArgBase</a> *localArg, <a class="el" href="classglstreamer_1_1IStream.html">IStream</a> &amp;is)</td></tr>
 </table>
 <h2>Member Function Documentation</h2>
-<a class="anchor" id="af760589a45c4de88cf8ce6cbcc36a46d"></a>
+<a class="anchor" id="ac7b195c2dd21f6e20faccb044a3ea0b0"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -153,7 +154,7 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a0e5f8da965f98289664876579bca5132"></a>
+<a class="anchor" id="ad86d8a971fc241f764e8eec7dddb9a0a"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -195,7 +196,7 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="ad918266590e7ef9538f41b604ac7f8af"></a>
+<a class="anchor" id="aeee04a698753bd909645617a10705c5e"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -243,7 +244,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Apr 25 2013 13:54:15 for GLStreamer by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri May 3 2013 22:31:43 for GLStreamer by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.1.2
 </small></address>

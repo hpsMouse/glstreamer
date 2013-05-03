@@ -7,6 +7,7 @@ var searchData=
   ['typemanager',['TypeManager',['../classglstreamer_1_1TypeManager.html',1,'glstreamer']]],
   ['typespec',['TypeSpec',['../structglstreamer_1_1TypeSpec.html',1,'glstreamer']]],
   ['typespecbasic',['TypeSpecBasic',['../structglstreamer_1_1TypeSpecBasic.html',1,'glstreamer']]],
+  ['typespecbasic_3c_20glframedata_3c_20pixeltypepack_20_3e_20_3e',['TypeSpecBasic&lt; GLFrameData&lt; PixelTypePack &gt; &gt;',['../structglstreamer_1_1TypeSpecBasic.html',1,'glstreamer']]],
   ['typespecbasic_3c_20std_3a_3astring_20_3e',['TypeSpecBasic&lt; std::string &gt;',['../structglstreamer_1_1TypeSpecBasic.html',1,'glstreamer']]],
   ['typespecbasic_3c_20std_3a_3avector_3c_20t_20_3e_20_3e',['TypeSpecBasic&lt; std::vector&lt; T &gt; &gt;',['../structglstreamer_1_1TypeSpecBasic.html',1,'glstreamer']]],
   ['typespecnocontext',['TypeSpecNoContext',['../structglstreamer_1_1TypeSpecNoContext.html',1,'glstreamer']]],

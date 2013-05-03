@@ -6,5 +6,6 @@ var searchData=
   ['errnone',['errNone',['../structglstreamer_1_1ErrorCode.html#a396478cce41cdcdb7ff15ea1275d730a',1,'glstreamer::ErrorCode']]],
   ['errpacket',['errPacket',['../structglstreamer_1_1ErrorCode.html#a0c8e51ef40a2561903ab2e911d3c2050',1,'glstreamer::ErrorCode']]],
   ['errsize',['errSize',['../structglstreamer_1_1ErrorCode.html#aa147dc49faffaf051f9773b080ed50a9',1,'glstreamer::ErrorCode']]],
-  ['errtype',['errType',['../structglstreamer_1_1ErrorCode.html#a2227b162eb8315afb55e4c3e97f7fa65',1,'glstreamer::ErrorCode']]]
+  ['errtype',['errType',['../structglstreamer_1_1ErrorCode.html#a2227b162eb8315afb55e4c3e97f7fa65',1,'glstreamer::ErrorCode']]],
+  ['externalformat',['ExternalFormat',['../structglstreamer__gl_1_1PixelTypePack.html#a5206ef1d58ba8f39cac9387ed6b0df6f',1,'glstreamer_gl::PixelTypePack']]]
 ];
