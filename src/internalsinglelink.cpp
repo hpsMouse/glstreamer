@@ -23,6 +23,7 @@ arg(nullptr, Destroyer(src->typeSpec))
     arg.reset(src->typeSpec->create());
     
     dst->simpleSlot->arg = src->simpleSlot->arg = arg.get();
+    dst->localArg = src->localArg;
     dst->simpleSlot->link = src->simpleSlot->link = this;
 }
 

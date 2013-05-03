@@ -3,13 +3,10 @@
 
 #include <GL/glew.h>
 
-namespace glstreamer_gl
+inline GLEWContext* glewGetContext()
 {
-    inline GLEWContext* glewGetContext()
-    {
-        static __thread GLEWContext context;
-        return &context;
-    }
+    static __thread GLEWContext context;
+    return &context;
 }
 
 #endif

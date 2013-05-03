@@ -9,6 +9,9 @@ namespace glstreamer
     {
     public:
         virtual ~LocalArgBase() {}
+        
+        template <typename ArgType>
+        ArgType& getArg();
     };
     
     template <typename ArgType>
@@ -20,13 +23,21 @@ namespace glstreamer
         arg_(std::forward(args)...)
         {}
         
-        virtual ~LocalArg();
+        virtual ~LocalArg() {}
         
         ArgType& arg() { return arg_; }
         
     private:
+        using LocalArgBase::getArg;
+        
         ArgType arg_;
     };
+    
+    template <typename ArgType>
+    inline ArgType& LocalArgBase::getArg()
+    {
+        return dynamic_cast<LocalArg<ArgType>&>(*this).arg();
+    }
 }
 
 #endif

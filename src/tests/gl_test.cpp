@@ -6,36 +6,36 @@
 
 #include "../glstreamer.h"
 
+#include "../gl/GLThread.h"
 #include "../gl/GLWindowBinding.h"
 
 pthread_barrier_t barrier1, barrier2;
 
-void render(int x, int y, GLclampf r, GLclampf g, GLclampf b, GLclampf a)
+void render(GLclampf r, GLclampf g, GLclampf b, GLclampf a)
 {
     pthread_barrier_wait(&barrier1);
     
-    glstreamer_gl::GLWindowBinding context(":0", 683, 768, true, x, y);
-    
-    context.getContext().printInfo();
+    using namespace glstreamer_gl;
+    auto context = GLThread::getGLContextBinding<GLWindowBinding>();
+    context->getContext().printInfo();
     
     pthread_barrier_wait(&barrier2);
     
-    for(int i = 0; i < 60; ++i)
+    for(int i = 0; i < 30; ++i)
     {
         using namespace oglplus;
         gl.ClearColor(r, g, b, a);
         gl.Clear().ColorBuffer().DepthBuffer();
-        context.swapBuffers();
+        context->swapBuffers();
         gl.ClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         gl.Clear().ColorBuffer().DepthBuffer();
-        context.swapBuffers();
+        context->swapBuffers();
     }
 }
 
 int main()
 {
     glstreamer::init();
-    glstreamer::loadExternalPlugin("./libglstreamer_gl.so");
     
     int err = pthread_barrier_init(&barrier1, nullptr, 2);
     if(err)
@@ -45,7 +45,10 @@ int main()
     if(err)
         return 2;
     
-    std::thread t1([]{render(0, 0, 1.0, 0.0, 0.0, 1.0);}), t2([]{render(683, 0, 0.0, 0.0, 1.0, 1.0);});
+    using namespace glstreamer_gl;
+    GLThread
+    t1([]{render(1.0, 0.0, 0.0, 1.0);}, (GLWindowBinding*)nullptr, ":0", 683, 768, true, 0, 0),
+    t2([]{render(0.0, 0.0, 1.0, 1.0);}, (GLWindowBinding*)nullptr, ":0", 683, 768, true, 683, 0);
     t1.join();
     t2.join();
 }

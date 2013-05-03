@@ -14,6 +14,7 @@
 void glstreamer::init()
 {
     loadExternalPlugin("./libglstreamer_core.so");
+    loadExternalPlugin("./libglstreamer_gl.so");
 }
 
 void glstreamer::loadExternalPlugin ( const char* filename )

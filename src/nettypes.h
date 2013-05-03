@@ -28,6 +28,12 @@ namespace glstreamer
         value_type const* rawMem() const
         { return &value; }
         
+        value_type& rawValue()
+        { return value; }
+        
+        value_type rawValue() const
+        { return value; }
+        
     private:
         value_type value;
     };

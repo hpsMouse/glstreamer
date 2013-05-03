@@ -52,15 +52,15 @@ namespace glstreamer
     
     struct TypeSpecNoFixedSerialize : virtual TypeSpec
     {
-        virtual size_type serialize_size() const override
+        virtual size_type serialize_size() const override final
         {
             return 0;
         }
-        virtual void serialize_fixed(const void*, LocalArgBase*, char*) const override
+        virtual void serialize_fixed(const void*, LocalArgBase*, char*) const override final
         {
             throw UnsupportedOperation("serialize_fixed");
         }
-        virtual void deserialize_fixed(void*, LocalArgBase*, const char*) const override
+        virtual void deserialize_fixed(void*, LocalArgBase*, const char*) const override final
         {
             throw UnsupportedOperation("deserialize_fixed");
         }

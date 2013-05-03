@@ -1,6 +1,7 @@
-#include <X11/Xlib.h>
-
 #include "../Plugin.h"
+#include "../typemgr.h"
+
+#include "GLFrameTypeSpec.h"
 
 #include "GLXException.h"
 
@@ -37,7 +38,7 @@ void glstreamer_gl::GLPlugin::init()
 
 void glstreamer_gl::GLPlugin::registerTypes()
 {
-
+    glstreamer::TypeManager::registerType<GLFrameData<RGBAFrame>, GLFrameTypeSpec<RGBAFrame>>();
 }
 
 void glstreamer_gl::GLPlugin::registerProcessors()
