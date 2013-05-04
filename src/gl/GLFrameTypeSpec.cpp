@@ -72,3 +72,4 @@ void GLFrameTypeSpec<PixelTypePack>::deserialize_varialbe ( void* , glstreamer::
 }
 
 template class GLFrameTypeSpec<RGBAFrame>;
+template class GLFrameTypeSpec<DepthFrame>;

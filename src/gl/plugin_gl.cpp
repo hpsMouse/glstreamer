@@ -36,9 +36,16 @@ void glstreamer_gl::GLPlugin::init()
         throw GLXException("XInitThreads() failed.");
 }
 
+template <typename FrameType>
+static inline void registerFrameType()
+{
+    glstreamer::TypeManager::registerType<glstreamer_gl::GLFrameData<FrameType>, glstreamer_gl::GLFrameTypeSpec<FrameType>>();
+}
+
 void glstreamer_gl::GLPlugin::registerTypes()
 {
-    glstreamer::TypeManager::registerType<GLFrameData<RGBAFrame>, GLFrameTypeSpec<RGBAFrame>>();
+    registerFrameType<RGBAFrame>();
+    registerFrameType<DepthFrame>();
 }
 
 void glstreamer_gl::GLPlugin::registerProcessors()

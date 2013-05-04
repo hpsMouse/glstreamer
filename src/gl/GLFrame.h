@@ -151,6 +151,7 @@ namespace glstreamer_gl
     };
     
     typedef PixelTypePack<RGBA, GL_UNSIGNED_INT_8_8_8_8_REV, GL_RGBA, GL_RGBA> RGBAFrame;
+    typedef PixelTypePack<GLfloat, GL_FLOAT, GL_DEPTH_COMPONENT, GL_DEPTH_COMPONENT> DepthFrame;
 }
 
 #endif
