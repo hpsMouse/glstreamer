@@ -1,44 +1,54 @@
+#include <unistd.h>
+
 #include <posixpp/PThreadBarrier.h>
 
-#include "../gl/ogl.inc.h"
+#include "../gl/gl.inc.h"
 
 #include "../glstreamer.h"
 #include "../threadedlink.h"
 
 #include "../gl/GLContextBinding.h"
 #include "../gl/GLFixedProcessor.h"
+#include "../gl/GLProgram.h"
+#include "../gl/GLShader.h"
 #include "../gl/GLThread.h"
+#include "../gl/GLUniform.h"
 #include "../gl/GLWindowBinding.h"
 
 using namespace glstreamer;
 using namespace glstreamer_gl;
-using namespace oglplus;
 
 class TextureFiller : public GLFixedProcessor<TypeList<>, TypeList<>, TypeList<>, TypeList<RGBAFrame, RGBAFrame>>
 {
 public:
     TextureFiller():
     GLFixedProcessor<TypeList<>, TypeList<>, TypeList<>, TypeList<RGBAFrame, RGBAFrame>>("RedFrame", "BlueFrame"),
-    fbo()
+    fbo(),
+    redScale(1.0),
+    blueScale(0.0)
     {}
     
 private:
-    Framebuffer fbo;
+    FramebufferObject fbo;
+    
+    GLdouble redScale, blueScale;
     
     void gl_run(GLTextureData<RGBAFrame>& red, GLTextureData<RGBAFrame>& blue) override final
     {
         red.resize(600, 600);
         blue.resize(600, 600);
         
-        fbo.Bind(FramebufferTarget::Draw);
+        gl_Call(glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo));
         
-        fbo.AttachTexture2D(FramebufferTarget::Draw, FramebufferColorAttachment::_0, red.target, red.obj(), 0);
-        gl.ClearColor(1.0, 0.0, 0.0, 1.0);
-        gl.Clear().ColorBuffer();
+        gl_Call(glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, red.obj(), 0));
+        gl_Call(glClearColor(1.0 * redScale, 0.0, 0.0, 1.0));
+        gl_Call(glClear(GL_COLOR_BUFFER_BIT));
         
-        fbo.AttachTexture2D(FramebufferTarget::Draw, FramebufferColorAttachment::_0, blue.target, blue.obj(), 0);
-        gl.ClearColor(0.0, 0.0, 1.0, 1.0);
-        gl.Clear().ColorBuffer();
+        gl_Call(glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, blue.obj(), 0));
+        gl_Call(glClearColor(0.0, 0.0, 1.0 * blueScale, 1.0));
+        gl_Call(glClear(GL_COLOR_BUFFER_BIT));
+        
+        std::swap(redScale, blueScale);
         
         write(2, "Readback finished\n", sizeof("Readback finished\n") - 1);
     }
@@ -49,11 +59,11 @@ class FrameDisplayer : public GLFixedProcessor<TypeList<>, TypeList<>, TypeList<
 public:
     FrameDisplayer():
     GLFixedProcessor<TypeList<>, TypeList<>, TypeList<RGBAFrame, RGBAFrame>, TypeList<>>("RedFrame", "BlueFrame"),
-    fshader(),
+    fshader(GL_FRAGMENT_SHADER),
     program()
     {
-        fshader.Source(fshaderSource).Compile();
-        program.AttachShader(fshader).Link();
+        fshader.addSourceStr(fshaderSource).compile();
+        program.attachShader(fshader).link();
     }
     
 private:
@@ -63,46 +73,48 @@ private:
     "uniform sampler2D blue;\n"
     "void main()\n"
     "{\n"
+//    "    gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);\n"
     "    gl_FragColor = texture2D(red, gl_TexCoord[0].st) + texture2D(blue, gl_TexCoord[1].st);\n"
     "}\n"
     ;
     
-    FragmentShader fshader;
-    Program program;
+    GLShader fshader;
+    GLProgram program;
     
     virtual void gl_run(GLTextureData<RGBAFrame>&, GLTextureData<RGBAFrame>&) override final
     {
         GLWindowBinding *window = GLThread::getGLContextBinding<GLWindowBinding>();
-        glc.MatrixMode(oglplus::CompatibilityMatrixMode::Modelview);
-        glc.LoadIdentity();
-        glc.MatrixMode(oglplus::CompatibilityMatrixMode::Projection);
-        glOrtho(0.0, 1.0, 0.0, 1.0, -1.0, 1.0);
+        gl_Call(glMatrixMode(GL_MODELVIEW));
+        gl_Call(glLoadIdentity());
+        gl_Call(glMatrixMode(GL_PROJECTION));
+        gl_Call(glLoadIdentity());
+        gl_Call(glOrtho(0.0, 1.0, 0.0, 1.0, -1.0, 1.0));
         
-        gl.ClearColor(0.0, 0.0, 0.0, 0.0);
-        gl.Clear().ColorBuffer().DepthBuffer();
+        gl_Call(glClearColor(0.0, 0.0, 0.0, 0.0));
+        gl_Call(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
         
-        program.Use();
-        Uniform<int>(program, "red").Set(0);
-        Uniform<int>(program, "blue").Set(1);
+        program.use();
+        GLUniform(program, "red").set(0);
+        GLUniform(program, "blue").set(1);
         
-        glc.Color(0.0, 1.0, 0.0, 1.0);
-        glc.Begin(oglplus::CompatibilityPrimitiveType::Quads);
-        glMultiTexCoord2d(GL_TEXTURE0, 0.0, 0.0);
-        glMultiTexCoord2d(GL_TEXTURE1, 0.0, 0.0);
-        glc.Vertex(0.0, 0.0);
-        
-        glMultiTexCoord2d(GL_TEXTURE0, 1.0, 0.0);
-        glMultiTexCoord2d(GL_TEXTURE1, 1.0, 0.0);
-        glc.Vertex(1.0, 0.0);
-        
-        glMultiTexCoord2d(GL_TEXTURE0, 1.0, 1.0);
-        glMultiTexCoord2d(GL_TEXTURE1, 1.0, 1.0);
-        glc.Vertex(1.0, 1.0);
-        
-        glMultiTexCoord2d(GL_TEXTURE0, 1.0, 1.0);
-        glMultiTexCoord2d(GL_TEXTURE1, 1.0, 1.0);
-        glc.Vertex(0.0, 1.0);
-        glc.End();
+        gl_Call(glColor4d(0.0, 1.0, 0.0, 1.0));
+        glBegin(GL_QUADS);
+            glMultiTexCoord2d(GL_TEXTURE0, 0.0, 0.0);
+            glMultiTexCoord2d(GL_TEXTURE1, 0.0, 0.0);
+            glVertex2d(0.0, 0.0);
+            
+            glMultiTexCoord2d(GL_TEXTURE0, 1.0, 0.0);
+            glMultiTexCoord2d(GL_TEXTURE1, 1.0, 0.0);
+            glVertex2d(1.0, 0.0);
+            
+            glMultiTexCoord2d(GL_TEXTURE0, 1.0, 1.0);
+            glMultiTexCoord2d(GL_TEXTURE1, 1.0, 1.0);
+            glVertex2d(1.0, 1.0);
+            
+            glMultiTexCoord2d(GL_TEXTURE0, 0.0, 1.0);
+            glMultiTexCoord2d(GL_TEXTURE1, 0.0, 1.0);
+            glVertex2d(0.0, 1.0);
+        gl_Call(glEnd());
         window->swapBuffers();
     }
 };

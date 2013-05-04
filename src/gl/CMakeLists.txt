@@ -1,1 +1,1 @@
-add_library(glstreamer_gl SHARED GLContext.cpp GLContextBinding.cpp GLDisplay.cpp GLFBConfig.cpp GLFrameTypeSpec.cpp GLThread.cpp GLWindow.cpp GLWindowBinding.cpp GLXException.cpp plugin_gl.cpp)
+add_library(glstreamer_gl SHARED GLContext.cpp GLContextBinding.cpp GLDisplay.cpp GLException.cpp GLFBConfig.cpp GLFrameTypeSpec.cpp GLProgram.cpp GLShader.cpp GLThread.cpp GLUniform.cpp GLWindow.cpp GLWindowBinding.cpp GLXException.cpp plugin_gl.cpp)

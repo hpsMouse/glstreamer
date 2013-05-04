@@ -1,6 +1,6 @@
 #include "GLFrameTypeSpec.h"
 
-#include "ogl.inc.h"
+#include "gl.inc.h"
 
 #include "../istream.h"
 #include "../LocalArg.h"

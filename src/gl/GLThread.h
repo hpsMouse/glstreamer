@@ -6,7 +6,7 @@
 #include <thread>
 #include <typeinfo>
 
-#include "ogl.inc.h"
+#include "gl.inc.h"
 
 class B;
 namespace glstreamer_gl
@@ -36,10 +36,6 @@ namespace glstreamer_gl
                     if(glewInit() != GLEW_OK)
                         throw std::runtime_error("GLEW init error.");
                     func();
-                }
-                catch(oglplus::CompileError const& e)
-                {
-                    std::cerr << "OpenGL compiler error: " << e.Log() << std::endl;
                 }
                 catch(std::exception const& e)
                 {

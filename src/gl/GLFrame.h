@@ -3,11 +3,17 @@
 
 #include <vector>
 
-#include "ogl.inc.h"
+#include "gl.inc.h"
+
+#include "GLObject.h"
 
 namespace glstreamer_gl
 {
-    template <typename _Pixel, oglplus::PixelDataType _DataType, oglplus::PixelDataFormat _ExternalFormat, oglplus::PixelDataInternalFormat _InternalFormat>
+    typedef GLenum GLDataType;
+    typedef GLenum GLExternalFormat;
+    typedef GLint  GLInternalFormat;
+    
+    template <typename _Pixel, GLDataType _DataType, GLExternalFormat _ExternalFormat, GLInternalFormat _InternalFormat>
     struct PixelTypePack
     {
         typedef _Pixel Pixel;
@@ -61,9 +67,9 @@ namespace glstreamer_gl
     class GLTextureData
     {
         typedef typename PixelTypePack::Pixel Pixel;
-        static constexpr oglplus::PixelDataType DataType = PixelTypePack::DataType;
-        static constexpr oglplus::PixelDataFormat ExternalFormat = PixelTypePack::ExternalFormat;
-        static constexpr oglplus::PixelDataInternalFormat InternalFormat = PixelTypePack::InternalFormat;
+        static constexpr GLDataType DataType = PixelTypePack::DataType;
+        static constexpr GLExternalFormat ExternalFormat = PixelTypePack::ExternalFormat;
+        static constexpr GLInternalFormat InternalFormat = PixelTypePack::InternalFormat;
     public:
         GLTextureData():
         texture_(),
@@ -73,7 +79,7 @@ namespace glstreamer_gl
             bind();
         }
         
-        oglplus::Texture& obj() { return texture_; }
+        TextureObject& obj() { return texture_; }
         
         GLsizei width()  const { return width_; }
         GLsizei height() const { return height_; }
@@ -84,16 +90,16 @@ namespace glstreamer_gl
                 return;
             
             bind();
-            oglplus::Texture::Image2D(target,
-                                      0,
-                                      PixelTypePack::InternalFormat,
-                                      width,
-                                      height,
-                                      0,
-                                      PixelTypePack::ExternalFormat,
-                                      PixelTypePack::DataType,
-                                      nullptr
-            );
+            gl_Call(glTexImage2D(target,
+                                 0,
+                                 PixelTypePack::InternalFormat,
+                                 width,
+                                 height,
+                                 0,
+                                 PixelTypePack::ExternalFormat,
+                                 PixelTypePack::DataType,
+                                 nullptr
+            ));
             width_ = width;
             height_ = height;
         }
@@ -101,41 +107,40 @@ namespace glstreamer_gl
         void readData(Pixel *data)
         {
             bind();
-            using namespace oglplus;
-            OGLPLUS_GLFUNC(GetTexImage)(GLenum(target),
-                                        0,
-                                        GLenum(ExternalFormat),
-                                        GLenum(DataType),
-                                        data
-            );
+            gl_Call(glGetTexImage(target,
+                                  0,
+                                  ExternalFormat,
+                                  DataType,
+                                  data
+            ));
         }
         
         void storeData(GLsizei width, GLsizei height, Pixel const* data)
         {
             bind();
-            oglplus::Texture::Image2D(target,
-                                      0,
-                                      InternalFormat,
-                                      width,
-                                      height,
-                                      0,
-                                      ExternalFormat,
-                                      DataType,
-                                      data
-            );
+            gl_Call(glTexImage2D(target,
+                                 0,
+                                 InternalFormat,
+                                 width,
+                                 height,
+                                 0,
+                                 ExternalFormat,
+                                 DataType,
+                                 data
+            ));
             width_ = width;
             height_ = height;
         }
         
         void bind()
         {
-            texture_.Bind(target);
+            gl_Call(glBindTexture(target, texture_));
         }
         
-        static constexpr oglplus::TextureTarget target = oglplus::TextureTarget::_2D;
+        static constexpr GLenum target = GL_TEXTURE_2D;
         
     private:
-        oglplus::Texture texture_;
+        TextureObject texture_;
         
         GLsizei width_, height_;
     };
@@ -145,7 +150,7 @@ namespace glstreamer_gl
         GLubyte r, g, b, a;
     };
     
-    typedef PixelTypePack<RGBA, oglplus::PixelDataType::UnsignedInt_8_8_8_8_Rev, oglplus::PixelDataFormat::RGBA, oglplus::PixelDataInternalFormat::RGBA> RGBAFrame;
+    typedef PixelTypePack<RGBA, GL_UNSIGNED_INT_8_8_8_8_REV, GL_RGBA, GL_RGBA> RGBAFrame;
 }
 
 #endif

@@ -2,7 +2,7 @@
 
 #include <pthread.h>
 
-#include "../gl/ogl.inc.h"
+#include "../gl/gl.inc.h"
 
 #include "../glstreamer.h"
 
@@ -23,12 +23,11 @@ void render(GLclampf r, GLclampf g, GLclampf b, GLclampf a)
     
     for(int i = 0; i < 30; ++i)
     {
-        using namespace oglplus;
-        gl.ClearColor(r, g, b, a);
-        gl.Clear().ColorBuffer().DepthBuffer();
+        gl_Call(glClearColor(r, g, b, a));
+        gl_Call(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
         context->swapBuffers();
-        gl.ClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-        gl.Clear().ColorBuffer().DepthBuffer();
+        gl_Call(glClearColor(0.0f, 0.0f, 0.0f, 0.0f));
+        gl_Call(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
         context->swapBuffers();
     }
 }

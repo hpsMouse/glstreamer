@@ -71,12 +71,11 @@ namespace glstreamer_gl
                                        GLTextureData<ParsedPixelTypes>& ... textures)
         {
             using namespace glstreamer;
-            using namespace oglplus;
             FullSlot& slot = this->inputArgs.fullSlot(argumentIndex);
             GLTextureData<PixelType>& texture = slot.localArg->getArg<GLTextureData<PixelType>>();
-            Texture::Active(textureIndex);
+            gl_Call(glActiveTexture(GL_TEXTURE0 + textureIndex));
             texture.bind();
-            Texture::GenerateMipmap(texture.target);
+            gl_Call(glGenerateMipmap(texture.target));
             bindInputTextureArguments<argumentIndex + 1, textureIndex + 1, PixelTypes...>
             (nonPixelInputs ...,
              nonPixelOutputs ...,
@@ -106,7 +105,6 @@ namespace glstreamer_gl
                                        )
         {
             using namespace glstreamer;
-            using namespace oglplus;
             FullSlot& slot = this->outputArgs.fullSlot(argumentIndex);
             GLTextureData<PixelType>& texture = slot.localArg->getArg<GLTextureData<PixelType>>();
 //             Texture::Active(textureIndex);

@@ -7,7 +7,7 @@
 
 #include <unistd.h>
 
-#include "../gl/ogl.inc.h"
+#include "../gl/gl.inc.h"
 
 #include "../glstreamer.h"
 #include "../LocalArg.h"
@@ -35,27 +35,24 @@ void renderto(GLclampf r, GLclampf g, GLclampf b, GLclampf a, RGBABuffer& buffer
     
     pthread_barrier_wait(&barrier2);
     
-    using namespace oglplus;
-    
-    Framebuffer fbo;
-    fbo.Bind(FramebufferTarget::Draw);
+    FramebufferObject fbo;
+    gl_Call(glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo));
     
     RGBABufferSpec &spec = dynamic_cast<RGBABufferSpec&>(*glstreamer::TypeManager::getTypeSpec<RGBABuffer>());
     std::shared_ptr<glstreamer::LocalArgBase> localArg(spec.createLocal());
     RGBATexture &texture = localArg->getArg<RGBATexture>();
     texture.resize(800, 600);
     
-    Framebuffer::AttachTexture2D(FramebufferTarget::Draw,
-                                 Framebuffer::Property::Attachment(FramebufferColorAttachment::_0),
-                                 texture.target,
-                                 texture.obj(),
-                                 0
-                                );
+    gl_Call(glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER,
+                                   GL_COLOR_ATTACHMENT0,
+                                   texture.target,
+                                   texture.obj(),
+                                   0
+                                  ));
     
-    gl.ClearColor(r, g, b, a);
-    gl.Clear().ColorBuffer();
+    gl_Call(glClearColor(r, g, b, a));
+    gl_Call(glClear(GL_COLOR_BUFFER_BIT));
     
-    fbo.Bind(FramebufferTarget::Read);
     buffer.resize(800, 600);
     spec.context_out(&buffer, localArg.get());
 }
