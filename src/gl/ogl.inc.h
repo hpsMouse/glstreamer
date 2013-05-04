@@ -3,6 +3,8 @@
 
 #include "GLEWContextBinding.h"
 
+#define OGLPLUS_LOW_PROFILE 1
+
 #include <oglplus/all.hpp>
 #include <oglplus/ext/ARB_compatibility.hpp>
 
