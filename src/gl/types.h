@@ -7,7 +7,9 @@ namespace glstreamer_gl
     class GLContextBinding;
     class GLDisplay;
     class GLFBConfig;
+    class GLGenericRenderer;
     class GLProgram;
+    class GLScreenSplitter;
     class GLShader;
     class GLUniform;
     class GLWindow;

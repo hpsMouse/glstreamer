@@ -1,9 +1,13 @@
 #include "../Plugin.h"
+
+#include "../defaulttypespec.h"
 #include "../typemgr.h"
 
 #include "GLFrameTypeSpec.h"
 
 #include "GLXException.h"
+
+#include "parameter_types.h"
 
 namespace glstreamer_gl
 {
@@ -42,10 +46,19 @@ static inline void registerFrameType()
     glstreamer::TypeManager::registerType<glstreamer_gl::GLFrameData<FrameType>, glstreamer_gl::GLFrameTypeSpec<FrameType>>();
 }
 
+template <typename T>
+static inline void registerDefault()
+{
+    using namespace glstreamer;
+    using namespace glstreamer_gl;
+    TypeManager::registerType<T, DefaultTypeSpec<T>>();
+}
+
 void glstreamer_gl::GLPlugin::registerTypes()
 {
     registerFrameType<RGBAFrame>();
     registerFrameType<DepthFrame>();
+    registerDefault<GLViewport>();
 }
 
 void glstreamer_gl::GLPlugin::registerProcessors()

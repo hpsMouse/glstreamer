@@ -18,7 +18,7 @@ namespace glstreamer_gl
 do\
 {\
     call;\
-    gl_TestError(#call);\
+    ::glstreamer_gl::gl_TestError(#call);\
 }\
 while(0)
 }
