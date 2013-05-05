@@ -32,15 +32,35 @@ class ShapeRenderer : public glstreamer_gl::GLGenericRenderer
 public:
     ShapeRenderer (glstreamer_gl::ProjectionStyle projection = glstreamer_gl::ProjectionStyle::Frustum ):
     glstreamer_gl::GLGenericRenderer(0, 0, 0, 0, projection),
-    importer(),
-    scene(importer.ReadFile("head.obj", aiProcess_Triangulate | aiProcess_SortByPType)),
-    meshes(scene->mNumMeshes),
+    meshes(),
     texAlbedo()
     {
+        Assimp::Importer importer;
+        aiScene const* scene = importer.ReadFile("head.obj", aiProcess_Triangulate | aiProcess_SortByPType);
+        
+        meshes.resize(scene->mNumMeshes);
+        
         for(unsigned i = 0; i < scene->mNumMeshes; ++i)
         {
-            meshes[i].mesh = scene->mMeshes[i];
-            glstreamer_gl::transformIndex(meshes[i].mesh, meshes[i].indices);
+            std::vector<unsigned> indices;
+            aiMesh const* mesh = scene->mMeshes[i];
+            glstreamer_gl::transformIndex(mesh, indices);
+            MeshBuffer& meshBuffer = meshes[i];
+            
+            gl_Call(glBindVertexArray(meshBuffer.vao));
+            
+            gl_Call(glBindBuffer(GL_ARRAY_BUFFER, meshBuffer.vertexBuffer));
+            gl_Call(glBufferData(GL_ARRAY_BUFFER, mesh->mNumVertices * sizeof(aiVector3D), mesh->mVertices, GL_STATIC_DRAW));
+            gl_Call(glVertexPointer(3, GL_FLOAT, 0, 0));
+            
+            gl_Call(glBindBuffer(GL_ARRAY_BUFFER, meshBuffer.texCoordBuffer));
+            gl_Call(glBufferData(GL_ARRAY_BUFFER, mesh->mNumVertices * sizeof(aiVector3D), mesh->mTextureCoords[0], GL_STATIC_DRAW));
+            gl_Call(glTexCoordPointer(3, GL_FLOAT, 0, 0));
+            
+            gl_Call(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, meshBuffer.indexBuffer));
+            gl_Call(glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned), indices.data(), GL_STATIC_DRAW));
+            
+            meshBuffer.nIndices = indices.size();
         }
         
         fipImage albedo;
@@ -54,18 +74,18 @@ public:
     virtual ~ShapeRenderer() noexcept {}
     
 private:
-    Assimp::Importer importer;
-    aiScene const* scene;
-    struct Mesh
+    struct MeshBuffer
     {
-        Mesh(): mesh(), indices() {}
-        Mesh(Mesh const&) = default;
-        Mesh& operator = (Mesh const&) = default;
+        MeshBuffer(): nIndices(), vao(), vertexBuffer(), texCoordBuffer(), indexBuffer() {}
         
-        aiMesh const* mesh;
-        std::vector<unsigned> indices;
+        unsigned nIndices;
+        glstreamer_gl::VertexArrayObject vao;
+        glstreamer_gl::BufferObject vertexBuffer;
+        glstreamer_gl::BufferObject texCoordBuffer;
+        glstreamer_gl::BufferObject indexBuffer;
     };
-    std::vector<Mesh> meshes;
+    
+    std::vector<MeshBuffer> meshes;
     
     glstreamer_gl::TextureObject texAlbedo;
     
@@ -85,8 +105,13 @@ private:
         gl_Call(glScaled(0.01, 0.01, 0.01));
         
         gl_Call(glEnable(GL_TEXTURE_2D));
-        for(Mesh const& mesh : meshes)
-            glstreamer_gl::drawMeshWithIndex(mesh.mesh, mesh.indices);
+        for(MeshBuffer const& mesh : meshes)
+        {
+            gl_Call(glBindVertexArray(mesh.vao));
+            gl_Call(glEnableClientState(GL_VERTEX_ARRAY));
+            gl_Call(glEnableClientState(GL_TEXTURE_COORD_ARRAY));
+            gl_Call(glDrawElements(GL_TRIANGLES, mesh.nIndices, GL_UNSIGNED_INT, 0));
+        }
         
 #if 0
         gl_Call(glLoadIdentity());

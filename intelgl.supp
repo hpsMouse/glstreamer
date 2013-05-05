@@ -11,3 +11,29 @@
   Memcheck:Cond
   fun:drm_intel_bufmgr_gem_init
 }
+
+{
+  intelgl/vboDraw_sf
+  Memcheck:Addr1
+  fun:bcmp
+  fun:brw_upload_cache
+  fun:compile_sf_prog
+  fun:brw_upload_sf_prog
+  fun:brw_upload_state
+  fun:brw_draw_prims
+  fun:vbo_validated_drawrangeelements
+  fun:vbo_exec_DrawElements
+}
+
+{
+  intelgl/vboDraw_vs
+  Memcheck:Addr1
+  fun:bcmp
+  fun:brw_upload_cache
+  fun:do_vs_prog
+  fun:brw_upload_vs_prog
+  fun:brw_upload_state
+  fun:brw_draw_prims
+  fun:vbo_validated_drawrangeelements
+  fun:vbo_exec_DrawElements
+}

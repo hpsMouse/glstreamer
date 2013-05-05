@@ -29,6 +29,7 @@ namespace glstreamer_gl
     GLSTREAMER_GL_DEF_OP(TextureOp, GLuint, glGenTextures, glDeleteTextures);
     GLSTREAMER_GL_DEF_OP(FramebufferOp, GLuint, glGenFramebuffers, glDeleteFramebuffers);
     GLSTREAMER_GL_DEF_OP(BufferOp, GLuint, glGenBuffers, glDeleteBuffers);
+    GLSTREAMER_GL_DEF_OP(VertexArrayOp, GLuint, glGenVertexArrays, glDeleteVertexArrays);
 }
 
 #endif

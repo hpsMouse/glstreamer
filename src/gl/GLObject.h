@@ -40,6 +40,7 @@ namespace glstreamer_gl
     GLSTREAMER_GL_DEF_OBJECT(TextureObject, TextureOp);
     GLSTREAMER_GL_DEF_OBJECT(FramebufferObject, FramebufferOp);
     GLSTREAMER_GL_DEF_OBJECT(BufferObject, BufferOp);
+    GLSTREAMER_GL_DEF_OBJECT(VertexArrayObject, VertexArrayOp);
 }
 
 #endif
