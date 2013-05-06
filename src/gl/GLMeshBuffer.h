@@ -14,7 +14,9 @@ namespace glstreamer_gl
         
         void draw(double start = 0.0, double end = 1.0) const
         {
-            GLsizei first = start * nIndices, last = end * nIndices;
+            unsigned nFaces = nIndices / 3;
+            GLsizei firstFace = start * nFaces, lastFace = end * nFaces;
+            GLsizei first = firstFace * 3, last = lastFace * 3;
             gl_Call(glBindVertexArray(vao));
             gl_Call(glEnableClientState(GL_VERTEX_ARRAY));
             gl_Call(glEnableClientState(GL_TEXTURE_COORD_ARRAY));

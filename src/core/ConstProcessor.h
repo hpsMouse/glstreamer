@@ -20,7 +20,7 @@ namespace glstreamer_core
             for(std::size_t i = 0; i < count; ++i)
             {
                 char name[64];
-                std::sprintf(name, "output_%zu", i);
+                std::snprintf(name, 64, "output_%zu", i);
                 outputArgs._addSlot<Type>(name);
             }
             outputArgs.refreshSimpleSlots();

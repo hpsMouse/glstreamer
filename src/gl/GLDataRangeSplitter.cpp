@@ -32,7 +32,7 @@ void GLDataRangeSplitter::init()
     for(std::size_t i = 0; i < nParts; ++i)
     {
         char name[64];
-        std::sprintf(name, "outputRange_%zu", i);
+        std::snprintf(name, 64, "outputRange_%zu", i);
         outputArgs._addSlot<GLDataRange>(name);
     }
     outputArgs.refreshSimpleSlots();

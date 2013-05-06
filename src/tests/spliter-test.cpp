@@ -10,6 +10,7 @@
 
 #include "../gl/GLDataRangeSplitter.h"
 #include "../gl/GLFBORenderer.h"
+#include "../gl/GLFrameCombiner.h"
 #include "../gl/GLFrameDisplayer.h"
 #include "../gl/GLObject.h"
 #include "../gl/GLScreenSpliter.h"
@@ -80,6 +81,9 @@ int main()
     
     init();
     
+    GLWindowBinding context(":0", 300, 300, true, 900 + 32, 32);
+    GLThread::initGLContextBinding(context);
+    
     //ConstProcessor<GLViewport> viewport(GLViewport({600, 600, -1.0, 1.0, -1.0, 1.0, 1.0, 5.0}));
     ConstProcessor<GLViewport> viewport(GLViewport({300, 300, -1.0, 1.0, -1.0, 1.0, 1.0, 5.0}));
     ConstProcessor<GLDataRange> dataRange(GLDataRange({0.0, 1.0}));
@@ -87,6 +91,10 @@ int main()
     GLScreenSplitter screenSplitter(std::vector<ScreenPart>(6, ScreenPart({0.0, 1.0, 0.0, 1.0})));
     GLDataRangeSplitter rangeSplitter(GLDataRangeSplitter::makeEvenSplit(6));
     //GLDataRangeSplitter rangeSplitter(std::vector<GLDataRange>(6, GLDataRange({0.0, 1.0})));
+    
+    GLFrameCombiner combiner(6, 300, 300);
+    GLFrameDisplayer combinedDisplayer;
+    
     for(int y = 0; y < 2; ++y)
     {
         for(int x = 0; x < 3; ++x)
@@ -96,17 +104,16 @@ int main()
             threads[i] = std::move(GLThread([i]{
                 std::unique_ptr<ShapeRenderer> renderer(new ShapeRenderer);
                 renderers[i] = renderer.get();
-                GLFrameDisplayer displayer;
-                glstreamer_core::FakeSink<GLFrameData<DepthFrame>> depthSink;
-                InternalSingleLink
-                displayLink(renderer->outputArg(0), displayer.inputArg(0)),
-                depthLink(renderer->outputArg(1), depthSink.inputArg(0));
+//                 GLFrameDisplayer displayer;
+//                 glstreamer_core::FakeSink<GLFrameData<DepthFrame>> depthSink;
+//                 InternalSingleLink
+//                 displayLink(renderer->outputArg(0), displayer.inputArg(0)),
+//                 depthLink(renderer->outputArg(1), depthSink.inputArg(0));
                 barrier.wait();
                 barrier.wait();
                 for(int i = 0; i < loops; ++i)
                 {
                     renderer->execute();
-                    displayer.execute();
                 }
                 barrier.wait();
                 barrier.wait();
@@ -117,19 +124,29 @@ int main()
     {
         InternalSingleLink screenConstLink(viewport.outputArg(0), screenSplitter.inputArg(0));
         InternalSingleLink rangeConstLink(dataRange.outputArg(0), rangeSplitter.inputArg(0));
-        std::unique_ptr<ThreadedLink> screenLinks[6], rangeLinks[6];
+        InternalSingleLink displayLink(combiner.outputArg(0), combinedDisplayer.inputArg(0));
+        
+        FakeSink<GLFrameData<DepthFrame>> depthSink;
+        InternalSingleLink depthLink(combiner.outputArg(1), depthSink.inputArg(0));
+        
+        std::unique_ptr<ThreadedLink> screenLinks[6], rangeLinks[6], colorLinks[6], depthLinks[6];
         for(int i = 0; i < 6; ++i)
         {
             screenLinks[i] = std::unique_ptr<ThreadedLink>(new ThreadedLink(screenSplitter.outputArg(i), renderers[i]->inputArg(0), 3));
             rangeLinks[i] = std::unique_ptr<ThreadedLink>(new ThreadedLink(rangeSplitter.outputArg(i), renderers[i]->inputArg(1), 3));
+            colorLinks[i] = std::unique_ptr<ThreadedLink>(new ThreadedLink(renderers[i]->outputArg(0), combiner.inputArg(i), 3));
+            depthLinks[i] = std::unique_ptr<ThreadedLink>(new ThreadedLink(renderers[i]->outputArg(1), combiner.inputArg(6 + i), 3));
         }
         barrier.wait();
+        
         for(int i = 0; i < loops; ++i)
         {
             viewport.execute();
             dataRange.execute();
             screenSplitter.execute();
             rangeSplitter.execute();
+            combiner.execute();
+            combinedDisplayer.execute();
         }
         barrier.wait();
     }

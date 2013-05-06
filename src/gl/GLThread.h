@@ -31,10 +31,7 @@ namespace glstreamer_gl
                 try
                 {
                     Binding binding(args...);
-                    GLThread::binding_ptr = &binding;
-                    GLThread::binding_type = &typeid(Binding);
-                    if(glewInit() != GLEW_OK)
-                        throw std::runtime_error("GLEW init error.");
+                    initGLContextBinding(binding);
                     func();
                 }
                 catch(std::exception const& e)
@@ -73,6 +70,15 @@ namespace glstreamer_gl
                 return static_cast<Binding*>(binding_ptr);
             else
                 return nullptr;
+        }
+        
+        template <typename Binding>
+        static void initGLContextBinding(Binding &binding)
+        {
+            GLThread::binding_ptr = &binding;
+            GLThread::binding_type = &typeid(Binding);
+            if(glewInit() != GLEW_OK)
+                throw std::runtime_error("GLEW init error.");
         }
         
     private:
