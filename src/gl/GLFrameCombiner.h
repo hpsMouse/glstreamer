@@ -19,6 +19,26 @@ namespace glstreamer_gl
     public:
         GLFrameCombiner(std::size_t nFrames, unsigned width, unsigned height);
         
+        glstreamer::InputSlot colorInput(unsigned index)
+        {
+            return inputArg(index);
+        }
+        
+        glstreamer::InputSlot depthInput(unsigned index)
+        {
+            return inputArg(nFrames + index);
+        }
+        
+        glstreamer::OutputSlot colorOutput()
+        {
+            return outputArg(0);
+        }
+        
+        glstreamer::OutputSlot depthOutput()
+        {
+            return outputArg(1);
+        }
+        
     private:
         virtual void run() override final;
         

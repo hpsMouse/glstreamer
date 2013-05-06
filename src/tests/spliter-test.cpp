@@ -1,3 +1,6 @@
+#include <cstdio>
+
+#include <chrono>
 #include <memory>
 
 #include <posixpp/PThreadBarrier.h>
@@ -73,6 +76,11 @@ glstreamer_gl::GLThread threads[6];
 
 static constexpr int loops = 60 * 10;
 
+// WARNING: Do NOT define both SORT_FIRST and SORT_LAST!
+
+#define SORT_FIRST
+//#define SORT_LAST
+
 int main()
 {
     using namespace glstreamer;
@@ -81,20 +89,52 @@ int main()
     
     init();
     
-    GLWindowBinding context(":0", 300, 300, true, 900 + 32, 32);
+    unsigned width = 640, height = 480;
+    GLViewport viewportGlobal({width, height, -(double(width)/height), double(width)/height, -1.0, 1.0, 1.0, 5.0});
+    GLDataRange rangeGlobal({0.0, 1.0});
+    
+#ifdef SORT_LAST
+    GLWindowBinding context(":0", width, height, true, 32, 32);
     GLThread::initGLContextBinding(context);
     
-    //ConstProcessor<GLViewport> viewport(GLViewport({600, 600, -1.0, 1.0, -1.0, 1.0, 1.0, 5.0}));
-    ConstProcessor<GLViewport> viewport(GLViewport({300, 300, -1.0, 1.0, -1.0, 1.0, 1.0, 5.0}));
-    ConstProcessor<GLDataRange> dataRange(GLDataRange({0.0, 1.0}));
-    //GLScreenSplitter spliter(GLScreenSplitter::makeGrid(3, 2));
-    GLScreenSplitter screenSplitter(std::vector<ScreenPart>(6, ScreenPart({0.0, 1.0, 0.0, 1.0})));
-    GLDataRangeSplitter rangeSplitter(GLDataRangeSplitter::makeEvenSplit(6));
-    //GLDataRangeSplitter rangeSplitter(std::vector<GLDataRange>(6, GLDataRange({0.0, 1.0})));
+    ConstProcessor<GLViewport> viewportSource(viewportGlobal, 6);
     
-    GLFrameCombiner combiner(6, 300, 300);
-    GLFrameDisplayer combinedDisplayer;
+    ConstProcessor<GLDataRange> range(GLDataRange({0.0, 1.0}));
+    GLDataRangeSplitter rangeSource(GLDataRangeSplitter::makeEvenSplit(6));
     
+    InternalSingleLink rangeLink(range.outputArg(0), rangeSource.inputArg(0));
+    
+    GLFrameCombiner combiner(6, width, height);
+    GLFrameDisplayer displayer;
+    FakeSink<GLFrameData<DepthFrame>> depthSink;
+    
+    InternalSingleLink displayLink(combiner.colorOutput(), displayer.inputArg(0));
+    InternalSingleLink depthLink(combiner.depthOutput(), depthSink.inputArg(0));
+    
+    auto action = [&]{
+        viewportSource.execute();
+        range.execute();
+        rangeSource.execute();
+        combiner.execute();
+        displayer.execute();
+        depthSink.execute();
+    };
+#endif
+    
+#ifdef SORT_FIRST
+    ConstProcessor<GLViewport> viewport(viewportGlobal);
+    GLScreenSplitter viewportSource(GLScreenSplitter::makeGrid(3, 2));
+    
+    InternalSingleLink viewportLink(viewport.outputArg(0), viewportSource.inputArg(0));
+    
+    ConstProcessor<GLDataRange> rangeSource(rangeGlobal, 6);
+    
+    auto action = [&]{
+        viewport.execute();
+        viewportSource.execute();
+        rangeSource.execute();
+    };
+#endif
     for(int y = 0; y < 2; ++y)
     {
         for(int x = 0; x < 3; ++x)
@@ -104,51 +144,62 @@ int main()
             threads[i] = std::move(GLThread([i]{
                 std::unique_ptr<ShapeRenderer> renderer(new ShapeRenderer);
                 renderers[i] = renderer.get();
-//                 GLFrameDisplayer displayer;
-//                 glstreamer_core::FakeSink<GLFrameData<DepthFrame>> depthSink;
-//                 InternalSingleLink
-//                 displayLink(renderer->outputArg(0), displayer.inputArg(0)),
-//                 depthLink(renderer->outputArg(1), depthSink.inputArg(0));
+                
+            #ifdef SORT_FIRST
+                GLFrameDisplayer displayer;
+                FakeSink<GLFrameData<DepthFrame>> depthSink;
+                InternalSingleLink displayLink(renderer->outputArg(0), displayer.inputArg(0));
+                InternalSingleLink depthLink(renderer->outputArg(1), depthSink.inputArg(0));
+            #endif
+                
                 barrier.wait();
                 barrier.wait();
                 for(int i = 0; i < loops; ++i)
                 {
                     renderer->execute();
+            #ifdef SORT_FIRST
+                    displayer.execute();
+                    depthSink.execute();
+            #endif
                 }
                 barrier.wait();
                 barrier.wait();
-            }, (GLWindowBinding*)nullptr, ":0", 300, 300, true, x * 300 + 32, (1-y) * 300 + 32));
+            },
+        #ifdef SORT_LAST
+            (GLWindowBinding*)nullptr, ":0", width, height, true, x * width / 3 + 32, (1-y) * height / 2 + 32));
+        #endif
+        #ifdef SORT_FIRST
+            (GLWindowBinding*)nullptr, ":0", width/3, height/2, true, x * width / 3 + 32, (1-y) * height / 2 + 32));
+        #endif
         }
     }
     barrier.wait();
     {
-        InternalSingleLink screenConstLink(viewport.outputArg(0), screenSplitter.inputArg(0));
-        InternalSingleLink rangeConstLink(dataRange.outputArg(0), rangeSplitter.inputArg(0));
-        InternalSingleLink displayLink(combiner.outputArg(0), combinedDisplayer.inputArg(0));
-        
-        FakeSink<GLFrameData<DepthFrame>> depthSink;
-        InternalSingleLink depthLink(combiner.outputArg(1), depthSink.inputArg(0));
-        
-        std::unique_ptr<ThreadedLink> screenLinks[6], rangeLinks[6], colorLinks[6], depthLinks[6];
+        std::unique_ptr<ThreadedLink> viewportLinks[6], rangeLinks[6];
         for(int i = 0; i < 6; ++i)
         {
-            screenLinks[i] = std::unique_ptr<ThreadedLink>(new ThreadedLink(screenSplitter.outputArg(i), renderers[i]->inputArg(0), 3));
-            rangeLinks[i] = std::unique_ptr<ThreadedLink>(new ThreadedLink(rangeSplitter.outputArg(i), renderers[i]->inputArg(1), 3));
-            colorLinks[i] = std::unique_ptr<ThreadedLink>(new ThreadedLink(renderers[i]->outputArg(0), combiner.inputArg(i), 3));
-            depthLinks[i] = std::unique_ptr<ThreadedLink>(new ThreadedLink(renderers[i]->outputArg(1), combiner.inputArg(6 + i), 3));
+            viewportLinks[i].reset(new ThreadedLink(viewportSource.outputArg(i), renderers[i]->inputArg(0), 3));
+            rangeLinks[i].reset(new ThreadedLink(rangeSource.outputArg(i), renderers[i]->inputArg(1), 3));
         }
+    #ifdef SORT_LAST
+        std::unique_ptr<ThreadedLink> colorLinks[6], depthLinks[6];
+        for(int i = 0; i < 6; ++i)
+        {
+            colorLinks[i].reset(new ThreadedLink(renderers[i]->outputArg(0), combiner.colorInput(i), 3));
+            depthLinks[i].reset(new ThreadedLink(renderers[i]->outputArg(1), combiner.depthInput(i), 3));
+        }
+    #endif
         barrier.wait();
         
+        auto start_time = std::chrono::high_resolution_clock::now();
         for(int i = 0; i < loops; ++i)
         {
-            viewport.execute();
-            dataRange.execute();
-            screenSplitter.execute();
-            rangeSplitter.execute();
-            combiner.execute();
-            combinedDisplayer.execute();
+            action();
         }
         barrier.wait();
+        auto end_time = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> duration(end_time - start_time);
+        printf("%d Frames in %f secs. %f frames/sec.\n", loops, duration.count(), loops/duration.count());
     }
     barrier.wait();
     for(int i = 0; i < 6; ++i)
