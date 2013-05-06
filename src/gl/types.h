@@ -5,9 +5,13 @@ namespace glstreamer_gl
 {
     class GLContext;
     class GLContextBinding;
+    class GLDataRangeSplitter;
     class GLDisplay;
     class GLFBConfig;
+    class GLFBORenderer;
+    class GLFrameCombiner;
     class GLGenericRenderer;
+    class GLMeshBuffer;
     class GLProgram;
     class GLScreenSplitter;
     class GLShader;

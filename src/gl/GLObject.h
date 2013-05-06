@@ -20,6 +20,19 @@ namespace glstreamer_gl
             Ops::deleteOne(id);
         }
         
+        GLObject(GLObject<Ops>&& obj):
+        id(obj.id)
+        {
+            obj.id = ID();
+        }
+        
+        GLObject<Ops>& operator = (GLObject<Ops>&& obj)
+        {
+            Ops::deleteOne(id);
+            id = obj.id;
+            obj.id = ID();
+        }
+        
         ID get() const
         {
             return id;
@@ -31,6 +44,9 @@ namespace glstreamer_gl
         }
         
     private:
+        GLObject(GLObject<Ops> const&) = delete;
+        GLObject<Ops>& operator = (GLObject<Ops> const&) = delete;
+        
         ID id;
     };
     

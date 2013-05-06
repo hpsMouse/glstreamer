@@ -18,6 +18,7 @@ outputDepthFrames(outputDepthFrames),
 projection(projection)
 {
     inputArgs._addSlot<GLViewport>("viewport");
+    inputArgs._addSlot<GLDataRange>("range");
     for(std::size_t i = 0; i < inputColorFrames; ++i)
     {
         char name[64];

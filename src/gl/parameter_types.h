@@ -14,6 +14,11 @@ namespace glstreamer_gl
         double left, right, bottom, top;
     };
     
+    struct GLDataRange
+    {
+        double start, end;
+    };
+    
     enum class ProjectionStyle
     {
         Frustum,

@@ -59,6 +59,7 @@ void glstreamer_gl::GLPlugin::registerTypes()
     registerFrameType<RGBAFrame>();
     registerFrameType<DepthFrame>();
     registerDefault<GLViewport>();
+    registerDefault<GLDataRange>();
 }
 
 void glstreamer_gl::GLPlugin::registerProcessors()

@@ -1,12 +1,4 @@
-#include <cstdio>
-
 #include <memory>
-
-#include <assimp/Importer.hpp>
-#include <assimp/postprocess.h>
-#include <assimp/scene.h>
-
-#include <FreeImagePlus.h>
 
 #include <posixpp/PThreadBarrier.h>
 
@@ -16,76 +8,35 @@
 
 #include "../gl/gl.inc.h"
 
-#include "../gl/GLGenericRenderer.h"
+#include "../gl/GLDataRangeSplitter.h"
+#include "../gl/GLFBORenderer.h"
+#include "../gl/GLFrameDisplayer.h"
 #include "../gl/GLObject.h"
 #include "../gl/GLScreenSpliter.h"
 #include "../gl/GLThread.h"
 #include "../gl/GLWindowBinding.h"
 
-#include "../gl/draw_funcs.h"
+#include "../gl/loaders.h"
 #include "../gl/parameter_types.h"
 
 #include "../core/ConstProcessor.h"
+#include "../core/FakeSink.h"
 
-class ShapeRenderer : public glstreamer_gl::GLGenericRenderer
+class ShapeRenderer : public glstreamer_gl::GLFBORenderer
 {
 public:
     ShapeRenderer (glstreamer_gl::ProjectionStyle projection = glstreamer_gl::ProjectionStyle::Frustum ):
-    glstreamer_gl::GLGenericRenderer(0, 0, 0, 0, projection),
+    glstreamer_gl::GLFBORenderer(0, 0, true, true, projection),
     meshes(),
-    texAlbedo()
+    texAlbedo(glstreamer_gl::load2DTexture("texture/AdrianAlbedo.tga"))
     {
-        Assimp::Importer importer;
-        aiScene const* scene = importer.ReadFile("head.obj", aiProcess_Triangulate | aiProcess_SortByPType);
-        
-        meshes.resize(scene->mNumMeshes);
-        
-        for(unsigned i = 0; i < scene->mNumMeshes; ++i)
-        {
-            std::vector<unsigned> indices;
-            aiMesh const* mesh = scene->mMeshes[i];
-            glstreamer_gl::transformIndex(mesh, indices);
-            MeshBuffer& meshBuffer = meshes[i];
-            
-            gl_Call(glBindVertexArray(meshBuffer.vao));
-            
-            gl_Call(glBindBuffer(GL_ARRAY_BUFFER, meshBuffer.vertexBuffer));
-            gl_Call(glBufferData(GL_ARRAY_BUFFER, mesh->mNumVertices * sizeof(aiVector3D), mesh->mVertices, GL_STATIC_DRAW));
-            gl_Call(glVertexPointer(3, GL_FLOAT, 0, 0));
-            
-            gl_Call(glBindBuffer(GL_ARRAY_BUFFER, meshBuffer.texCoordBuffer));
-            gl_Call(glBufferData(GL_ARRAY_BUFFER, mesh->mNumVertices * sizeof(aiVector3D), mesh->mTextureCoords[0], GL_STATIC_DRAW));
-            gl_Call(glTexCoordPointer(3, GL_FLOAT, 0, 0));
-            
-            gl_Call(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, meshBuffer.indexBuffer));
-            gl_Call(glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned), indices.data(), GL_STATIC_DRAW));
-            
-            meshBuffer.nIndices = indices.size();
-        }
-        
-        fipImage albedo;
-        albedo.load("texture/AdrianAlbedo.tga");
-        albedo.convertTo32Bits();
-        gl_Call(glBindTexture(GL_TEXTURE_2D, texAlbedo));
-        gl_Call(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, albedo.getWidth(), albedo.getHeight(), 0, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, albedo.accessPixels()));
-        gl_Call(glGenerateMipmap(GL_TEXTURE_2D));
+        glstreamer_gl::loadMeshes("head.obj", meshes);
     }
     
     virtual ~ShapeRenderer() noexcept {}
     
 private:
-    struct MeshBuffer
-    {
-        MeshBuffer(): nIndices(), vao(), vertexBuffer(), texCoordBuffer(), indexBuffer() {}
-        
-        unsigned nIndices;
-        glstreamer_gl::VertexArrayObject vao;
-        glstreamer_gl::BufferObject vertexBuffer;
-        glstreamer_gl::BufferObject texCoordBuffer;
-        glstreamer_gl::BufferObject indexBuffer;
-    };
-    
-    std::vector<MeshBuffer> meshes;
+    std::vector<glstreamer_gl::GLMeshBuffer> meshes;
     
     glstreamer_gl::TextureObject texAlbedo;
     
@@ -104,48 +55,20 @@ private:
         gl_Call(glTranslated(0.0, 0.0, -3.0));
         gl_Call(glScaled(0.01, 0.01, 0.01));
         
+        auto const& range = this->getDataRange();
+        
+        gl_Call(glActiveTexture(GL_TEXTURE0));
+        gl_Call(glBindTexture(GL_TEXTURE_2D, texAlbedo));
         gl_Call(glEnable(GL_TEXTURE_2D));
-        for(MeshBuffer const& mesh : meshes)
-        {
-            gl_Call(glBindVertexArray(mesh.vao));
-            gl_Call(glEnableClientState(GL_VERTEX_ARRAY));
-            gl_Call(glEnableClientState(GL_TEXTURE_COORD_ARRAY));
-            gl_Call(glDrawElements(GL_TRIANGLES, mesh.nIndices, GL_UNSIGNED_INT, 0));
-        }
-        
-#if 0
-        gl_Call(glLoadIdentity());
-        gl_Call(glTranslated(0.0, 0.0, -2.0));
-        gl_Call(glRotated(10, 1.0, 0.0, 0.0));
-        gl_Call(glRotated(30, 0.0, 1.0, 0.0));
-        
-        gl_Call(glColor4d(0.5, 0.5, 0.0, 1.0));
-        glBegin(GL_QUADS);
-            glVertex2d(-1.0, -1.0);
-            glVertex2d( 1.0, -1.0);
-            glVertex2d( 1.0,  1.0);
-            glVertex2d(-1.0,  1.0);
-        gl_Call(glEnd());
-        
-        gl_Call(glLoadIdentity());
-        gl_Call(glTranslated(0.0, 0.0, -2.0));
-        gl_Call(glRotated(10, 1.0, 0.0, 0.0));
-        gl_Call(glRotated(-30, 0.0, 1.0, 0.0));
-        
-        gl_Call(glColor4d(0.5, 0.0, 0.5, 1.0));
-        glBegin(GL_QUADS);
-            glVertex2d(-1.0, -1.0);
-            glVertex2d( 1.0, -1.0);
-            glVertex2d( 1.0,  1.0);
-            glVertex2d(-1.0,  1.0);
-        gl_Call(glEnd());
-#endif
+        for(glstreamer_gl::GLMeshBuffer const& mesh : meshes)
+            mesh.draw(range.start, range.end);
+        gl_Call(glDisable(GL_TEXTURE_2D));
     }
 };
 
 posixpp::PThreadBarrier barrier(7);
 ShapeRenderer* renderers[6];
-std::unique_ptr<glstreamer_gl::GLThread> threads[6];
+glstreamer_gl::GLThread threads[6];
 
 static constexpr int loops = 60 * 10;
 
@@ -157,42 +80,60 @@ int main()
     
     init();
     
-    ConstProcessor<GLViewport> viewport(GLViewport({600, 600, -1.0, 1.0, -1.0, 1.0, 1.0, 5.0}));
-    GLScreenSplitter spliter(GLScreenSplitter::makeGrid(3, 2));
+    //ConstProcessor<GLViewport> viewport(GLViewport({600, 600, -1.0, 1.0, -1.0, 1.0, 1.0, 5.0}));
+    ConstProcessor<GLViewport> viewport(GLViewport({300, 300, -1.0, 1.0, -1.0, 1.0, 1.0, 5.0}));
+    ConstProcessor<GLDataRange> dataRange(GLDataRange({0.0, 1.0}));
+    //GLScreenSplitter spliter(GLScreenSplitter::makeGrid(3, 2));
+    GLScreenSplitter screenSplitter(std::vector<ScreenPart>(6, ScreenPart({0.0, 1.0, 0.0, 1.0})));
+    GLDataRangeSplitter rangeSplitter(GLDataRangeSplitter::makeEvenSplit(6));
+    //GLDataRangeSplitter rangeSplitter(std::vector<GLDataRange>(6, GLDataRange({0.0, 1.0})));
     for(int y = 0; y < 2; ++y)
     {
         for(int x = 0; x < 3; ++x)
         {
             int i = y * 3 + x;
-            threads[i] = std::unique_ptr<GLThread>(new GLThread([i]{
+            // No need to move, but KDevelop doesn't understand.
+            threads[i] = std::move(GLThread([i]{
                 std::unique_ptr<ShapeRenderer> renderer(new ShapeRenderer);
                 renderers[i] = renderer.get();
+                GLFrameDisplayer displayer;
+                glstreamer_core::FakeSink<GLFrameData<DepthFrame>> depthSink;
+                InternalSingleLink
+                displayLink(renderer->outputArg(0), displayer.inputArg(0)),
+                depthLink(renderer->outputArg(1), depthSink.inputArg(0));
                 barrier.wait();
                 barrier.wait();
                 for(int i = 0; i < loops; ++i)
                 {
                     renderer->execute();
+                    displayer.execute();
                 }
                 barrier.wait();
                 barrier.wait();
-            }, (GLWindowBinding*)nullptr, ":0", 200, 300, true, x * 200 + 32, (1-y) * 300 + 32));
+            }, (GLWindowBinding*)nullptr, ":0", 300, 300, true, x * 300 + 32, (1-y) * 300 + 32));
         }
     }
     barrier.wait();
     {
-        InternalSingleLink constLink(viewport.outputArg(0), spliter.inputArg(0));
-        std::unique_ptr<ThreadedLink> links[6];
+        InternalSingleLink screenConstLink(viewport.outputArg(0), screenSplitter.inputArg(0));
+        InternalSingleLink rangeConstLink(dataRange.outputArg(0), rangeSplitter.inputArg(0));
+        std::unique_ptr<ThreadedLink> screenLinks[6], rangeLinks[6];
         for(int i = 0; i < 6; ++i)
-            links[i] = std::unique_ptr<ThreadedLink>(new ThreadedLink(spliter.outputArg(i), renderers[i]->inputArg(0), 3));
+        {
+            screenLinks[i] = std::unique_ptr<ThreadedLink>(new ThreadedLink(screenSplitter.outputArg(i), renderers[i]->inputArg(0), 3));
+            rangeLinks[i] = std::unique_ptr<ThreadedLink>(new ThreadedLink(rangeSplitter.outputArg(i), renderers[i]->inputArg(1), 3));
+        }
         barrier.wait();
         for(int i = 0; i < loops; ++i)
         {
             viewport.execute();
-            spliter.execute();
+            dataRange.execute();
+            screenSplitter.execute();
+            rangeSplitter.execute();
         }
         barrier.wait();
     }
     barrier.wait();
     for(int i = 0; i < 6; ++i)
-        threads[i]->join();
+        threads[i].join();
 }

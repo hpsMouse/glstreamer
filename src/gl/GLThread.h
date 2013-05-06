@@ -45,6 +45,8 @@ namespace glstreamer_gl
         };
         
     public:
+        GLThread(): realThread() {}
+        
         /**
          * \brief Start a new thread in an OpenGL context.
          * 
@@ -55,6 +57,9 @@ namespace glstreamer_gl
         explicit GLThread(Func&& f, Binding const*, BindingArgs&& ... args):
         realThread(ThreadFunc<Binding>(), f, args...)
         {}
+        
+        GLThread(GLThread&&) = default;
+        GLThread& operator = (GLThread&&) = default;
         
         void join()
         {
@@ -71,6 +76,8 @@ namespace glstreamer_gl
         }
         
     private:
+        GLThread(GLThread const&) = delete;
+        GLThread& operator = (GLThread const&) = delete;
         
         static __thread void* binding_ptr;
         static __thread std::type_info const* binding_type;

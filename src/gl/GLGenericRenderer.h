@@ -35,6 +35,16 @@ namespace glstreamer_gl
         int getInputColorTexture(std::ptrdiff_t index);
         int getInputDepthTexture(std::ptrdiff_t index);
         
+        GLViewport const& getViewport()
+        {
+            return *static_cast<GLViewport*>(inputArgs.simpleSlot(0).arg);
+        }
+        
+        GLDataRange const& getDataRange()
+        {
+            return *static_cast<GLDataRange*>(inputArgs.simpleSlot(1).arg);
+        }
+        
     private:
         virtual void run() override final;
         
@@ -42,7 +52,7 @@ namespace glstreamer_gl
         
         ProjectionStyle projection;
         
-        static constexpr std::size_t fixedInputs = 1, fixedOutputs = 0;
+        static constexpr std::size_t fixedInputs = 2, fixedOutputs = 0;
     };
 }
 
