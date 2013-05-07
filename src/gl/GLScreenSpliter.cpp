@@ -32,6 +32,9 @@ GLViewport GLScreenSplitter::split ( const GLViewport& input, const ScreenPart& 
     unsigned bottomP = input.height * part.bottom;
     unsigned topP    = input.height * part.top;
     
+    output.x = input.x + leftP;
+    output.y = input.y + bottomP;
+    
     output.width = rightP - leftP;
     output.height = topP - bottomP;
     

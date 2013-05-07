@@ -5,6 +5,7 @@ namespace glstreamer_gl
 {
     struct GLViewport
     {
+        int x, y;
         unsigned width, height;
         double left, right, bottom, top, near, far;
     };
@@ -23,6 +24,11 @@ namespace glstreamer_gl
     {
         Frustum,
         Ortho
+    };
+    
+    struct GLFrameInfo
+    {
+        int colorIndex, depthIndex;
     };
 }
 

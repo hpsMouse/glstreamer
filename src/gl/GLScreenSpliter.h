@@ -12,7 +12,7 @@ namespace glstreamer_gl
     /**
      * \brief Split a viewport into multiple parts
      * 
-     * Input and outputs: Viewport(width, height), Frustum_or_Ortho(left, right, bottom, top, near, far)
+     * Input and outputs: Viewport(x, y, width, height), Frustum_or_Ortho(left, right, bottom, top, near, far)
      */
     class GLScreenSplitter : public glstreamer::Processor
     {

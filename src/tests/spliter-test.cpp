@@ -13,7 +13,7 @@
 
 #include "../gl/GLDataRangeSplitter.h"
 #include "../gl/GLFBORenderer.h"
-#include "../gl/GLFrameCombiner.h"
+#include "../gl/GLFrameComposer.h"
 #include "../gl/GLFrameDisplayer.h"
 #include "../gl/GLObject.h"
 #include "../gl/GLScreenSpliter.h"
@@ -85,8 +85,8 @@ static constexpr int loops = 60 * 10;
 
 // WARNING: Do NOT define both SORT_FIRST and SORT_LAST!
 
-#define SORT_FIRST
-//#define SORT_LAST
+//#define SORT_FIRST
+#define SORT_LAST
 
 int main()
 {
@@ -97,7 +97,7 @@ int main()
     init();
     
     unsigned width = 640, height = 480;
-    GLViewport viewportGlobal({width, height, -(double(width)/height), double(width)/height, -1.0, 1.0, 1.0, 5.0});
+    GLViewport viewportGlobal({0, 0, width, height, -(double(width)/height), double(width)/height, -1.0, 1.0, 1.0, 5.0});
     GLDataRange rangeGlobal({0.0, 1.0});
     
 #ifdef SORT_LAST
@@ -111,18 +111,25 @@ int main()
     
     InternalSingleLink rangeLink(range.outputArg(0), rangeSource.inputArg(0));
     
-    GLFrameCombiner combiner(6, width, height);
+    GLFrameComposer composer(6, std::vector<GLFrameInfo>({
+        GLFrameInfo({0, 0}), GLFrameInfo({1, 1}), GLFrameInfo({2, 2}), GLFrameInfo({3, 3}), GLFrameInfo({4, 4}), GLFrameInfo({5, 5})
+    }), 6, 6);
+    FakeSink<GLViewport> viewportSink;
     GLFrameDisplayer displayer;
     FakeSink<GLFrameData<DepthFrame>> depthSink;
     
-    InternalSingleLink displayLink(combiner.colorOutput(), displayer.inputArg(0));
-    InternalSingleLink depthLink(combiner.depthOutput(), depthSink.inputArg(0));
+    InternalSingleLink viewportLink(composer.outputArg(0), viewportSink.inputArg(0));
+    InternalSingleLink displayLink(composer.outputArg(1), displayer.inputArg(0));
+    InternalSingleLink depthLink(composer.outputArg(2), depthSink.inputArg(0));
+    
+    ConstProcessor<GLViewport> viewportParam(viewportGlobal, 7);
     
     auto action = [&]{
         viewportSource.execute();
         range.execute();
         rangeSource.execute();
-        combiner.execute();
+        viewportParam.execute();
+        composer.execute();
         displayer.execute();
         depthSink.execute();
     };
@@ -194,11 +201,13 @@ int main()
             rotationLinks[i].reset(new ThreadedLink(rotationSource.outputArg(i), renderers[i]->inputArg("rotation"), 3));
         }
     #ifdef SORT_LAST
-        std::unique_ptr<ThreadedLink> colorLinks[6], depthLinks[6];
+        std::unique_ptr<ThreadedLink> colorLinks[6], depthLinks[6], viewportParamLinks[7];
+        for(int i = 0; i < 7; ++i)
+            viewportParamLinks[i].reset(new ThreadedLink(viewportParam.outputArg(i), composer.inputArg(i), 3));
         for(int i = 0; i < 6; ++i)
         {
-            colorLinks[i].reset(new ThreadedLink(renderers[i]->outputArg(0), combiner.colorInput(i), 3));
-            depthLinks[i].reset(new ThreadedLink(renderers[i]->outputArg(1), combiner.depthInput(i), 3));
+            colorLinks[i].reset(new ThreadedLink(renderers[i]->outputArg(0), composer.colorInputSlot(i), 3));
+            depthLinks[i].reset(new ThreadedLink(renderers[i]->outputArg(1), composer.depthInputSlot(i), 3));
         }
     #endif
         barrier.wait();
