@@ -14,6 +14,7 @@ namespace glstreamer_gl
                       std::size_t inputDepthFrames,
                       bool hasColorOutput = true,
                       bool hasDepthOutput = true,
+                      bool show = true,
                       ProjectionStyle projection = ProjectionStyle::Frustum
                      );
         
@@ -24,7 +25,7 @@ namespace glstreamer_gl
     private:
         FramebufferObject fbo;
         
-        bool hasColor, hasDepth;
+        bool hasColor, hasDepth, show;
     };
 }
 

@@ -24,17 +24,21 @@
 #include "../gl/parameter_types.h"
 
 #include "../core/ConstProcessor.h"
+#include "../core/Dispatcher.h"
 #include "../core/FakeSink.h"
+#include "../core/VariableProcessor.h"
 
 class ShapeRenderer : public glstreamer_gl::GLFBORenderer
 {
 public:
     ShapeRenderer (glstreamer_gl::ProjectionStyle projection = glstreamer_gl::ProjectionStyle::Frustum ):
-    glstreamer_gl::GLFBORenderer(0, 0, true, true, projection),
+    glstreamer_gl::GLFBORenderer(0, 0, true, true, true, projection),
     meshes(),
     texAlbedo(glstreamer_gl::load2DTexture("texture/AdrianAlbedo.tga"))
     {
         glstreamer_gl::loadMeshes("head.obj", meshes);
+        
+        inputArgs.addSlot<double>("rotation");
     }
     
     virtual ~ShapeRenderer() noexcept {}
@@ -49,6 +53,8 @@ private:
     
     virtual void draw() override
     {
+        double rotation = *static_cast<double*>(inputArg("rotation").toSlot().simpleSlot->arg);
+        
         gl_Call(glEnable(GL_DEPTH_TEST));
         gl_Call(glClearColor(0.0f, 0.0f, 0.0f, 0.0f));
         gl_Call(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
@@ -57,6 +63,7 @@ private:
         
         gl_Call(glLoadIdentity());
         gl_Call(glTranslated(0.0, 0.0, -3.0));
+        gl_Call(glRotated(rotation, 0.0, 1.0, 0.0));
         gl_Call(glScaled(0.01, 0.01, 0.01));
         
         auto const& range = this->getDataRange();
@@ -146,9 +153,9 @@ int main()
                 renderers[i] = renderer.get();
                 
             #ifdef SORT_FIRST
-                GLFrameDisplayer displayer;
+                FakeSink<GLFrameData<RGBAFrame>> colorSink;
                 FakeSink<GLFrameData<DepthFrame>> depthSink;
-                InternalSingleLink displayLink(renderer->outputArg(0), displayer.inputArg(0));
+                InternalSingleLink colorLink(renderer->outputArg(0), colorSink.inputArg(0));
                 InternalSingleLink depthLink(renderer->outputArg(1), depthSink.inputArg(0));
             #endif
                 
@@ -158,7 +165,7 @@ int main()
                 {
                     renderer->execute();
             #ifdef SORT_FIRST
-                    displayer.execute();
+                    colorSink.execute();
                     depthSink.execute();
             #endif
                 }
@@ -175,11 +182,16 @@ int main()
     }
     barrier.wait();
     {
-        std::unique_ptr<ThreadedLink> viewportLinks[6], rangeLinks[6];
+        VariableProcessor<double> rotation;
+        Dispatcher<double> rotationSource(6);
+        InternalSingleLink rotationLink(rotation.outputArg(0), rotationSource.inputArg(0));
+        
+        std::unique_ptr<ThreadedLink> viewportLinks[6], rangeLinks[6], rotationLinks[6];
         for(int i = 0; i < 6; ++i)
         {
             viewportLinks[i].reset(new ThreadedLink(viewportSource.outputArg(i), renderers[i]->inputArg(0), 3));
             rangeLinks[i].reset(new ThreadedLink(rangeSource.outputArg(i), renderers[i]->inputArg(1), 3));
+            rotationLinks[i].reset(new ThreadedLink(rotationSource.outputArg(i), renderers[i]->inputArg("rotation"), 3));
         }
     #ifdef SORT_LAST
         std::unique_ptr<ThreadedLink> colorLinks[6], depthLinks[6];
@@ -194,6 +206,11 @@ int main()
         auto start_time = std::chrono::high_resolution_clock::now();
         for(int i = 0; i < loops; ++i)
         {
+            auto current_time = std::chrono::high_resolution_clock::now();
+            std::chrono::duration<double> duration(current_time - start_time);
+            rotation.set(duration.count() * 30);
+            rotation.execute();
+            rotationSource.execute();
             action();
         }
         barrier.wait();
