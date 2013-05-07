@@ -18,42 +18,14 @@ namespace glstreamer_gl
     class GLFrameComposer : public glstreamer::Processor
     {
     public:
+        struct ColorOnly {};
+        
+        GLFrameComposer(std::size_t nFrames);
+        GLFrameComposer(std::size_t nFrames, ColorOnly const&);
         GLFrameComposer(std::size_t nFrames, std::vector<GLFrameInfo>&& frameInfo, std::size_t colorFrames, std::size_t depthFrames);
         
-        glstreamer::InputSlot viewportInputSlot()
-        {
-            return inputArg(0);
-        }
-        
-        glstreamer::InputSlot viewportInputSlot(std::ptrdiff_t index)
-        {
-            return inputArg(1 + index);
-        }
-        
-        glstreamer::InputSlot colorInputSlot(std::ptrdiff_t index)
-        {
-            return inputArg(1 + nFrames + index);
-        }
-        
-        glstreamer::InputSlot depthInputSlot(std::ptrdiff_t index)
-        {
-            return inputArg(1 + nFrames + colorFrames + index);
-        }
-        
-        glstreamer::OutputSlot viewportOutputSlot()
-        {
-            return outputArg(0);
-        }
-        
-        glstreamer::OutputSlot colorOutputSlot()
-        {
-            return outputArg(1);
-        }
-        
-        glstreamer::OutputSlot depthOutputSlot()
-        {
-            return outputArg(2);
-        }
+        static std::vector<GLFrameInfo> makeTrivialFrameList(std::size_t nFrames);
+        static std::vector<GLFrameInfo> makeColorOnlyFrameList(std::size_t nFrames);
         
     private:
         std::size_t nFrames;
@@ -64,14 +36,13 @@ namespace glstreamer_gl
         GLProgram program;
         GLShader shader;
         
-        GLViewport& getViewport();
+        GLViewport& canvasViewportIn();
+        GLViewport& canvasViewportOut();
         
-        GLViewport& viewportInput(std::ptrdiff_t index);
+        GLViewport& frameViewport(std::ptrdiff_t index);
         
         GLTextureData<RGBAFrame>& inputColorTexture(std::ptrdiff_t index);
         GLTextureData<DepthFrame>& inputDepthTexture(std::ptrdiff_t index);
-        
-        GLViewport& getOutputViewport();
         
         GLTextureData<RGBAFrame>& outputColorTexture();
         GLTextureData<DepthFrame>& outputDepthTexture();

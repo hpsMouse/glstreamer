@@ -11,7 +11,7 @@ namespace glstreamer_core
     class Dispatcher : public glstreamer::Processor
     {
     public:
-        Dispatcher(std::size_t numDuplications):
+        explicit Dispatcher(std::size_t numDuplications):
         glstreamer::Processor(),
         numDuplications(numDuplications)
         {

@@ -59,30 +59,6 @@ namespace glstreamer
         }
         
         template <typename T>
-        T& externalArg(size_type index)
-        {
-            return *static_cast<T*>(simpleSlot(index).arg);
-        }
-        
-        template <typename T>
-        T& externalArg(std::string const& name)
-        {
-            return *static_cast<T*>(fullSlot(name).simpleSlot->arg);
-        }
-        
-        template <typename T>
-        T& localArg(size_type index)
-        {
-            return fullSlot(index).localArg->getArg<T>();
-        }
-        
-        template <typename T>
-        T& localArg(std::string const& name)
-        {
-            return fullSlot(name).localArg->getArg<T>();
-        }
-        
-        template <typename T>
         ArgBlock& _addSlot(std::string const& name)
         {
             TypeSpec* typeSpec = TypeManager::getTypeSpec<T>();

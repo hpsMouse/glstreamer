@@ -8,6 +8,7 @@
 #include "types.h"
 
 #include "LocalArg.h"
+#include "simpleslot.h"
 
 namespace glstreamer
 {
@@ -47,6 +48,18 @@ namespace glstreamer
             src.simpleSlot = nullptr;
             src.typeSpec = nullptr;
             src.processor = nullptr;
+        }
+        
+        template <typename T>
+        T& arg()
+        {
+            return *static_cast<T*>(simpleSlot->arg);
+        }
+        
+        template <typename T>
+        T& local()
+        {
+            return localArg->getArg<T>();
         }
     };
 }

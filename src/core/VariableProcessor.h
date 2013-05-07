@@ -9,11 +9,14 @@ namespace glstreamer_core
     class VariableProcessor : public glstreamer::Processor
     {
     public:
-        VariableProcessor():
+        explicit VariableProcessor(std::size_t numOutputs = 1):
         glstreamer::Processor(),
-        value()
+        value(),
+        numOutputs(numOutputs)
         {
-            outputArgs.addSlot<T>("output");
+            for(std::size_t i = 0; i < numOutputs; ++i)
+                outputArgs._addSlot<T>(genName("output", i));
+            outputArgs.refreshSimpleSlots();
         }
         
         T& get()
@@ -29,9 +32,12 @@ namespace glstreamer_core
     private:
         T value;
         
+        std::size_t numOutputs;
+        
         virtual void run() override
         {
-            *static_cast<T*>(outputArgs.simpleSlot(0).arg) = value;
+            for(std::size_t i = 0; i < numOutputs; ++i)
+                *static_cast<T*>(outputArgs.simpleSlot(i).arg) = value;
         }
     };
 }

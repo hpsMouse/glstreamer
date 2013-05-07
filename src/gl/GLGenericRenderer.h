@@ -45,6 +45,11 @@ namespace glstreamer_gl
             return *static_cast<GLDataRange*>(inputArgs.simpleSlot(1).arg);
         }
         
+        GLViewport& getViewportOutput()
+        {
+            return *static_cast<GLViewport*>(outputArgs.simpleSlot(0).arg);
+        }
+        
     private:
         virtual void run() override final;
         
@@ -52,7 +57,7 @@ namespace glstreamer_gl
         
         ProjectionStyle projection;
         
-        static constexpr std::size_t fixedInputs = 2, fixedOutputs = 0;
+        static constexpr std::size_t fixedInputs = 2, fixedOutputs = 1;
     };
 }
 

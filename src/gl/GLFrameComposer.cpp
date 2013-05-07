@@ -1,5 +1,3 @@
-#include <cstdio>
-
 #include <utility>
 
 #include "GLFrameComposer.h"
@@ -23,6 +21,14 @@ static char const* ComposeShader =
 "}\n"
 ;
 
+GLFrameComposer::GLFrameComposer ( std::size_t nFrames ):
+GLFrameComposer(nFrames, makeTrivialFrameList(nFrames), nFrames, nFrames)
+{}
+
+GLFrameComposer::GLFrameComposer ( std::size_t nFrames, const GLFrameComposer::ColorOnly& ):
+GLFrameComposer(nFrames, makeColorOnlyFrameList(nFrames), nFrames, 0)
+{}
+
 GLFrameComposer::GLFrameComposer ( std::size_t nFrames, std::vector< GLFrameInfo >&& frameInfo, std::size_t colorFrames, std::size_t depthFrames ):
 nFrames(nFrames),
 frameInfo(std::move(frameInfo)),
@@ -32,28 +38,20 @@ fbo(),
 program(),
 shader(GL_FRAGMENT_SHADER)
 {
-    inputArgs._addSlot<GLViewport>("iviewport");
+    inputArgs._addSlot<GLViewport>("canvas_viewport_in");
+    
     for(std::size_t i = 0; i < nFrames; ++i)
-    {
-        char name[64];
-        std::snprintf(name, 64, "viewport_%zu", i);
-        inputArgs._addSlot<GLViewport>(name);
-    }
+        inputArgs._addSlot<GLViewport>(genName("frame_viewport", i));
+    
     for(std::size_t i = 0; i < colorFrames; ++i)
-    {
-        char name[64];
-        std::snprintf(name, 64, "icolor_%zu", i);
-        inputArgs._addSlot<GLFrameData<RGBAFrame>>(name);
-    }
+        inputArgs._addSlot<GLFrameData<RGBAFrame>>(genName("color_in", i));
+    
     for(std::size_t i = 0; i < depthFrames; ++i)
-    {
-        char name[64];
-        std::snprintf(name, 64, "idepth_%zu", i);
-        inputArgs._addSlot<GLFrameData<DepthFrame>>(name);
-    }
+        inputArgs._addSlot<GLFrameData<DepthFrame>>(genName("depth_in", i));
+    
     inputArgs.refreshSimpleSlots();
     
-    outputArgs.addSlots<GLViewport, GLFrameData<RGBAFrame>, GLFrameData<DepthFrame>>("oviewport", "ocolor", "odepth");
+    outputArgs.addSlots<GLViewport, GLFrameData<RGBAFrame>, GLFrameData<DepthFrame>>("canvas_viewport_out", "color_out", "depth_out");
     
     shader.addSourceStr(ComposeShader).compile();
     program.attachShader(shader).link();
@@ -63,45 +61,67 @@ shader(GL_FRAGMENT_SHADER)
     program.useNone();
 }
 
-GLViewport& GLFrameComposer::getViewport()
+std::vector< GLFrameInfo > GLFrameComposer::makeTrivialFrameList ( std::size_t nFrames )
 {
-    return inputArgs.externalArg<GLViewport>(0);
+    std::vector<GLFrameInfo> result;
+    result.reserve(nFrames);
+    
+    for(std::size_t i = 0; i < nFrames; ++i)
+        result.push_back(GLFrameInfo({int(i), int(i)}));
+    
+    return result;
 }
 
-GLViewport& GLFrameComposer::viewportInput ( std::ptrdiff_t index )
+std::vector< GLFrameInfo > GLFrameComposer::makeColorOnlyFrameList ( std::size_t nFrames )
 {
-    return inputArgs.externalArg<GLViewport>(1 + index);
+    std::vector<GLFrameInfo> result;
+    result.reserve(nFrames);
+    
+    for(std::size_t i = 0; i < nFrames; ++i)
+        result.push_back(GLFrameInfo({int(i), -1}));
+    
+    return result;
+}
+
+GLViewport& GLFrameComposer::canvasViewportIn()
+{
+    return inputArg("canvas_viewport_in").toSlot().arg<GLViewport>();
+}
+
+GLViewport& GLFrameComposer::canvasViewportOut()
+{
+    return outputArg("canvas_viewport_out").toSlot().arg<GLViewport>();
+}
+
+GLViewport& GLFrameComposer::frameViewport ( std::ptrdiff_t index )
+{
+    return inputArg("frame_viewport", index).toSlot().arg<GLViewport>();
 }
 
 GLTextureData< RGBAFrame >& GLFrameComposer::inputColorTexture ( std::ptrdiff_t index )
 {
-    return inputArgs.localArg<GLTextureData<RGBAFrame>>(1 + nFrames + index);
+    return inputArg("color_in", index).toSlot().local<GLTextureData<RGBAFrame>>();
 }
 
 GLTextureData< DepthFrame >& GLFrameComposer::inputDepthTexture ( std::ptrdiff_t index )
 {
-    return inputArgs.localArg<GLTextureData<DepthFrame>>(1 + nFrames + colorFrames + index);
-}
-
-GLViewport& GLFrameComposer::getOutputViewport()
-{
-    return outputArgs.externalArg<GLViewport>(0);
+    return inputArg("depth_in", index).toSlot().local<GLTextureData<DepthFrame>>();
 }
 
 GLTextureData< RGBAFrame >& GLFrameComposer::outputColorTexture()
 {
-    return outputArgs.localArg<GLTextureData<RGBAFrame>>(1);
+    return outputArg("color_out").toSlot().local<GLTextureData<RGBAFrame>>();
 }
 
 GLTextureData< DepthFrame >& GLFrameComposer::outputDepthTexture()
 {
-    return outputArgs.localArg<GLTextureData<DepthFrame>>(2);
+    return outputArg("depth_out").toSlot().local<GLTextureData<DepthFrame>>();
 }
 
 void GLFrameComposer::run()
 {
-    GLViewport const& viewport = getViewport();
-    getOutputViewport() = viewport;
+    GLViewport const& viewport = canvasViewportIn();
+    canvasViewportOut() = viewport;
     
     auto width = viewport.width, height = viewport.height;
     
@@ -132,7 +152,7 @@ void GLFrameComposer::run()
     for(std::size_t i = 0; i < nFrames; ++i)
     {
         GLFrameInfo const& frame = frameInfo[i];
-        auto const& frameViewport = viewportInput(i);
+        auto const& frameVP = frameViewport(i);
         
         GLTextureData<RGBAFrame> *iColor = nullptr;
         GLTextureData<DepthFrame> *iDepth = nullptr;
@@ -177,16 +197,16 @@ void GLFrameComposer::run()
         {
             glBegin(GL_QUADS);
                 glTexCoord2d(0.0, 0.0);
-                glVertex2d(frameViewport.x, frameViewport.y);
+                glVertex2d(frameVP.x, frameVP.y);
                 
                 glTexCoord2d(1.0, 0.0);
-                glVertex2d(frameViewport.x + frameViewport.width, frameViewport.y);
+                glVertex2d(frameVP.x + frameVP.width, frameVP.y);
                 
                 glTexCoord2d(1.0, 1.0);
-                glVertex2d(frameViewport.x + frameViewport.width, frameViewport.y + frameViewport.height);
+                glVertex2d(frameVP.x + frameVP.width, frameVP.y + frameVP.height);
                 
                 glTexCoord2d(0.0, 1.0);
-                glVertex2d(frameViewport.x, frameViewport.y + frameViewport.height);
+                glVertex2d(frameVP.x, frameVP.y + frameVP.height);
             gl_Call(glEnd());
         }
     }

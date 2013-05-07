@@ -9,9 +9,10 @@ namespace glstreamer_core
     class FakeSink : public glstreamer::Processor
     {
     public:
-        FakeSink() : glstreamer::Processor()
+        explicit FakeSink(std::size_t count = 1) : glstreamer::Processor()
         {
-            inputArgs.addSlot<T>("sink");
+            for(std::size_t i = 0; i < count; ++i)
+                inputArgs.addSlot<T>(genName("sink", i));
         }
         
     private:

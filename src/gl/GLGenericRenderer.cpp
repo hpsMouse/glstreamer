@@ -1,5 +1,3 @@
-#include <cstdio>
-
 #include "gl.inc.h"
 
 #include "GLGenericRenderer.h"
@@ -17,32 +15,22 @@ outputColorFrames(outputColorFrames),
 outputDepthFrames(outputDepthFrames),
 projection(projection)
 {
-    inputArgs._addSlot<GLViewport>("viewport");
+    inputArgs._addSlot<GLViewport>("viewport_in");
     inputArgs._addSlot<GLDataRange>("range");
+    outputArgs._addSlot<GLViewport>("viewport_out");
+    
     for(std::size_t i = 0; i < inputColorFrames; ++i)
-    {
-        char name[64];
-        std::snprintf(name, 64, "icolor_%zu", i);
-        inputArgs._addSlot<GLFrameData<RGBAFrame>>(name);
-    }
+        inputArgs._addSlot<GLFrameData<RGBAFrame>>(genName("color_in", i));
+    
     for(std::size_t i = 0; i < inputDepthFrames; ++i)
-    {
-        char name[64];
-        std::snprintf(name, 64, "idepth_%zu", i);
-        inputArgs._addSlot<GLFrameData<DepthFrame>>(name);
-    }
+        inputArgs._addSlot<GLFrameData<DepthFrame>>(genName("depth_in", i));
+    
     for(std::size_t i = 0; i < outputColorFrames; ++i)
-    {
-        char name[64];
-        std::snprintf(name, 64, "ocolor_%zu", i);
-        outputArgs._addSlot<GLFrameData<RGBAFrame>>(name);
-    }
+        outputArgs._addSlot<GLFrameData<RGBAFrame>>(genName("color_out", i));
+    
     for(std::size_t i = 0; i < outputDepthFrames; ++i)
-    {
-        char name[64];
-        std::snprintf(name, 64, "odepth_%zu", i);
-        outputArgs._addSlot<GLFrameData<DepthFrame>>(name);
-    }
+        outputArgs._addSlot<GLFrameData<DepthFrame>>(genName("depth_out", i));
+    
     inputArgs.refreshSimpleSlots();
     outputArgs.refreshSimpleSlots();
 }
@@ -59,22 +47,22 @@ void GLGenericRenderer::drawFinish()
 
 GLTextureData< RGBAFrame >& GLGenericRenderer::getInputColorFrame ( std::ptrdiff_t index )
 {
-    return inputArgs.fullSlot(fixedInputs + index).localArg->getArg<GLTextureData<RGBAFrame>>();
+    return inputArg("color_in", index).toSlot().local<GLTextureData<RGBAFrame>>();
 }
 
 GLTextureData< DepthFrame >& GLGenericRenderer::getInputDepthFrame ( std::ptrdiff_t index )
 {
-    return inputArgs.fullSlot(fixedInputs + inputColorFrames + index).localArg->getArg<GLTextureData<DepthFrame>>();
+    return inputArg("depth_in", index).toSlot().local<GLTextureData<DepthFrame>>();
 }
 
 GLTextureData< RGBAFrame >& GLGenericRenderer::getOutputColorFrame ( std::ptrdiff_t index )
 {
-    return outputArgs.fullSlot(fixedOutputs + index).localArg->getArg<GLTextureData<RGBAFrame>>();
+    return outputArg("color_out", index).toSlot().local<GLTextureData<RGBAFrame>>();
 }
 
 GLTextureData< DepthFrame >& GLGenericRenderer::getOutputDepthFrame ( std::ptrdiff_t index )
 {
-    return outputArgs.fullSlot(fixedOutputs + outputColorFrames + index).localArg->getArg<GLTextureData<DepthFrame>>();
+    return outputArg("depth_out", index).toSlot().local<GLTextureData<DepthFrame>>();
 }
 
 int GLGenericRenderer::getInputColorTexture ( std::ptrdiff_t index )
@@ -111,7 +99,8 @@ void GLGenericRenderer::run()
         auto unitId = getInputColorTexture(i);
         gl_Call(glActiveTexture(GL_TEXTURE0 + unitId));
         gl_Call(glBindTexture(GL_TEXTURE_2D, getInputColorFrame(i).obj()));
-        gl_Call(glGenerateMipmap(GL_TEXTURE_2D));
+        gl_Call(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
+        gl_Call(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
     }
     
     for(std::size_t i = 0; i < inputDepthFrames; ++i)
@@ -119,8 +108,11 @@ void GLGenericRenderer::run()
         auto unitId = getInputDepthTexture(i);
         gl_Call(glActiveTexture(GL_TEXTURE0 + unitId));
         gl_Call(glBindTexture(GL_TEXTURE_2D, getInputDepthFrame(i).obj()));
-        gl_Call(glGenerateMipmap(GL_TEXTURE_2D));
+        gl_Call(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST));
+        gl_Call(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
     }
+    
+    getViewportOutput() = viewport;
     
     draw();
     

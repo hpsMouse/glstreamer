@@ -1,8 +1,6 @@
 #ifndef _160EB68A_B547_11E2_9BF9_206A8A22A96A
 #define _160EB68A_B547_11E2_9BF9_206A8A22A96A
 
-#include <cstdio>
-
 #include <type_traits>
 
 #include "../processor.h"
@@ -13,16 +11,12 @@ namespace glstreamer_core
     class ConstProcessor : public glstreamer::Processor
     {
     public:
-        ConstProcessor(Type const& value, std::size_t count = 1):
+        explicit ConstProcessor(Type const& value, std::size_t count = 1):
         value(value),
         count(count)
         {
             for(std::size_t i = 0; i < count; ++i)
-            {
-                char name[64];
-                std::snprintf(name, 64, "output_%zu", i);
-                outputArgs._addSlot<Type>(name);
-            }
+                outputArgs._addSlot<Type>(genName("output", i));
             outputArgs.refreshSimpleSlots();
         }
         

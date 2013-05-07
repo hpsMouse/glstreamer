@@ -122,13 +122,14 @@ int main()
     InternalSingleLink displayLink(composer.outputArg(1), displayer.inputArg(0));
     InternalSingleLink depthLink(composer.outputArg(2), depthSink.inputArg(0));
     
-    ConstProcessor<GLViewport> viewportParam(viewportGlobal, 7);
+    ConstProcessor<GLViewport> viewportFinal(viewportGlobal);
+    InternalSingleLink composerViewportLink(viewportFinal.outputArg(0), composer.inputArg("canvas_viewport_in"));
     
     auto action = [&]{
         viewportSource.execute();
         range.execute();
         rangeSource.execute();
-        viewportParam.execute();
+        viewportFinal.execute();
         composer.execute();
         displayer.execute();
         depthSink.execute();
@@ -201,13 +202,12 @@ int main()
             rotationLinks[i].reset(new ThreadedLink(rotationSource.outputArg(i), renderers[i]->inputArg("rotation"), 3));
         }
     #ifdef SORT_LAST
-        std::unique_ptr<ThreadedLink> colorLinks[6], depthLinks[6], viewportParamLinks[7];
-        for(int i = 0; i < 7; ++i)
-            viewportParamLinks[i].reset(new ThreadedLink(viewportParam.outputArg(i), composer.inputArg(i), 3));
+        std::unique_ptr<ThreadedLink> colorLinks[6], depthLinks[6], viewportParamLinks[6];
         for(int i = 0; i < 6; ++i)
         {
-            colorLinks[i].reset(new ThreadedLink(renderers[i]->outputArg(0), composer.colorInputSlot(i), 3));
-            depthLinks[i].reset(new ThreadedLink(renderers[i]->outputArg(1), composer.depthInputSlot(i), 3));
+            viewportParamLinks[i].reset(new ThreadedLink(renderers[i]->outputArg(0), composer.inputArg("frame_viewport", i), 3));
+            colorLinks[i].reset(new ThreadedLink(renderers[i]->outputArg(1), composer.inputArg("color_in", i), 3));
+            depthLinks[i].reset(new ThreadedLink(renderers[i]->outputArg(2), composer.inputArg("depth_in", i), 3));
         }
     #endif
         barrier.wait();

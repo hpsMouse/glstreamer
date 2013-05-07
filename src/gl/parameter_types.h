@@ -30,6 +30,13 @@ namespace glstreamer_gl
     {
         int colorIndex, depthIndex;
     };
+    
+    struct GLObjectState
+    {
+        double scale;
+        double posx, posy, posz;
+        double rx, ry, rz;
+    };
 }
 
 #endif
