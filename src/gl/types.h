@@ -9,7 +9,6 @@ namespace glstreamer_gl
     class GLDisplay;
     class GLFBConfig;
     class GLFBORenderer;
-    class GLFrameCombiner;
     class GLFrameComposer;
     class GLGenericRenderer;
     class GLMeshBuffer;
