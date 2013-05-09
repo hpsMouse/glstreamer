@@ -25,13 +25,8 @@ void GLObjectRenderer::draw()
     auto const& state = inputArg("state").toSlot().arg<GLObjectState>();
     
     gl_Call(glMatrixMode(GL_MODELVIEW));
-    
     gl_Call(glLoadIdentity());
-    gl_Call(glTranslated(state.posx, state.posy, state.posz));
-    gl_Call(glRotated(state.rz, 0., 0., 1.));
-    gl_Call(glRotated(state.ry, 0., 1., 0.));
-    gl_Call(glRotated(state.rx, 1., 0., 0.));
-    gl_Call(glScaled(state.scale, state.scale, state.scale));
+    state.apply();
     
     auto const& range = this->getDataRange();
     

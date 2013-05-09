@@ -83,16 +83,7 @@ void GLGenericRenderer::run()
     gl_Call(glViewport(0, 0, viewport.width, viewport.height));
     gl_Call(glMatrixMode(GL_PROJECTION));
     gl_Call(glLoadIdentity());
-    switch(projection)
-    {
-        case ProjectionStyle::Frustum:
-            gl_Call(glFrustum(viewport.left, viewport.right, viewport.bottom, viewport.top, viewport.near, viewport.far));
-            break;
-        case ProjectionStyle::Ortho:
-        default:
-            gl_Call(glOrtho(viewport.left, viewport.right, viewport.bottom, viewport.top, viewport.near, viewport.far));
-            break;
-    }
+    applyViewport(viewport, projection);
     
     for(std::size_t i = 0; i < inputColorFrames; ++i)
     {

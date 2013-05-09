@@ -17,6 +17,7 @@ namespace glstreamer
     class InternalSingleLink;
     class IStream;
     class Link;
+    class LinkBlock;
     class LinkBuffer;
     class LinkHeader;
     class LocalArgBase;
@@ -38,6 +39,7 @@ namespace glstreamer
     class ProcessorManager;
     class SimpleSlot;
     class SocketLinkOutput;
+    class ThreadBlock;
     class ThreadedLink;
     class TypeManager;
     class TypeSpec;

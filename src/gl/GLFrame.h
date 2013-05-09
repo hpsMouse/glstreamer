@@ -137,6 +137,23 @@ namespace glstreamer_gl
             gl_Call(glBindTexture(target, texture_));
         }
         
+        void setFilter(GLint min, GLint mag)
+        {
+            bind();
+            gl_Call(glTexParameteri(target, GL_TEXTURE_MIN_FILTER, min));
+            gl_Call(glTexParameteri(target, GL_TEXTURE_MAG_FILTER, mag));
+        }
+        
+        void setLinearFilter()
+        {
+            setFilter(GL_LINEAR, GL_LINEAR);
+        }
+        
+        void setNearestFilter()
+        {
+            setFilter(GL_NEAREST, GL_NEAREST);
+        }
+        
         static constexpr GLenum target = GL_TEXTURE_2D;
         
     private:

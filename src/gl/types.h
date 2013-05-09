@@ -6,6 +6,7 @@ namespace glstreamer_gl
     class GLContext;
     class GLContextBinding;
     class GLDataRangeSplitter;
+    class GLDepthDisplayer;
     class GLDisplay;
     class GLFBConfig;
     class GLFBORenderer;
@@ -15,6 +16,7 @@ namespace glstreamer_gl
     class GLProgram;
     class GLScreenSplitter;
     class GLShader;
+    class GLShadowMapGenerator;
     class GLUniform;
     class GLWindow;
     class GLWindowBinding;

@@ -57,6 +57,7 @@ namespace glstreamer_gl
     GLSTREAMER_GL_DEF_OBJECT(FramebufferObject, FramebufferOp);
     GLSTREAMER_GL_DEF_OBJECT(BufferObject, BufferOp);
     GLSTREAMER_GL_DEF_OBJECT(VertexArrayObject, VertexArrayOp);
+    GLSTREAMER_GL_DEF_OBJECT(RenderbufferObject, RenderbufferOp);
 }
 
 #endif

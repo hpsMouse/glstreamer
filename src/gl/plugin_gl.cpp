@@ -61,6 +61,7 @@ void glstreamer_gl::GLPlugin::registerTypes()
     registerDefault<GLViewport>();
     registerDefault<GLDataRange>();
     registerDefault<GLObjectState>();
+    registerDefault<GLMatrix>();
 }
 
 void glstreamer_gl::GLPlugin::registerProcessors()

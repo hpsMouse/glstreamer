@@ -13,6 +13,7 @@
 #include "../core/VariableProcessor.h"
 
 #include "../gl/GLDataRangeSplitter.h"
+#include "../gl/GLDepthDisplayer.h"
 #include "../gl/GLFrameComposer.h"
 #include "../gl/GLFrameDisplayer.h"
 #include "../gl/GLObjectRenderer.h"
@@ -71,8 +72,8 @@ int main()
     GLDataRangeSplitter splitter(GLDataRangeSplitter::makeEvenSplit(2));
     
     GLFrameComposer composer(2);
-    GLFrameDisplayer displayer;
-    FakeSink<GLFrameData<DepthFrame>> depthSink;
+    FakeSink<GLFrameData<RGBAFrame>> displayer;
+    GLDepthDisplayer depthDisplayer;
     FakeSink<GLViewport> viewportFakeSink;
     
     barrier.wait();
@@ -80,7 +81,7 @@ int main()
         InternalSingleLink canvasViewportLink(viewport.outputArg(2), composer.inputArg("canvas_viewport_in"));
         InternalSingleLink rangeLink(range.outputArg(0), splitter.inputArg(0));
         InternalSingleLink displayLink(composer.outputArg("color_out"), displayer.inputArg(0));
-        InternalSingleLink depthLink(composer.outputArg("depth_out"), depthSink.inputArg(0));
+        InternalSingleLink depthLink(composer.outputArg("depth_out"), depthDisplayer.inputArg(0));
         InternalSingleLink viewportFakeLink(composer.outputArg("canvas_viewport_out"), viewportFakeSink.inputArg(0));
         
         std::unique_ptr<ThreadedLink> viewportLinks[2], rangeLinks[2], stateLinks[2], composerViewports[2], composerColors[2], composerDepths[2];
@@ -108,7 +109,7 @@ int main()
             splitter.execute();
             composer.execute();
             displayer.execute();
-            depthSink.execute();
+            depthDisplayer.execute();
             viewportFakeSink.execute();
         }
         double end_time = getTimeAsDouble();

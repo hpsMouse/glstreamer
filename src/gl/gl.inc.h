@@ -5,6 +5,8 @@
 
 #include "GLException.h"
 
+// #define GLSTREAMER_GL_NOCHECK
+
 namespace glstreamer_gl
 {
     inline void gl_TestError(char const* call = nullptr)
@@ -14,6 +16,8 @@ namespace glstreamer_gl
             throw GLException(call, err);
     }
     
+#ifndef GLSTREAMER_GL_NOCHECK
+
 #define gl_Call(call)\
 do\
 {\
@@ -21,6 +25,13 @@ do\
     ::glstreamer_gl::gl_TestError(#call);\
 }\
 while(0)
+
+#else
+
+#define gl_Call(call) call
+
+#endif
+
 }
 
 #endif
