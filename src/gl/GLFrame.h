@@ -147,24 +147,11 @@ namespace glstreamer_gl
     
     struct RGBA
     {
-        GLubyte r, g, b, a;
+        GLubyte channels[4];
     };
     
-    typedef PixelTypePack<RGBA, GL_UNSIGNED_INT_8_8_8_8_REV, GL_RGBA, GL_RGBA> RGBAFrame;
-    typedef PixelTypePack<GLfloat, GL_FLOAT, GL_DEPTH_COMPONENT, GL_DEPTH_COMPONENT> DepthFrame;
-    
-    struct GLCombinedTextureFrame
-    {
-        GLTextureData<RGBAFrame> color;
-        GLTextureData<DepthFrame> depth;
-        
-        void attachToFBO(FramebufferObject& fbo, GLenum target = GL_FRAMEBUFFER)
-        {
-            gl_Call(glBindFramebuffer(target, fbo));
-            gl_Call(glFramebufferTexture2D(target, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color.obj(), 0));
-            gl_Call(glFramebufferTexture2D(target, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depth.obj(), 0));
-        }
-    };
+    typedef PixelTypePack<RGBA, GL_UNSIGNED_BYTE, GL_RGBA, GL_RGBA> RGBAFrame;
+    typedef PixelTypePack<GLfloat, GL_FLOAT, GL_DEPTH_COMPONENT, GL_DEPTH_COMPONENT32F> DepthFrame;
 }
 
 #endif
