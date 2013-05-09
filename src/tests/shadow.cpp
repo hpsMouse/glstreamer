@@ -31,7 +31,7 @@ int main()
     .addProcessor<ConstProcessor<GLDataRange>>("range", fullRange)
     .addProcessor<GLShadowMapGenerator>("shadow", "head.obj", 1, std::vector<ProjectionStyle>({ProjectionStyle::Frustum}))
     .addProcessor<GLDepthDisplayer>("display")
-    .addProcessor<FakeSink<GLMatrix>>("matrix")
+    .addProcessor<FakeSink<GLViewport>>("viewport_sink")
     ;
     
     auto &stateP = dynamic_cast<VariableProcessor<GLObjectState>&>(p["state"]);
@@ -39,10 +39,10 @@ int main()
     
     LinkBlock l;l
     .link<InternalSingleLink>(p["state"].outputArg(0), p["shadow"].inputArg("state", 0))
-    .link<InternalSingleLink>(p["viewport"].outputArg(0), p["shadow"].inputArg("viewport", 0))
+    .link<InternalSingleLink>(p["viewport"].outputArg(0), p["shadow"].inputArg("viewport_in", 0))
     .link<InternalSingleLink>(p["range"].outputArg(0), p["shadow"].inputArg("range", 0))
     .link<InternalSingleLink>(p["shadow"].outputArg("depth", 0), p["display"].inputArg(0))
-    .link<InternalSingleLink>(p["shadow"].outputArg("texcoord_mat", 0), p["matrix"].inputArg(0))
+    .link<InternalSingleLink>(p["shadow"].outputArg("viewport_out", 0), p["viewport_sink"].inputArg(0))
     ;
     
     for(int i = 0; i < 600; ++i)

@@ -119,12 +119,6 @@ namespace glstreamer
                 slot.link->push(&slot);
         }
         
-        void clearArgs()
-        {
-            for(SimpleSlot& slot : simpleSlots)
-                slot.typeSpec->clear(slot.arg);
-        }
-        
     private:
         std::vector<SimpleSlot> simpleSlots;
         std::map<std::string, FullSlot> fullSlots;

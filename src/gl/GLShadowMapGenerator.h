@@ -14,7 +14,7 @@ namespace glstreamer_gl
 {
     /**
      * Inputs: [ObjectState], [Viewport]. [DataRange]
-     * Outputs: [DepthImage], [TexCoordMatrix]
+     * Outputs: [DepthImage], [Viewport]
      */
     class GLShadowMapGenerator : public glstreamer::Processor
     {

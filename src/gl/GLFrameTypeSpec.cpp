@@ -10,13 +10,6 @@
 using namespace glstreamer_gl;
 
 template <typename PixelTypePack>
-void GLFrameTypeSpec<PixelTypePack>::clear ( void* obj ) const
-{
-    Frame* frame = static_cast<Frame*>(obj);
-    frame->clear();
-}
-
-template <typename PixelTypePack>
 glstreamer::LocalArgBase* GLFrameTypeSpec<PixelTypePack>::createLocal() const
 {
     return new glstreamer::LocalArg<Texture>;

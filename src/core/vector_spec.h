@@ -22,12 +22,6 @@ namespace glstreamer_core
         VectorSpec(VectorSpec<T> const&) = default;
         VectorSpec& operator = (VectorSpec<T> const&) = default;
         
-        virtual void clear ( void* obj ) const
-        {
-            std::vector<T> *vec = static_cast<std::vector<T>*>(obj);
-            vec->clear();
-        }
-        
         virtual void serialize_variable ( const void* obj, LocalArgBase*, OStream& os ) const override
         {
             std::vector<T> const* vec = static_cast<std::vector<T> const*>(obj);

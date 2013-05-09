@@ -14,12 +14,6 @@ namespace glstreamer_core
     using namespace glstreamer;
     struct StringSpec : public TypeSpecBasic<std::string>, public TypeSpecNoContext, public TypeSpecNoFixedSerialize
     {
-        virtual void clear ( void* obj ) const
-        {
-            std::string *str = static_cast<std::string*>(obj);
-            str->clear();
-        }
-        
         virtual void serialize_variable ( const void* obj, LocalArgBase*, OStream& os ) const override
         {
             std::string const* str = static_cast<std::string const*>(obj);

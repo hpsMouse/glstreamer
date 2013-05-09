@@ -18,7 +18,6 @@ namespace glstreamer
         virtual LocalArgBase*          createLocal         ()                                                     const = 0;
         virtual void                   destroy             (void *obj)                                            const = 0;
         virtual void                   assign              (void *dst, void const* src)                           const = 0;
-        virtual void                   clear               (void *obj)                                            const = 0;
         virtual void                   context_out         (void *obj, LocalArgBase *localArg)                    const = 0;
         virtual void                   context_in          (void *obj, LocalArgBase *localArg)                    const = 0;
         virtual size_type              serialize_size      ()                                                     const = 0;

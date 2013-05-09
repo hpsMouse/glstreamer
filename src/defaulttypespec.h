@@ -30,10 +30,6 @@ namespace glstreamer
         {
             ref(dst) = ref(src);
         }
-        virtual void clear(void* obj) const override
-        {
-            ref(obj) = T();
-        }
     private:
         std::type_index const _id;
         

@@ -19,7 +19,7 @@ meshes()
         inputArgs._addSlot<GLObjectState>(genName("state", i));
     
     for(std::size_t i = 0; i < numLightSources; ++i)
-        inputArgs._addSlot<GLViewport>(genName("viewport", i));
+        inputArgs._addSlot<GLViewport>(genName("viewport_in", i));
     
     for(std::size_t i = 0; i < numLightSources; ++i)
         inputArgs._addSlot<GLDataRange>(genName("range", i));
@@ -28,7 +28,7 @@ meshes()
         outputArgs._addSlot<GLFrameData<DepthFrame>>(genName("depth", i));
     
     for(std::size_t i = 0; i < numLightSources; ++i)
-        outputArgs._addSlot<GLMatrix>(genName("texcoord_mat", i));
+        outputArgs._addSlot<GLViewport>(genName("viewport_out", i));
     
     inputArgs.refreshSimpleSlots();
     outputArgs.refreshSimpleSlots();
@@ -41,10 +41,12 @@ void GLShadowMapGenerator::run()
     for(std::size_t i = 0; i < numLightSources; ++i)
     {
         GLObjectState const& state = inputArg("state", i).toSlot().arg<GLObjectState>();
-        GLViewport const& viewport = inputArg("viewport", i).toSlot().arg<GLViewport>();
+        GLViewport const& viewport = inputArg("viewport_in", i).toSlot().arg<GLViewport>();
         GLDataRange const& range = inputArg("range", i).toSlot().arg<GLDataRange>();
         GLTextureData<DepthFrame>& texDepth = outputArg("depth", i).toSlot().local<GLTextureData<DepthFrame>>();
-        GLMatrix& texCoordMat = outputArg("texcoord_mat", i).toSlot().arg<GLMatrix>();
+        GLViewport& viewportOut = outputArg("viewport_out", i).toSlot().arg<GLViewport>();
+        
+        viewportOut = viewport;
         
         auto width = viewport.width, height = viewport.height;
         texDepth.resize(width, height);
@@ -62,7 +64,6 @@ void GLShadowMapGenerator::run()
         applyViewport(viewport, lightProjections[i]);
         state.apply();
         
-        gl_Call(glGetFloatv(GL_MODELVIEW_MATRIX, texCoordMat.elements));
         for(GLMeshBuffer const& mesh : meshes)
             mesh.draw(range.start, range.end);
     }

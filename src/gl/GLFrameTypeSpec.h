@@ -14,8 +14,6 @@ namespace glstreamer_gl
         typedef GLFrameData<PixelTypePack> Frame;
         typedef GLTextureData<PixelTypePack> Texture;
     public:
-        virtual void clear ( void* obj ) const override final;
-        
         virtual glstreamer::LocalArgBase* createLocal() const override final;
         
         virtual void context_out ( void* obj, glstreamer::LocalArgBase* localArg ) const override final;

@@ -21,7 +21,6 @@ namespace glstreamer
         
         void execute()
         {
-            outputArgs.clearArgs();
             inputArgs.fetchArgs();
             run();
             outputArgs.pushArgs();
