@@ -51,10 +51,14 @@ namespace glstreamer_gl
         double scale;
         double posx, posy, posz;
         double rx, ry, rz;
+        double qx, qy, qz;
         
         void apply() const
         {
             gl_Call(glTranslated(posx, posy, posz));
+            gl_Call(glRotated(qz, 0., 0., 1.));
+            gl_Call(glRotated(qy, 0., 1., 0.));
+            gl_Call(glRotated(qx, 1., 0., 0.));
             gl_Call(glRotated(rz, 0., 0., 1.));
             gl_Call(glRotated(ry, 0., 1., 0.));
             gl_Call(glRotated(rx, 1., 0., 0.));
@@ -64,7 +68,17 @@ namespace glstreamer_gl
     
     struct GLMatrix
     {
-        float elements[16];
+        float elements[4][4];
+        GLMatrix transpose() const
+        {
+            GLMatrix result;
+            for(int i = 0; i < 4; ++i)
+            {
+                for(int j = 0; j < 4; ++j)
+                    result.elements[i][j] = elements[j][i];
+            }
+            return result;
+        }
     };
 }
 

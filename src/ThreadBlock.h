@@ -7,7 +7,7 @@
 #include <string>
 #include <utility>
 
-#include "types.h"
+#include "processor.h"
 
 namespace glstreamer
 {
@@ -16,6 +16,9 @@ namespace glstreamer
     public:
         ThreadBlock();
         ~ThreadBlock();
+        
+        ThreadBlock(ThreadBlock&&) = default;
+        ThreadBlock& operator = (ThreadBlock&&) = default;
         
         ThreadBlock& addProcessor(std::string const& name, Processor* processor);
         

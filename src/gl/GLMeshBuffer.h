@@ -7,7 +7,7 @@ namespace glstreamer_gl
 {
     struct GLMeshBuffer
     {
-        GLMeshBuffer(): nIndices(), vao(), vertexBuffer(), texCoordBuffer(), indexBuffer() {}
+        GLMeshBuffer(): nIndices(), vao(), vertexBuffer(), texCoordBuffer(), normalBuffer(), indexBuffer() {}
         
         GLMeshBuffer(GLMeshBuffer&&) = default;
         GLMeshBuffer& operator = (GLMeshBuffer&&) = default;
@@ -20,6 +20,7 @@ namespace glstreamer_gl
             gl_Call(glBindVertexArray(vao));
             gl_Call(glEnableClientState(GL_VERTEX_ARRAY));
             gl_Call(glEnableClientState(GL_TEXTURE_COORD_ARRAY));
+            gl_Call(glEnableClientState(GL_NORMAL_ARRAY));
             gl_Call(glDrawElements(GL_TRIANGLES, last - first, GL_UNSIGNED_INT, (unsigned*)nullptr + first));
         }
         
@@ -27,6 +28,7 @@ namespace glstreamer_gl
         VertexArrayObject vao;
         BufferObject vertexBuffer;
         BufferObject texCoordBuffer;
+        BufferObject normalBuffer;
         BufferObject indexBuffer;
         
     private:

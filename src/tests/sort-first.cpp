@@ -37,10 +37,10 @@ int main()
 {
     init();
     
-    unsigned width = 600, height = 480;
-    GLViewport canvasViewport({0, 0, width, height, -(double(width)/height), double(width)/height, -1.0, 1.0, 1.0, 5.0});
+    unsigned width = 600, height = 600;
+    GLViewport canvasViewport({0, 0, width, height, -(double(width)/height), double(width)/height, -1.0, 1.0, 12.0, 64.0});
     GLDataRange fullRange({0.0, 1.0});
-    GLObjectState initState({0.01, 0.0, 0.0, -3.0, 0.0, 0.0, 0.0});
+    GLObjectState initState({0.1, 3.0, 0.5, -24.0, 0.0, 190.0, 0.0, 10.0, 0.0, 0.0});
     
     GLWindowBinding context(":0", width, height, true, 32 + 600, 32);
     GLThread::initGLContextBinding(context);
@@ -51,7 +51,8 @@ int main()
         {
             int i = y * 3 + x;
             threads[i] = GLThread([i]{
-                GLObjectRenderer renderer("head.obj", "texture/AdrianAlbedo.tga");
+//                 GLObjectRenderer renderer("head.obj", "texture/AdrianAlbedo.tga");
+                GLObjectRenderer renderer("mcreg/minecraft.obj", "mcreg/tex/texture.png");
                 renderers[i] = &renderer;
                 FakeSink<GLFrameData<DepthFrame>> depthSink;
                 barrier.wait();
@@ -103,8 +104,8 @@ int main()
         double start_time = getTimeAsDouble();
         for(int i = 0; i < loops; ++i)
         {
-            double current_time = getTimeAsDouble();
-            state.get().ry = (current_time - start_time) * 30;
+            //double current_time = getTimeAsDouble();
+            //state.get().ry = (current_time - start_time) * 30;
             viewport.execute();
             range.execute();
             state.execute();

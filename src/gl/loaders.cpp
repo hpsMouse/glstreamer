@@ -31,7 +31,7 @@ static void transformIndex ( const aiMesh* mesh, std::vector< unsigned int >& in
 void glstreamer_gl::loadMeshes ( const char* path, std::vector< glstreamer_gl::GLMeshBuffer >& meshes )
 {
     Assimp::Importer importer;
-    aiScene const* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_SortByPType);
+    aiScene const* scene = importer.ReadFile(path, aiProcessPreset_TargetRealtime_MaxQuality);
     
     meshes.clear();
     meshes.resize(scene->mNumMeshes);
@@ -52,6 +52,10 @@ void glstreamer_gl::loadMeshes ( const char* path, std::vector< glstreamer_gl::G
         gl_Call(glBindBuffer(GL_ARRAY_BUFFER, meshBuffer.texCoordBuffer));
         gl_Call(glBufferData(GL_ARRAY_BUFFER, mesh->mNumVertices * sizeof(aiVector3D), mesh->mTextureCoords[0], GL_STATIC_DRAW));
         gl_Call(glTexCoordPointer(3, GL_FLOAT, 0, 0));
+        
+        gl_Call(glBindBuffer(GL_ARRAY_BUFFER, meshBuffer.normalBuffer));
+        gl_Call(glBufferData(GL_ARRAY_BUFFER, mesh->mNumVertices * sizeof(aiVector3D), mesh->mNormals, GL_STATIC_DRAW));
+        gl_Call(glNormalPointer(GL_FLOAT, 0, 0));
         
         gl_Call(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, meshBuffer.indexBuffer));
         gl_Call(glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned), indices.data(), GL_STATIC_DRAW));

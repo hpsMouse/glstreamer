@@ -21,6 +21,15 @@ namespace glstreamer_gl
     class GLWindow;
     class GLWindowBinding;
     class GLXException;
+    
+    struct GLDataRange;
+    struct GLFrameInfo;
+    struct GLMatrix;
+    struct GLObjectState;
+    struct GLViewport;
+    struct ScreenPart;
+    
+    enum class ProjectionStyle;
 }
 
 #endif

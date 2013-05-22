@@ -19,6 +19,9 @@ texture(load2DTexture(texturePath))
 void GLObjectRenderer::draw()
 {
     gl_Call(glEnable(GL_DEPTH_TEST));
+    gl_Call(glEnable(GL_BLEND));
+    gl_Call(glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_ADD));
+    gl_Call(glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA));
     gl_Call(glClearColor(0.0f, 0.0f, 0.0f, 0.0f));
     gl_Call(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
     
@@ -32,8 +35,13 @@ void GLObjectRenderer::draw()
     
     gl_Call(glActiveTexture(GL_TEXTURE0));
     gl_Call(glBindTexture(GL_TEXTURE_2D, texture));
+    gl_Call(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST));
+    gl_Call(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
     gl_Call(glEnable(GL_TEXTURE_2D));
     for(glstreamer_gl::GLMeshBuffer const& mesh : meshes)
         mesh.draw(range.start, range.end);
     gl_Call(glDisable(GL_TEXTURE_2D));
+    
+    gl_Call(glDisable(GL_BLEND));
+    gl_Call(glDisable(GL_DEPTH_TEST));
 }

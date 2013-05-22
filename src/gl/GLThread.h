@@ -6,7 +6,11 @@
 #include <thread>
 #include <typeinfo>
 
+#include <posixpp/PThreadBarrier.h>
+
 #include "gl.inc.h"
+
+#include "../ThreadBlock.h"
 
 class B;
 namespace glstreamer_gl
@@ -24,6 +28,12 @@ namespace glstreamer_gl
         template <typename Binding>
         struct ThreadFunc
         {
+            ThreadFunc(GLThread *thread):
+            thread(thread)
+            {}
+            
+            GLThread *thread;
+            
             // NOTE: Args is for Binding, NOT for Func!!
             template <typename Func, typename ... Args>
             void operator() (Func&& func, Args&& ... args)
@@ -32,6 +42,13 @@ namespace glstreamer_gl
                 {
                     Binding binding(args...);
                     initGLContextBinding(binding);
+                    
+                    glstreamer::ThreadBlock threadBlock;
+                    current_threadblock = &threadBlock;
+                    thread->threadBlock_ = &threadBlock;
+                    
+                    thread->initBarrier->wait();
+                    
                     func();
                 }
                 catch(std::exception const& e)
@@ -42,7 +59,7 @@ namespace glstreamer_gl
         };
         
     public:
-        GLThread(): realThread() {}
+        GLThread(): threadBlock_(nullptr), initBarrier(), realThread() {}
         
         /**
          * \brief Start a new thread in an OpenGL context.
@@ -52,8 +69,13 @@ namespace glstreamer_gl
          */
         template <typename Func, typename Binding, typename ... BindingArgs>
         explicit GLThread(Func&& f, Binding const*, BindingArgs&& ... args):
-        realThread(ThreadFunc<Binding>(), f, args...)
-        {}
+        threadBlock_(),
+        initBarrier(new posixpp::PThreadBarrier(2)),
+        realThread(ThreadFunc<Binding>(this), f, args...)
+        {
+            initBarrier->wait();
+            initBarrier.reset();
+        }
         
         GLThread(GLThread&&) = default;
         GLThread& operator = (GLThread&&) = default;
@@ -61,6 +83,16 @@ namespace glstreamer_gl
         void join()
         {
             realThread.join();
+        }
+        
+        glstreamer::ThreadBlock& threadBlock()
+        {
+            return *threadBlock_;
+        }
+        
+        static glstreamer::ThreadBlock& currentThreadBlock()
+        {
+            return *current_threadblock;
         }
         
         template <typename Binding>
@@ -87,7 +119,10 @@ namespace glstreamer_gl
         
         static __thread void* binding_ptr;
         static __thread std::type_info const* binding_type;
+        static __thread glstreamer::ThreadBlock *current_threadblock;
         
+        glstreamer::ThreadBlock *threadBlock_;
+        std::unique_ptr<posixpp::PThreadBarrier> initBarrier;
         std::thread realThread;
     };
 }

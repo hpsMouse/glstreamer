@@ -4,6 +4,10 @@
 
 using namespace glstreamer_gl;
 
+GLUniform::GLUniform() noexcept
+:location(-2)
+{}
+
 GLUniform::GLUniform ( GLProgram& program, const GLchar* name ):
 location(glGetUniformLocation(program.get(), name))
 {

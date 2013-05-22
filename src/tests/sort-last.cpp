@@ -32,23 +32,23 @@ posixpp::PThreadBarrier barrier(3);
 GLObjectRenderer *renderers[2];
 GLThread threads[2];
 
-static constexpr int loops = 60;
+static constexpr int loops = 120;
 
 int main()
 {
     init();
     
-    unsigned width = 600, height = 480;
+    unsigned width = 400, height = 400;
     GLViewport canvasViewport({0, 0, width, height, -(double(width)/height), double(width)/height, -1.0, 1.0, 1.0, 5.0});
     GLDataRange fullRange({0.0, 1.0});
-    GLObjectState initState({0.01, 0.0, 0.0, -3.0, 0.0, 0.0, 0.0});
+    GLObjectState initState({0.01, 0.0, 0.0, -3.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0});
     
-    GLWindowBinding context(":0", width, height, true, 32 + 600, 32 + 240);
+    GLWindowBinding context(":0", width, height, true, 32 + width * 2, 32);
     GLThread::initGLContextBinding(context);
     
     for(int i = 0; i < 2; ++i)
     {
-        threads[i] = GLThread([i]{
+        threads[i] = std::move(GLThread([i]{
             GLObjectRenderer renderer("head.obj", "texture/AdrianAlbedo.tga");
             renderers[i] = &renderer;
             barrier.wait();
@@ -62,7 +62,7 @@ int main()
             barrier.wait();
             
             barrier.wait();
-        }, (GLWindowBinding*)nullptr, ":0", width, height, true, 32 + i * 600, 32);
+        }, (GLWindowBinding*)nullptr, ":0", width, height, true, 32 + i * width, 32));
     }
     
     ConstProcessor<GLViewport> viewport(canvasViewport, 3);
@@ -72,8 +72,10 @@ int main()
     GLDataRangeSplitter splitter(GLDataRangeSplitter::makeEvenSplit(2));
     
     GLFrameComposer composer(2);
-    FakeSink<GLFrameData<RGBAFrame>> displayer;
-    GLDepthDisplayer depthDisplayer;
+    GLFrameDisplayer displayer;
+    FakeSink<GLFrameData<DepthFrame>> depthDisplayer;
+//     FakeSink<GLFrameData<RGBAFrame>> displayer;
+//     GLDepthDisplayer depthDisplayer;
     FakeSink<GLViewport> viewportFakeSink;
     
     barrier.wait();
