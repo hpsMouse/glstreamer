@@ -88,6 +88,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="classglstreamer_1_1Processor-members.html">List of all members</a>  </div>
@@ -103,7 +104,18 @@ Inheritance diagram for glstreamer::Processor:</div>
  <div class="center">
   <img src="classglstreamer_1_1Processor.png" usemap="#glstreamer::Processor_map" alt=""/>
   <map id="glstreamer::Processor_map" name="glstreamer::Processor_map">
-<area href="classglstreamer_1_1FixedProcessor_3_01TypeList_3_01InputTypes_8_8_8_4_00_01TypeList_3_01OutputTypes_8_8_8_4_01_4.html" alt="glstreamer::FixedProcessor&lt; TypeList&lt; InputTypes...&gt;, TypeList&lt; OutputTypes...&gt; &gt;" shape="rect" coords="0,56,487,80"/>
+<area href="classglstreamer_1_1FixedProcessor_3_01TypeList_3_01InputTypes_8_8_8_4_00_01TypeList_3_01OutputTypes_8_8_8_4_01_4.html" alt="glstreamer::FixedProcessor&lt; TypeList&lt; InputTypes...&gt;, TypeList&lt; OutputTypes...&gt; &gt;" shape="rect" coords="497,56,984,80"/>
+<area href="classglstreamer__core_1_1ConstProcessor.html" alt="glstreamer_core::ConstProcessor&lt; Type &gt;" shape="rect" coords="497,112,984,136"/>
+<area href="classglstreamer__core_1_1Dispatcher.html" alt="glstreamer_core::Dispatcher&lt; T &gt;" shape="rect" coords="497,168,984,192"/>
+<area href="classglstreamer__core_1_1FakeSink.html" alt="glstreamer_core::FakeSink&lt; T &gt;" shape="rect" coords="497,224,984,248"/>
+<area href="classglstreamer__core_1_1VariableProcessor.html" alt="glstreamer_core::VariableProcessor&lt; T &gt;" shape="rect" coords="497,280,984,304"/>
+<area href="classglstreamer__gl_1_1GLDataRangeSplitter.html" alt="glstreamer_gl::GLDataRangeSplitter" shape="rect" coords="497,336,984,360"/>
+<area href="classglstreamer__gl_1_1GLDepthDisplayer.html" alt="glstreamer_gl::GLDepthDisplayer" shape="rect" coords="497,392,984,416"/>
+<area href="classglstreamer__gl_1_1GLFrameComposer.html" alt="glstreamer_gl::GLFrameComposer" shape="rect" coords="497,448,984,472"/>
+<area href="classglstreamer__gl_1_1GLFrameDisplayer.html" alt="glstreamer_gl::GLFrameDisplayer" shape="rect" coords="497,504,984,528"/>
+<area href="classglstreamer__gl_1_1GLGenericRenderer.html" alt="glstreamer_gl::GLGenericRenderer" shape="rect" coords="497,560,984,584"/>
+<area href="classglstreamer__gl_1_1GLScreenSplitter.html" title="Split a viewport into multiple parts." alt="glstreamer_gl::GLScreenSplitter" shape="rect" coords="497,616,984,640"/>
+<area href="classglstreamer__gl_1_1GLShadowMapGenerator.html" alt="glstreamer_gl::GLShadowMapGenerator" shape="rect" coords="497,672,984,696"/>
 </map>
  </div></div>
 <table class="memberdecls">
@@ -116,8 +128,14 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a301af73da35d61c0d0ebdac483684727"><td class="memItemLeft" align="right" valign="top">size_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classglstreamer_1_1Processor.html#a301af73da35d61c0d0ebdac483684727">outputArgCount</a> () const </td></tr>
 <tr class="memitem:aeebf0389e997872f1d5c9ca4598d0437"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classglstreamer_1_1InputSlot.html">InputSlot</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classglstreamer_1_1Processor.html#aeebf0389e997872f1d5c9ca4598d0437">inputArg</a> (size_type i)</td></tr>
 <tr class="memitem:aeac5fd203eaec487cab635a2f0201d00"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classglstreamer_1_1InputSlot.html">InputSlot</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classglstreamer_1_1Processor.html#aeac5fd203eaec487cab635a2f0201d00">inputArg</a> (std::string const &amp;name)</td></tr>
+<tr class="memitem:a9d8f3404e8af96889e55762efe8d0083"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classglstreamer_1_1InputSlot.html">InputSlot</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classglstreamer_1_1Processor.html#a9d8f3404e8af96889e55762efe8d0083">inputArg</a> (std::string const &amp;base, std::size_t index)</td></tr>
 <tr class="memitem:a8349fe14cad74b7483e945b42cb1b939"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classglstreamer_1_1OutputSlot.html">OutputSlot</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classglstreamer_1_1Processor.html#a8349fe14cad74b7483e945b42cb1b939">outputArg</a> (size_type i)</td></tr>
 <tr class="memitem:af67b094c89722ffed05f9567ac36355a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classglstreamer_1_1OutputSlot.html">OutputSlot</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classglstreamer_1_1Processor.html#af67b094c89722ffed05f9567ac36355a">outputArg</a> (std::string const &amp;name)</td></tr>
+<tr class="memitem:a2cebc938dd34791fb82b5f66fdbc3884"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classglstreamer_1_1OutputSlot.html">OutputSlot</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classglstreamer_1_1Processor.html#a2cebc938dd34791fb82b5f66fdbc3884">outputArg</a> (std::string const &amp;base, std::size_t index)</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2><a name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:a06d473344dce549407d15184b691c648"><td class="memItemLeft" align="right" valign="top">static std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classglstreamer_1_1Processor.html#a06d473344dce549407d15184b691c648">genName</a> (std::string const &amp;base, std::size_t index)</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
@@ -293,6 +311,40 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a9d8f3404e8af96889e55762efe8d0083"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classglstreamer_1_1InputSlot.html">InputSlot</a> glstreamer::Processor::inputArg </td>
+          <td>(</td>
+          <td class="paramtype">std::string const &amp;&#160;</td>
+          <td class="paramname"><em>base</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::size_t&#160;</td>
+          <td class="paramname"><em>index</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="a8349fe14cad74b7483e945b42cb1b939"></a>
 <div class="memitem">
 <div class="memproto">
@@ -335,6 +387,74 @@ Protected Attributes</h2></td></tr>
   </td>
   <td class="mlabels-right">
 <span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a2cebc938dd34791fb82b5f66fdbc3884"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classglstreamer_1_1OutputSlot.html">OutputSlot</a> glstreamer::Processor::outputArg </td>
+          <td>(</td>
+          <td class="paramtype">std::string const &amp;&#160;</td>
+          <td class="paramname"><em>base</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::size_t&#160;</td>
+          <td class="paramname"><em>index</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a06d473344dce549407d15184b691c648"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static std::string glstreamer::Processor::genName </td>
+          <td>(</td>
+          <td class="paramtype">std::string const &amp;&#160;</td>
+          <td class="paramname"><em>base</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::size_t&#160;</td>
+          <td class="paramname"><em>index</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -411,7 +531,7 @@ Protected Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri May 3 2013 22:31:44 for GLStreamer by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri May 24 2013 15:07:47 for GLStreamer by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.1.2
 </small></address>

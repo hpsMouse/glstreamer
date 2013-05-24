@@ -91,70 +91,90 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a href="processor_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#ifndef _57AA767C_2A48_11E2_A5E4_206A8A22A96A</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _57AA767C_2A48_11E2_A5E4_206A8A22A96A</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="argblock_8h.html">argblock.h</a>&quot;</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="slottypes_8h.html">slottypes.h</a>&quot;</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;</div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="keyword">namespace </span>glstreamer</div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;{</div>
-<div class="line"><a name="l00009"></a><span class="lineno"><a class="code" href="classglstreamer_1_1Processor.html">    9</a></span>&#160;    <span class="keyword">class </span><a class="code" href="classglstreamer_1_1Processor.html">Processor</a></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;    {</div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00012"></a><span class="lineno"><a class="code" href="classglstreamer_1_1Processor.html#a21b21776668be35b325748fd83d768c0">   12</a></span>&#160;        <a class="code" href="classglstreamer_1_1Processor.html#a21b21776668be35b325748fd83d768c0">Processor</a>():</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;        <a class="code" href="classglstreamer_1_1Processor.html#af981cd32d7470fd5f8273faab5e35e3b">inputArgs</a>(this, <a class="code" href="namespaceglstreamer.html#aa9adb3f26cd0afd9fb6faf5878b82b12aaa92b3f525d08984ddeb25d3b120cc38">Input</a>),</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;        <a class="code" href="classglstreamer_1_1Processor.html#a5dcec2ae3c91ff71fa08c732a2da4531">outputArgs</a>(this, <a class="code" href="namespaceglstreamer.html#aa9adb3f26cd0afd9fb6faf5878b82b12a4cb6887869cb322856e456dd906564c6">Output</a>)</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;        {}</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;        <span class="keyword">virtual</span> <a class="code" href="classglstreamer_1_1Processor.html#a6d176397ba856341c335ff9793fd8ecf">~Processor</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;        </div>
-<div class="line"><a name="l00018"></a><span class="lineno"><a class="code" href="classglstreamer_1_1Processor.html#a75950bf7b6f8ce4908af8ef7a26de272">   18</a></span>&#160;        <span class="keywordtype">void</span> <a class="code" href="classglstreamer_1_1Processor.html#a75950bf7b6f8ce4908af8ef7a26de272">execute</a>()</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;        {</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;            <a class="code" href="classglstreamer_1_1Processor.html#a5dcec2ae3c91ff71fa08c732a2da4531">outputArgs</a>.<a class="code" href="classglstreamer_1_1ArgBlock.html#a4d449515125644250de7666cdc58dac8">clearArgs</a>();</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;            <a class="code" href="classglstreamer_1_1Processor.html#af981cd32d7470fd5f8273faab5e35e3b">inputArgs</a>.<a class="code" href="classglstreamer_1_1ArgBlock.html#a6da70468423b725d0725b6c6874c41fa">fetchArgs</a>();</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;            <a class="code" href="classglstreamer_1_1Processor.html#a74224b92fb62a878b491b4a02463229d">run</a>();</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;            <a class="code" href="classglstreamer_1_1Processor.html#a5dcec2ae3c91ff71fa08c732a2da4531">outputArgs</a>.<a class="code" href="classglstreamer_1_1ArgBlock.html#a6c057ee54c9c5b9fdb09a2afe27efe9d">pushArgs</a>();</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;        }</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;        </div>
-<div class="line"><a name="l00026"></a><span class="lineno"><a class="code" href="classglstreamer_1_1Processor.html#a0dde735211d689fdb86d46bb8f365443">   26</a></span>&#160;        size_type <a class="code" href="classglstreamer_1_1Processor.html#a0dde735211d689fdb86d46bb8f365443">inputArgCount</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="keyword">        </span>{</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="classglstreamer_1_1Processor.html#af981cd32d7470fd5f8273faab5e35e3b">inputArgs</a>.<a class="code" href="classglstreamer_1_1ArgBlock.html#ab6fa8b4d6ed6b6f0a679c1e1f1d0852a">argCount</a>();</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        }</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        </div>
-<div class="line"><a name="l00031"></a><span class="lineno"><a class="code" href="classglstreamer_1_1Processor.html#a301af73da35d61c0d0ebdac483684727">   31</a></span>&#160;        size_type <a class="code" href="classglstreamer_1_1Processor.html#a301af73da35d61c0d0ebdac483684727">outputArgCount</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">        </span>{</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="classglstreamer_1_1Processor.html#a5dcec2ae3c91ff71fa08c732a2da4531">outputArgs</a>.<a class="code" href="classglstreamer_1_1ArgBlock.html#ab6fa8b4d6ed6b6f0a679c1e1f1d0852a">argCount</a>();</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;        }</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;        </div>
-<div class="line"><a name="l00036"></a><span class="lineno"><a class="code" href="classglstreamer_1_1Processor.html#aeebf0389e997872f1d5c9ca4598d0437">   36</a></span>&#160;        <a class="code" href="classglstreamer_1_1InputSlot.html">InputSlot</a> <a class="code" href="classglstreamer_1_1Processor.html#aeebf0389e997872f1d5c9ca4598d0437">inputArg</a>(size_type i)</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        {</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="classglstreamer_1_1InputSlot.html">InputSlot</a>(<a class="code" href="classglstreamer_1_1Processor.html#af981cd32d7470fd5f8273faab5e35e3b">inputArgs</a>.<a class="code" href="classglstreamer_1_1ArgBlock.html#a6febe70a10efbd0e84473a6b19e99c9e">fullSlot</a>(i));</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        }</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        </div>
-<div class="line"><a name="l00041"></a><span class="lineno"><a class="code" href="classglstreamer_1_1Processor.html#aeac5fd203eaec487cab635a2f0201d00">   41</a></span>&#160;        <a class="code" href="classglstreamer_1_1InputSlot.html">InputSlot</a> <a class="code" href="classglstreamer_1_1Processor.html#aeebf0389e997872f1d5c9ca4598d0437">inputArg</a>(std::string <span class="keyword">const</span>&amp; name)</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        {</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="classglstreamer_1_1InputSlot.html">InputSlot</a>(<a class="code" href="classglstreamer_1_1Processor.html#af981cd32d7470fd5f8273faab5e35e3b">inputArgs</a>.<a class="code" href="classglstreamer_1_1ArgBlock.html#a6febe70a10efbd0e84473a6b19e99c9e">fullSlot</a>(name));</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        }</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        </div>
-<div class="line"><a name="l00046"></a><span class="lineno"><a class="code" href="classglstreamer_1_1Processor.html#a8349fe14cad74b7483e945b42cb1b939">   46</a></span>&#160;        <a class="code" href="classglstreamer_1_1OutputSlot.html">OutputSlot</a> <a class="code" href="classglstreamer_1_1Processor.html#a8349fe14cad74b7483e945b42cb1b939">outputArg</a>(size_type i)</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        {</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="classglstreamer_1_1OutputSlot.html">OutputSlot</a>(<a class="code" href="classglstreamer_1_1Processor.html#a5dcec2ae3c91ff71fa08c732a2da4531">outputArgs</a>.<a class="code" href="classglstreamer_1_1ArgBlock.html#a6febe70a10efbd0e84473a6b19e99c9e">fullSlot</a>(i));</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        }</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        </div>
-<div class="line"><a name="l00051"></a><span class="lineno"><a class="code" href="classglstreamer_1_1Processor.html#af67b094c89722ffed05f9567ac36355a">   51</a></span>&#160;        <a class="code" href="classglstreamer_1_1OutputSlot.html">OutputSlot</a> <a class="code" href="classglstreamer_1_1Processor.html#a8349fe14cad74b7483e945b42cb1b939">outputArg</a>(std::string <span class="keyword">const</span>&amp; name)</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        {</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="classglstreamer_1_1OutputSlot.html">OutputSlot</a>(<a class="code" href="classglstreamer_1_1Processor.html#a5dcec2ae3c91ff71fa08c732a2da4531">outputArgs</a>.<a class="code" href="classglstreamer_1_1ArgBlock.html#a6febe70a10efbd0e84473a6b19e99c9e">fullSlot</a>(name));</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        }</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        </div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classglstreamer_1_1Processor.html#a74224b92fb62a878b491b4a02463229d">run</a>() = 0;</div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;cstdio&gt;</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;</div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;</div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="argblock_8h.html">argblock.h</a>&quot;</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="slottypes_8h.html">slottypes.h</a>&quot;</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;</div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="keyword">namespace </span>glstreamer</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;{</div>
+<div class="line"><a name="l00013"></a><span class="lineno"><a class="code" href="classglstreamer_1_1Processor.html">   13</a></span>&#160;    <span class="keyword">class </span><a class="code" href="classglstreamer_1_1Processor.html">Processor</a></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    {</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00016"></a><span class="lineno"><a class="code" href="classglstreamer_1_1Processor.html#a21b21776668be35b325748fd83d768c0">   16</a></span>&#160;        <a class="code" href="classglstreamer_1_1Processor.html#a21b21776668be35b325748fd83d768c0">Processor</a>():</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;        <a class="code" href="classglstreamer_1_1Processor.html#af981cd32d7470fd5f8273faab5e35e3b">inputArgs</a>(this, <a class="code" href="namespaceglstreamer.html#aa9adb3f26cd0afd9fb6faf5878b82b12aaa92b3f525d08984ddeb25d3b120cc38">Input</a>),</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;        <a class="code" href="classglstreamer_1_1Processor.html#a5dcec2ae3c91ff71fa08c732a2da4531">outputArgs</a>(this, <a class="code" href="namespaceglstreamer.html#aa9adb3f26cd0afd9fb6faf5878b82b12a4cb6887869cb322856e456dd906564c6">Output</a>)</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;        {}</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;        <span class="keyword">virtual</span> <a class="code" href="classglstreamer_1_1Processor.html#a6d176397ba856341c335ff9793fd8ecf">~Processor</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;        </div>
+<div class="line"><a name="l00022"></a><span class="lineno"><a class="code" href="classglstreamer_1_1Processor.html#a75950bf7b6f8ce4908af8ef7a26de272">   22</a></span>&#160;        <span class="keywordtype">void</span> <a class="code" href="classglstreamer_1_1Processor.html#a75950bf7b6f8ce4908af8ef7a26de272">execute</a>()</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;        {</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;            <a class="code" href="classglstreamer_1_1Processor.html#af981cd32d7470fd5f8273faab5e35e3b">inputArgs</a>.<a class="code" href="classglstreamer_1_1ArgBlock.html#a6da70468423b725d0725b6c6874c41fa">fetchArgs</a>();</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;            <a class="code" href="classglstreamer_1_1Processor.html#a74224b92fb62a878b491b4a02463229d">run</a>();</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;            <a class="code" href="classglstreamer_1_1Processor.html#a5dcec2ae3c91ff71fa08c732a2da4531">outputArgs</a>.<a class="code" href="classglstreamer_1_1ArgBlock.html#a6c057ee54c9c5b9fdb09a2afe27efe9d">pushArgs</a>();</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;        }</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;        </div>
+<div class="line"><a name="l00029"></a><span class="lineno"><a class="code" href="classglstreamer_1_1Processor.html#a0dde735211d689fdb86d46bb8f365443">   29</a></span>&#160;        size_type <a class="code" href="classglstreamer_1_1Processor.html#a0dde735211d689fdb86d46bb8f365443">inputArgCount</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keyword">        </span>{</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="classglstreamer_1_1Processor.html#af981cd32d7470fd5f8273faab5e35e3b">inputArgs</a>.<a class="code" href="classglstreamer_1_1ArgBlock.html#ab6fa8b4d6ed6b6f0a679c1e1f1d0852a">argCount</a>();</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;        }</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;        </div>
+<div class="line"><a name="l00034"></a><span class="lineno"><a class="code" href="classglstreamer_1_1Processor.html#a301af73da35d61c0d0ebdac483684727">   34</a></span>&#160;        size_type <a class="code" href="classglstreamer_1_1Processor.html#a301af73da35d61c0d0ebdac483684727">outputArgCount</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="keyword">        </span>{</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="classglstreamer_1_1Processor.html#a5dcec2ae3c91ff71fa08c732a2da4531">outputArgs</a>.<a class="code" href="classglstreamer_1_1ArgBlock.html#ab6fa8b4d6ed6b6f0a679c1e1f1d0852a">argCount</a>();</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        }</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        </div>
+<div class="line"><a name="l00039"></a><span class="lineno"><a class="code" href="classglstreamer_1_1Processor.html#aeebf0389e997872f1d5c9ca4598d0437">   39</a></span>&#160;        <a class="code" href="classglstreamer_1_1InputSlot.html">InputSlot</a> <a class="code" href="classglstreamer_1_1Processor.html#aeebf0389e997872f1d5c9ca4598d0437">inputArg</a>(size_type i)</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        {</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="classglstreamer_1_1InputSlot.html">InputSlot</a>(<a class="code" href="classglstreamer_1_1Processor.html#af981cd32d7470fd5f8273faab5e35e3b">inputArgs</a>.<a class="code" href="classglstreamer_1_1ArgBlock.html#a6febe70a10efbd0e84473a6b19e99c9e">fullSlot</a>(i));</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        }</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        </div>
+<div class="line"><a name="l00044"></a><span class="lineno"><a class="code" href="classglstreamer_1_1Processor.html#aeac5fd203eaec487cab635a2f0201d00">   44</a></span>&#160;        <a class="code" href="classglstreamer_1_1InputSlot.html">InputSlot</a> <a class="code" href="classglstreamer_1_1Processor.html#aeebf0389e997872f1d5c9ca4598d0437">inputArg</a>(std::string <span class="keyword">const</span>&amp; name)</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        {</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="classglstreamer_1_1InputSlot.html">InputSlot</a>(<a class="code" href="classglstreamer_1_1Processor.html#af981cd32d7470fd5f8273faab5e35e3b">inputArgs</a>.<a class="code" href="classglstreamer_1_1ArgBlock.html#a6febe70a10efbd0e84473a6b19e99c9e">fullSlot</a>(name));</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        }</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        </div>
+<div class="line"><a name="l00049"></a><span class="lineno"><a class="code" href="classglstreamer_1_1Processor.html#a9d8f3404e8af96889e55762efe8d0083">   49</a></span>&#160;        <a class="code" href="classglstreamer_1_1InputSlot.html">InputSlot</a> <a class="code" href="classglstreamer_1_1Processor.html#aeebf0389e997872f1d5c9ca4598d0437">inputArg</a>(std::string <span class="keyword">const</span>&amp; base, std::size_t index)</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        {</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="classglstreamer_1_1Processor.html#aeebf0389e997872f1d5c9ca4598d0437">inputArg</a>(<a class="code" href="classglstreamer_1_1Processor.html#a06d473344dce549407d15184b691c648">genName</a>(base, index));</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        }</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        </div>
+<div class="line"><a name="l00054"></a><span class="lineno"><a class="code" href="classglstreamer_1_1Processor.html#a8349fe14cad74b7483e945b42cb1b939">   54</a></span>&#160;        <a class="code" href="classglstreamer_1_1OutputSlot.html">OutputSlot</a> <a class="code" href="classglstreamer_1_1Processor.html#a8349fe14cad74b7483e945b42cb1b939">outputArg</a>(size_type i)</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        {</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="classglstreamer_1_1OutputSlot.html">OutputSlot</a>(<a class="code" href="classglstreamer_1_1Processor.html#a5dcec2ae3c91ff71fa08c732a2da4531">outputArgs</a>.<a class="code" href="classglstreamer_1_1ArgBlock.html#a6febe70a10efbd0e84473a6b19e99c9e">fullSlot</a>(i));</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        }</div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        </div>
-<div class="line"><a name="l00059"></a><span class="lineno"><a class="code" href="classglstreamer_1_1Processor.html#a5dcec2ae3c91ff71fa08c732a2da4531">   59</a></span>&#160;        <a class="code" href="classglstreamer_1_1ArgBlock.html">ArgBlock</a> <a class="code" href="classglstreamer_1_1Processor.html#af981cd32d7470fd5f8273faab5e35e3b">inputArgs</a>, <a class="code" href="classglstreamer_1_1Processor.html#a5dcec2ae3c91ff71fa08c732a2da4531">outputArgs</a>;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    };</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;}</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00059"></a><span class="lineno"><a class="code" href="classglstreamer_1_1Processor.html#af67b094c89722ffed05f9567ac36355a">   59</a></span>&#160;        <a class="code" href="classglstreamer_1_1OutputSlot.html">OutputSlot</a> <a class="code" href="classglstreamer_1_1Processor.html#a8349fe14cad74b7483e945b42cb1b939">outputArg</a>(std::string <span class="keyword">const</span>&amp; name)</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        {</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="classglstreamer_1_1OutputSlot.html">OutputSlot</a>(<a class="code" href="classglstreamer_1_1Processor.html#a5dcec2ae3c91ff71fa08c732a2da4531">outputArgs</a>.<a class="code" href="classglstreamer_1_1ArgBlock.html#a6febe70a10efbd0e84473a6b19e99c9e">fullSlot</a>(name));</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        }</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        </div>
+<div class="line"><a name="l00064"></a><span class="lineno"><a class="code" href="classglstreamer_1_1Processor.html#a2cebc938dd34791fb82b5f66fdbc3884">   64</a></span>&#160;        <a class="code" href="classglstreamer_1_1OutputSlot.html">OutputSlot</a> <a class="code" href="classglstreamer_1_1Processor.html#a8349fe14cad74b7483e945b42cb1b939">outputArg</a>(std::string <span class="keyword">const</span>&amp; base, std::size_t index)</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        {</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="classglstreamer_1_1Processor.html#a8349fe14cad74b7483e945b42cb1b939">outputArg</a>(<a class="code" href="classglstreamer_1_1Processor.html#a06d473344dce549407d15184b691c648">genName</a>(base, index));</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        }</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        </div>
+<div class="line"><a name="l00069"></a><span class="lineno"><a class="code" href="classglstreamer_1_1Processor.html#a06d473344dce549407d15184b691c648">   69</a></span>&#160;        <span class="keyword">static</span> std::string <a class="code" href="classglstreamer_1_1Processor.html#a06d473344dce549407d15184b691c648">genName</a>(std::string <span class="keyword">const</span>&amp; base, std::size_t index)</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        {</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;            <span class="keywordtype">char</span> postfix[64];</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;            snprintf(postfix, 64, <span class="stringliteral">&quot;_%zu&quot;</span>, index);</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;            <span class="keywordflow">return</span> base + postfix;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        }</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        </div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="keyword">protected</span>:</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classglstreamer_1_1Processor.html#a74224b92fb62a878b491b4a02463229d">run</a>() = 0;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        </div>
+<div class="line"><a name="l00079"></a><span class="lineno"><a class="code" href="classglstreamer_1_1Processor.html#a5dcec2ae3c91ff71fa08c732a2da4531">   79</a></span>&#160;        <a class="code" href="classglstreamer_1_1ArgBlock.html">ArgBlock</a> <a class="code" href="classglstreamer_1_1Processor.html#af981cd32d7470fd5f8273faab5e35e3b">inputArgs</a>, <a class="code" href="classglstreamer_1_1Processor.html#a5dcec2ae3c91ff71fa08c732a2da4531">outputArgs</a>;</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    };</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;}</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="preprocessor">#endif</span></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri May 3 2013 22:31:43 for GLStreamer by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri May 24 2013 15:07:47 for GLStreamer by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.1.2
 </small></address>

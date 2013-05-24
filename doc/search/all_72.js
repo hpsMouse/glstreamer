@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['r',['r',['../structglstreamer__gl_1_1RGBA.html#a41f0c235e06270d06f8264bd60d35cfb',1,'glstreamer_gl::RGBA']]],
   ['rawmem',['rawMem',['../classglstreamer_1_1NetUInt32.html#a571ecebb7109d6bfb7224134089fed1f',1,'glstreamer::NetUInt32::rawMem()'],['../classglstreamer_1_1NetUInt32.html#a41e41204a87637fabe756e6d5c8d1bb4',1,'glstreamer::NetUInt32::rawMem() const ']]],
   ['rawvalue',['rawValue',['../classglstreamer_1_1NetUInt32.html#a871f47e7d9d8843a014dc4ac6d0fc6fc',1,'glstreamer::NetUInt32::rawValue()'],['../classglstreamer_1_1NetUInt32.html#a7012c81dc080ea64c71ba326cecb98dd',1,'glstreamer::NetUInt32::rawValue() const ']]],
   ['readdata',['readData',['../classglstreamer_1_1IStream.html#a7d024bf5b7bbf811e917e0f45408793d',1,'glstreamer::IStream::readData()'],['../classglstreamer_1_1MemBufferIStream.html#a7f9ae27e3da3b601280c2555b643fa69',1,'glstreamer::MemBufferIStream::readData()'],['../classglstreamer_1_1PosixShmIStream.html#a0b897e5260d842d5dba469ca45285632',1,'glstreamer::PosixShmIStream::readData()'],['../classglstreamer__gl_1_1GLTextureData.html#a148c29af2b43357ce4fdc75dbae2e877',1,'glstreamer_gl::GLTextureData::readData()']]],
@@ -22,6 +21,10 @@ var searchData=
   ['resourceconflict',['ResourceConflict',['../classglstreamer_1_1ResourceConflict.html#aaf2a869510e2e581ece35b2dd2203c92',1,'glstreamer::ResourceConflict']]],
   ['resourceconflict',['ResourceConflict',['../classglstreamer_1_1ResourceConflict.html',1,'glstreamer']]],
   ['rgba',['RGBA',['../structglstreamer__gl_1_1RGBA.html',1,'glstreamer_gl']]],
-  ['rgbaframe',['RGBAFrame',['../namespaceglstreamer__gl.html#a9a3206b5d238525eb6a5cd30d36a2332',1,'glstreamer_gl']]],
-  ['run',['run',['../classglstreamer_1_1CancellableThread.html#ab96150ff6118b5780765984c158171c9',1,'glstreamer::CancellableThread::run()'],['../classglstreamer_1_1Processor.html#a74224b92fb62a878b491b4a02463229d',1,'glstreamer::Processor::run()']]]
+  ['rgbaframe',['RGBAFrame',['../namespaceglstreamer__gl.html#affe95ccc5095eae57e06d77ba3b70626',1,'glstreamer_gl']]],
+  ['right',['right',['../structglstreamer__gl_1_1GLViewport.html#ade8a51f0a1e95754f8b34c83ff055a65',1,'glstreamer_gl::GLViewport::right()'],['../structglstreamer__gl_1_1ScreenPart.html#a5342acc0f911448e13c4ebd45914fc80',1,'glstreamer_gl::ScreenPart::right()']]],
+  ['run',['run',['../classglstreamer_1_1CancellableThread.html#ab96150ff6118b5780765984c158171c9',1,'glstreamer::CancellableThread::run()'],['../classglstreamer_1_1Processor.html#a74224b92fb62a878b491b4a02463229d',1,'glstreamer::Processor::run()']]],
+  ['rx',['rx',['../structglstreamer__gl_1_1GLObjectState.html#a4af9c134d7e6499613098d03bdc93ec0',1,'glstreamer_gl::GLObjectState']]],
+  ['ry',['ry',['../structglstreamer__gl_1_1GLObjectState.html#a462a52205b15e424b5a514e034566f65',1,'glstreamer_gl::GLObjectState']]],
+  ['rz',['rz',['../structglstreamer__gl_1_1GLObjectState.html#a987a40678d0ee375abcbdb7223f8cf0e',1,'glstreamer_gl::GLObjectState']]]
 ];

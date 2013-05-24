@@ -161,74 +161,72 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;                                       <a class="code" href="classglstreamer__gl_1_1GLTextureData.html">GLTextureData&lt;ParsedPixelTypes&gt;</a>&amp; ... textures)</div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        {</div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;            <span class="keyword">using namespace </span>glstreamer;</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;            <span class="keyword">using namespace </span>oglplus;</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;            <a class="code" href="structglstreamer_1_1FullSlot.html">FullSlot</a>&amp; slot = this-&gt;inputArgs.fullSlot(argumentIndex);</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;            <a class="code" href="classglstreamer__gl_1_1GLTextureData.html">GLTextureData&lt;PixelType&gt;</a>&amp; texture = slot.localArg-&gt;getArg&lt;<a class="code" href="classglstreamer__gl_1_1GLTextureData.html">GLTextureData&lt;PixelType&gt;</a>&gt;();</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;            Texture::Active(textureIndex);</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;            texture.bind();</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;            Texture::GenerateMipmap(texture.target);</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;            bindInputTextureArguments&lt;argumentIndex + 1, textureIndex + 1, PixelTypes...&gt;</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;            (nonPixelInputs ...,</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;             nonPixelOutputs ...,</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;             textures ...,</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;             texture</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;            );</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        }</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        </div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        <span class="keyword">template</span> &lt;std::size_t argumentIndex, std::size_t textureIndex, <span class="keyword">typename</span> ... PixelTypes, <span class="keyword">typename</span> ... ParsedPixelTypes&gt;</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        <span class="keyword">typename</span> std::enable_if&lt;<span class="keyword">sizeof</span>...(PixelTypes) == 0&gt;::type</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        bindInputTextureArguments(NonPixelInputs&amp; ... nonPixelInputs,</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;                                  NonPixelOutputs&amp; ... nonPixelOutputs,</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;                                  GLTextureData&lt;ParsedPixelTypes&gt;&amp; ... textures</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;                                 )</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        {</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;            bindOutputTextureArguments&lt;outputFramesStart, inputFramesCount, OutputPixelTypes ...&gt;</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;            (nonPixelInputs ...,</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;             nonPixelOutputs ...,</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;             textures ...</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;            );</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        }</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;        </div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;        <span class="keyword">template</span> &lt;std::size_t argumentIndex, std::size_t textureIndex, <span class="keyword">typename</span> PixelType, <span class="keyword">typename</span> ... PixelTypes, <span class="keyword">typename</span> ... ParsedPixelTypes&gt;</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        <span class="keywordtype">void</span> bindOutputTextureArguments(NonPixelInputs&amp; ... nonPixelInputs,</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;                                        NonPixelOutputs&amp; ... nonPixelOutputs,</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;                                        GLTextureData&lt;ParsedPixelTypes&gt;&amp; ... textures</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;                                       )</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;        {</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;            <span class="keyword">using namespace </span>glstreamer;</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;            <span class="keyword">using namespace </span>oglplus;</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;            <a class="code" href="structglstreamer_1_1FullSlot.html">FullSlot</a>&amp; slot = this-&gt;outputArgs.fullSlot(argumentIndex);</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;            GLTextureData&lt;PixelType&gt;&amp; texture = slot.<a class="code" href="structglstreamer_1_1FullSlot.html#a5879974a0add580e912fe2ef15b65d03">localArg</a>-&gt;getArg&lt;GLTextureData&lt;PixelType&gt;&gt;();</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="comment">//             Texture::Active(textureIndex);</span></div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;<span class="comment">//             texture.bind();</span></div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;            bindOutputTextureArguments&lt;argumentIndex + 1, textureIndex + 1, PixelTypes...&gt;</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;            (nonPixelInputs ...,</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;             nonPixelOutputs ...,</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;             textures ...,</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;             texture</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;            );</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;        }</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;        </div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;        <span class="keyword">template</span> &lt;std::size_t argumentIndex, std::size_t textureIndex, <span class="keyword">typename</span> ... PixelTypes, <span class="keyword">typename</span> ... ParsedPixelTypes&gt;</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;        <span class="keyword">typename</span> std::enable_if&lt;<span class="keyword">sizeof</span>...(PixelTypes) == 0&gt;::type</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;        bindOutputTextureArguments(NonPixelInputs&amp; ... nonPixelInputs,</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;                                   NonPixelOutputs&amp; ... nonPixelOutputs,</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;                                   GLTextureData&lt;ParsedPixelTypes&gt;&amp; ... textures</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;                                  )</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;        {</div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;            gl_run(nonPixelInputs ...,</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;                   nonPixelOutputs ...,</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;                   textures ...</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;            );</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;        }</div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;    };</div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;}</div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;</div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;            <a class="code" href="structglstreamer_1_1FullSlot.html">FullSlot</a>&amp; slot = this-&gt;inputArgs.fullSlot(argumentIndex);</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;            <a class="code" href="classglstreamer__gl_1_1GLTextureData.html">GLTextureData&lt;PixelType&gt;</a>&amp; texture = slot.localArg-&gt;getArg&lt;<a class="code" href="classglstreamer__gl_1_1GLTextureData.html">GLTextureData&lt;PixelType&gt;</a>&gt;();</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;            <a class="code" href="gl_8inc_8h.html#a1fd760ca2c139d51434faa330dbd7f36">gl_Call</a>(glActiveTexture(GL_TEXTURE0 + textureIndex));</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;            texture.bind();</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;            <a class="code" href="gl_8inc_8h.html#a1fd760ca2c139d51434faa330dbd7f36">gl_Call</a>(glGenerateMipmap(texture.target));</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;            bindInputTextureArguments&lt;argumentIndex + 1, textureIndex + 1, PixelTypes...&gt;</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;            (nonPixelInputs ...,</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;             nonPixelOutputs ...,</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;             textures ...,</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;             texture</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;            );</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        }</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        </div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        <span class="keyword">template</span> &lt;std::size_t argumentIndex, std::size_t textureIndex, <span class="keyword">typename</span> ... PixelTypes, <span class="keyword">typename</span> ... ParsedPixelTypes&gt;</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        <span class="keyword">typename</span> std::enable_if&lt;<span class="keyword">sizeof</span>...(PixelTypes) == 0&gt;::type</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        bindInputTextureArguments(NonPixelInputs&amp; ... nonPixelInputs,</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;                                  NonPixelOutputs&amp; ... nonPixelOutputs,</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;                                  GLTextureData&lt;ParsedPixelTypes&gt;&amp; ... textures</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;                                 )</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        {</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;            bindOutputTextureArguments&lt;outputFramesStart, inputFramesCount, OutputPixelTypes ...&gt;</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;            (nonPixelInputs ...,</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;             nonPixelOutputs ...,</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;             textures ...</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;            );</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        }</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        </div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;        <span class="keyword">template</span> &lt;std::size_t argumentIndex, std::size_t textureIndex, <span class="keyword">typename</span> PixelType, <span class="keyword">typename</span> ... PixelTypes, <span class="keyword">typename</span> ... ParsedPixelTypes&gt;</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;        <span class="keywordtype">void</span> bindOutputTextureArguments(NonPixelInputs&amp; ... nonPixelInputs,</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;                                        NonPixelOutputs&amp; ... nonPixelOutputs,</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;                                        GLTextureData&lt;ParsedPixelTypes&gt;&amp; ... textures</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;                                       )</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;        {</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;            <span class="keyword">using namespace </span>glstreamer;</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;            <a class="code" href="structglstreamer_1_1FullSlot.html">FullSlot</a>&amp; slot = this-&gt;outputArgs.fullSlot(argumentIndex);</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;            GLTextureData&lt;PixelType&gt;&amp; texture = slot.<a class="code" href="structglstreamer_1_1FullSlot.html#a5879974a0add580e912fe2ef15b65d03">localArg</a>-&gt;getArg&lt;GLTextureData&lt;PixelType&gt;&gt;();</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="comment">//             Texture::Active(textureIndex);</span></div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;<span class="comment">//             texture.bind();</span></div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;            bindOutputTextureArguments&lt;argumentIndex + 1, textureIndex + 1, PixelTypes...&gt;</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;            (nonPixelInputs ...,</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;             nonPixelOutputs ...,</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;             textures ...,</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;             texture</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;            );</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;        }</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;        </div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;        <span class="keyword">template</span> &lt;std::size_t argumentIndex, std::size_t textureIndex, <span class="keyword">typename</span> ... PixelTypes, <span class="keyword">typename</span> ... ParsedPixelTypes&gt;</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;        <span class="keyword">typename</span> std::enable_if&lt;<span class="keyword">sizeof</span>...(PixelTypes) == 0&gt;::type</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;        bindOutputTextureArguments(NonPixelInputs&amp; ... nonPixelInputs,</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;                                   NonPixelOutputs&amp; ... nonPixelOutputs,</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;                                   GLTextureData&lt;ParsedPixelTypes&gt;&amp; ... textures</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;                                  )</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;        {</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;            gl_run(nonPixelInputs ...,</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;                   nonPixelOutputs ...,</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;                   textures ...</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;            );</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;        }</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;    };</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;}</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;<span class="preprocessor">#endif</span></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri May 3 2013 22:31:43 for GLStreamer by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri May 24 2013 15:07:46 for GLStreamer by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.1.2
 </small></address>
