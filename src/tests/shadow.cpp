@@ -24,27 +24,36 @@ posixpp::PThreadBarrier barrier(2);
 
 static constexpr int loops = 600;
 
+char const* objPath = "village/minecraft.obj";
+char const* texPath = "village/tex/texture.png";
+
 int main()
 {
     init();
     
-    unsigned width = 512, height = 512;
+    unsigned width = 1280, height = 720;
     unsigned lightSize = 1024;
     unsigned lightWidth = lightSize, lightHeight = lightSize;
     GLWindowBinding context(":0", width, height, true, 32, 32);
     GLThread::initGLContextBinding(context);
     
-    double lightSpan = 150;
+    double lightSpan = 50.0;
+    double cameraSpan = 10.0;
     
-    GLObjectState state = {0.01, 0.0, 0.0, -3.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-    GLObjectState lightState = {1.0, 0.0, 0.0, -1600.0, 0.0, -30.0, 0.0, 0.0, 0.0, 0.0};
-    GLViewport viewport = {0, 0, width, height, -(double(width)/height), double(width)/height, -1.0, 1.0, 1.0, 5.0};
-    GLViewport lightViewport = {0, 0, lightWidth, lightHeight, -lightSpan, lightSpan, -lightSpan, lightSpan, 1400.0, 1800.0};
+//     GLObjectState state = {0.01, 0.0, 0.0, -3.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+    GLObjectState state = {1.0, 0.0, -5.0, -240.0, 0.0, 60.0, 0.0, 10.0, 0.0, 0.0};
+    GLObjectState lightState = {1.0, 0.0, 0.0, -1600.0, 120.0, 30.0, 0.0, 0.0, 00.0, 0.0};
+    GLViewport viewport = {0, 0, width, height, -cameraSpan * width / height, cameraSpan * width / height, -cameraSpan, cameraSpan, 120.0, 320.0};
+    GLViewport lightViewport = {0, 0, lightWidth, lightHeight, -lightSpan, lightSpan, -lightSpan, lightSpan, 1550.0, 1650.0};
+    
+//     GLObjectState state = lightState;
+//     GLViewport viewport = lightViewport;
+    
     GLDataRange fullRange = {0.0, 1.0};
     
     thread = std::move(GLThread([]{
         ThreadBlock& p = GLThread::currentThreadBlock();p
-        .addProcessor<GLShadowMapGenerator>("shadow_map", "head.obj", 1, std::vector<ProjectionStyle>({ProjectionStyle::Frustum}))
+        .addProcessor<GLShadowMapGenerator>("shadow_map", objPath, 1, std::vector<ProjectionStyle>({ProjectionStyle::Ortho}))
         .addProcessor<FakeSink<GLViewport>>("viewport_sink")
         ;
         
@@ -71,8 +80,8 @@ int main()
     .addProcessor<VariableProcessor<GLObjectState>>("obj_state")
     .addProcessor<ConstProcessor<GLViewport>>("obj_viewport", viewport)
     .addProcessor<ConstProcessor<GLDataRange>>("range", fullRange, 2)
-    .addProcessor<GLShadowCoordCalc>("matrix", ProjectionStyle::Frustum)
-    .addProcessor<GLSimpleShadowRenderer>("shadower", 1, "head.obj", "texture/AdrianAlbedo.tga")
+    .addProcessor<GLShadowCoordCalc>("matrix", ProjectionStyle::Ortho)
+    .addProcessor<GLSimpleShadowRenderer>("shadower", 1, objPath, texPath)
     .addProcessor<GLFrameDisplayer>("display")
     .addProcessor<FakeSink<GLFrameData<DepthFrame>>>("depth_sink")
     .addProcessor<FakeSink<GLViewport>>("viewport_sink")
@@ -108,7 +117,7 @@ int main()
         
         for(int i = 0; i < 600; ++i)
         {
-            statePO.get().ry -= 1.0;
+//             statePO.get().ry -= 1.0;
             p.execute();
         }
         

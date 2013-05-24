@@ -51,9 +51,11 @@ char const* fragmentSource =
 
 "float shadowTex2D(sampler2D tex, vec2 coord, float ref)\n"
 "{\n"
+"    if(clamp(coord.x, 0.0, 1.0) != coord.x || clamp(coord.y, 0.0, 1.0) != coord.y)\n"
+"        return 0.0;\n"
 "    float depth = texture2D(tex, coord).r;\n"
 // "    return depth;\n"
-"    if(depth >= ref - 0.02)\n"
+"    if(depth >= ref - 0.0015)\n"
 "        return 1.0;\n"
 "    else\n"
 "        return 0.0;\n"
@@ -63,9 +65,13 @@ char const* fragmentSource =
 "{\n"
 "    float lightSum = shadowTex2D(shadows[0], lightCoord[0].xy, lightCoord[0].z);\n"
 "    vec4 objTexValue = texture2D(objTex, gl_TexCoord[0].st);\n"
-"    lightSum = lightSum * 0.75 + 0.25;\n"
+"    lightSum = lightSum * 0.5 + 0.5;\n"
 // "    gl_FragColor = vec4(vec3(lightSum), 1.0);\n"
-"    gl_FragColor = vec4(lightSum * objTexValue.rgb, 1.0);\n"
+"    gl_FragColor = vec4(lightSum * objTexValue.rgb, objTexValue.a);\n"
+"    if(objTexValue.a == 0.0)\n"
+"        gl_FragDepth = 1.0;\n"
+"    else\n"
+"        gl_FragDepth = gl_FragCoord.z;\n"
 "}\n"
 ;
 
@@ -111,12 +117,17 @@ void GLSimpleShadowRenderer::draw()
     int objectTexture = nLights;
     gl_Call(glActiveTexture(GL_TEXTURE0 + objectTexture));
     gl_Call(glBindTexture(GL_TEXTURE_2D, texture));
+    gl_Call(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST));
+    gl_Call(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
     
     gl_Call(glMatrixMode(GL_MODELVIEW));
     gl_Call(glLoadIdentity());
     inputArg("state").toSlot().arg<GLObjectState>().apply();
     
     gl_Call(glEnable(GL_DEPTH_TEST));
+    gl_Call(glEnable(GL_BLEND));
+    gl_Call(glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_ADD));
+    gl_Call(glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA));
     
     program.use();
     
@@ -135,6 +146,7 @@ void GLSimpleShadowRenderer::draw()
         mesh.draw(range.start, range.end);
     program.useNone();
     
+    gl_Call(glDisable(GL_BLEND));
     gl_Call(glDisable(GL_DEPTH_TEST));
 }
 
